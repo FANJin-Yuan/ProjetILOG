@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="libs/org.eclipse.text_3.7.0.v20180822-1511.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.ui.forms_3.7.300.v20180828-1350.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.ui.workbench_3.112.0.v20180906-1121.jar"/>
+	<classpathentry kind="lib" path="libs/commons-vfs2-2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
