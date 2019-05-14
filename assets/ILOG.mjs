@@ -1,45 +1,4 @@
-'use strict';
-
-var file = 'fr';
-/**
- * Retrieves the correct ICS data according to which button has been pressed
- * INPUT is the  HTML input
- * FILE_EXPLORER is the file explorer
- * EXAMPLE is the .ics file in the assets
- */
-function importICS(type) {
-    switch (type) {
-        case 'INPUT':
-            file = document.getElementById("icsInput").value;
-            break;
-        case 'EXAMPLE':
-            file = ics;
-            break;
-    }
-    console.log(type, file);
-    return file;
-}
-
-function handleFileSelect(evt) {
-    console.log('fire');
-    file = evt.target.files;
-    
-    //TODO parse file into str
-    var reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onloadend = (evt) => {
-        console.log('fire on load end');
-        file = evt.target.result;
-    }
-    ////////////////////////
-    //file = 'encours';
-    console.log(file);
-    importICS('FILE_EXPlORER');
-}
-
-  // File explorer use detection
-
-  var ics = `BEGIN:VCALENDAR
+const ics = `BEGIN:VCALENDAR
 X-WR-CALNAME:ILOG
 X-WR-CALID:3a239bef-087f-43c4-a363-35c8831b3d05:35109
 PRODID:Zimbra-Calendar-Provider

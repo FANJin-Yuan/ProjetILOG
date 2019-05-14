@@ -13,6 +13,7 @@
 
 
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <html>
 <title>Vanilla Local Calendar</title>
 
@@ -44,7 +45,12 @@
 
     <!-- File Explorer -->
     <input type="file" id="files" name="files[]" />
+    <script>
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
 
+    <h1>2. Generate calendar</h1>
+    
 </body>
 
 </html>
