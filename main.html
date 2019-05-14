@@ -7,28 +7,44 @@
 <!-- Material Animations JS -->
 <script src="./material/material.min.js"></script>
 <!-- Material Color Theme -->
-<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-amber.min.css" /> 
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-amber.min.css" />
+<!-- JS Files -->
+<script src="js/main.js"></script>
+
 
 <!DOCTYPE html>
 <html>
-    <title>Vanilla Local Calendar</title>
+<title>Vanilla Local Calendar</title>
+
 <head>
     Vanilla Local Calendar
 </head>
 
 <body>
-    <h1>This is a heading</h1>
-    <p>This is a paragraph.</p>
-    <!-- Simple Textfield -->
-<form action="#">
-    <div class="mdl-textfield mdl-js-textfield">
-      <input class="mdl-textfield__input" type="text" id="icsInput">
-      <label class="mdl-textfield__label" for="icsInput">Paste .ics file here ...</label>
-    </div>
-  </form>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-        Button
+    <h1>1. Import your ICS file</h1>
+
+    <!-- Input form -->
+    <form action="#">
+        <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" id="icsInput">
+            <label class="mdl-textfield__label" for="icsInput">Paste .ics file here ...</label>
+        </div>
+    </form>
+
+    <button onclick="importICS('INPUT')"
+        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        Import
     </button>
+
+    <!-- Example use button -->
+    <button onclick="importICS('EXAMPLE')"
+        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        Use example
+    </button>
+
+    <!-- File Explorer -->
+    <input type="file" id="files" name="files[]" />
+
 </body>
 
 </html>
