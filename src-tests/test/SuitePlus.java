@@ -7,6 +7,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
+import arduino.*;
 
 public class SuitePlus extends Suite {
 	
@@ -24,6 +25,11 @@ public class SuitePlus extends Suite {
 			Result testResult = JUnitCore.runClasses(cls);
 			System.out.println(testResult.getFailureCount());
 	        System.out.println(testResult.wasSuccessful());
+	        Arduino ard = new Arduino("COM4", 9600);
+	        ard.openConnection();
+	        ard.serialWrite("sexe");
+	        
+	        
 	        //new TwoWaySerialComm().connect("", testResult);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
