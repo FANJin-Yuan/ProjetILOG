@@ -1,6 +1,7 @@
 package test;
 
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
@@ -20,8 +21,13 @@ public class SuitePlus extends Suite {
         Class<?> cls;
 		try {
 			cls = cl.loadClass(runner.getDescription().toString());
-	        System.out.println(JUnitCore.runClasses(cls).wasSuccessful());
+			Result testResult = JUnitCore.runClasses(cls);
+			System.out.println(testResult.getFailureCount());
+	        System.out.println(testResult.wasSuccessful());
+	        //new TwoWaySerialComm().connect("", testResult);
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
