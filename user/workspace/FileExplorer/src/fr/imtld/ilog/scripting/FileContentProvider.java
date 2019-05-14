@@ -10,8 +10,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
 public class FileContentProvider implements ITreeContentProvider, ILabelProvider, ITableLabelProvider {
-	protected Image imgFolder = new Image(null, "Folder.gif");
-	protected Image imgDoc = new Image(null, "Document.gif");
+	protected Image imgFolder = new Image(null, FileContentProvider.class.getResourceAsStream("Folder.gif"));
+	protected Image imgDoc = new Image(null, FileContentProvider.class.getResourceAsStream("Document.gif"));
 
 	@Override
 	public void dispose() {
