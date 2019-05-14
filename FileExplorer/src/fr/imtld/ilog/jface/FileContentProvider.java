@@ -17,7 +17,6 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 	protected Image imgArchive = new Image(null, "Archive.gif");
 	protected Image imgFolder = new Image(null, "Folder.gif");
 	protected Image imgDoc = new Image(null, "Document.gif");
-	protected Image imgJar = new Image(null, "Document.gif");
 
 	@Override
 	public Object[] getChildren(Object parent) {
@@ -45,6 +44,9 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					case ".zip":
 						FileObject archive = fm.resolveFile("zip:" + file.getName());
 						return archive.getChildren();
+					case ".jar":
+						FileObject jar = fm.resolveFile("jar:" + file.getName());
+						return jar.getChildren();
 					default:
 						file.getChildren();
 					}
@@ -119,7 +121,7 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					case ".zip":
 						return imgArchive;
 					case ".jar":
-						return imgJar;
+						return imgArchive;
 					default:
 						return imgDoc;
 					}
@@ -145,7 +147,6 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		imgDoc.dispose();
 		imgFolder.dispose();
 		imgArchive.dispose();
-		imgJar.dispose();
 	}
 
 	@Override
@@ -160,7 +161,7 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					case ".zip":
 						return imgArchive;
 					case ".jar":
-						return imgJar;
+						return imgArchive;
 					default:
 						return imgDoc;
 					}

@@ -9,7 +9,7 @@ public class VFSTest {
 
 	public static void main(String[] args) throws FileSystemException {
 		FileSystemManager fm = VFS.getManager();
-		FileObject zipFile = fm.resolveFile("c:/DossierTest/Archive.zip");
+		FileObject zipFile = fm.resolveFile("jar:c:/DossierTest/Archive.zip");
 		System.out.println(FileUtils.getTrueFileName(zipFile));
 		System.out.println(FileUtils.getFileExtension(zipFile));
 		System.out.println(zipFile.getName().getBaseName());

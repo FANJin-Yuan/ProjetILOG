@@ -136,7 +136,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 		TableSorter sorter = new TableSorter();
 		tbvw.setComparator(sorter);
-		
+
 		ViewerFilter filter = new TableFilter();
 		tbvw.setFilters(new ViewerFilter[] { filter });
 
@@ -190,7 +190,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 			if (elt instanceof FileObject) {
 				try {
 					FileObject file = (FileObject) elt;
-					if (file.isFolder() || FileUtils.getFileExtension(file).equals(".zip"))
+					if (file.isFolder() || FileUtils.getFileExtension(file).equals(".zip")
+							|| FileUtils.getFileExtension(file).equals(".jar"))
 						tbvw.setInput(elt);
 				} catch (FileSystemException e1) {
 					e1.printStackTrace();
