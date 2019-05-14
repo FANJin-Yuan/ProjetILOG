@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Result-Online book search plateform</title>
+
+<script><!-- 
+	class Conversion {
+		constructor (json) {
+            var obj=JSON.parse(json);
+            this.tab=
+            [obj.temperature.value, obj.temperature.unit, 
+            obj.conversions[0].value, obj.conversions[0].unit,
+            obj.conversions[1].value, obj.conversions[1].unit];
+        }
+    }
+    
+	function sendRequest (){
+        var valeur = document.getElementById('value').value;
+        var units = document.getElementsByName('unit');
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = requestStateHandler; //An EventHandler that is called whenever the readyState attribute changes.
+		var strUrl = "convert.php";
+		
+		var unit;
+		for (var i=0; i<units.length; i++){
+			if (units[i].type==='radio'&& units[i].checked) {
+				unit = units[i].value;
+				try{
+					xhr.open('post',strUrl, true);//Initializes a request. This method is to be used from JavaScript code; 
+					xhr.setRequestHeader('Content-type',
+							'application/x-www-form-urlencoded');
+					//Sets the value of an HTTP request header. You must call setRequestHeader()after open(), but before send()
+					xhr.send('value='+valeur+'&unit='+unit);
+				}catch(err){
+					alert(err.name+' '+strUrl);
+				}
+			}
+		}
+
+	}
+	
+	function requestStateHandler(){
+		var xhr= this;
+		if(this.readyState == 4){
+			switch(xhr.status){//Returns an unsigned short with the status of the response of the request
+			case 200:
+				var conv = new Conversion(xhr.responseText);//reponseText Returns a DOMString that contains the response to the request as text, or null if the request was unsuccessful or has not yet been sent.
+				console.log(xhr.responseText)
+				updatePage(conv);
+				break;
+			default:
+				alert(xhr.status);
+			}	
+		}
+	}
+	
+	function updatePage(conv){
+        var tab=document.getElementById('tabconv');
+        var newRow = tab.insertRow(tab.rowslength);
+        var newCell1 = newRow.insertCell(0);
+        var newCell2 = newRow.insertCell(1);
+        var newCell3 = newRow.insertCell(2);
+        var newText = document.createTextNode(conv.tab[0]+' '+conv.tab[1]);
+        newCell1.appendChild(newText);
+        newText = document.createTextNode(conv.tab[2]+' '+conv.tab[3]);
+        newCell2.appendChild(newText);
+        newText = document.createTextNode(conv.tab[4]+' '+conv.tab[5]);
+        newCell3.appendChild(newText);
+	}
+	
+	function clearTabHTML() {
+        var tab=document.getElementById('tabconv');
+            for(var i=1; i<tab.rows.length;){
+                tab.deleteRow(i);
+            }
+		
+	} -->
+	searchRequest(){}
+	modifyRequest(){}
+	addRequest(){}
+	deleteRequest(){}
+</script>
+</head>
+<body>
+	<head><h1>Online book search system</h1></head>
+<hr />
+
+<div> 
+     <h2>pleas entre the book information to start search:</h2>
+		Search by ISDN:<input type="text" name="bookID"> <br>
+		Search by book name: <input type="text" name="bookNm"> <br>
+		Search by auther name: <input type="text" name="autherNm"> <br>
+		<input type="button" name="submit" value="Search" onclick="sendRequest()"> <br><!--todo-->
+		<!--若所有输入都为空，则停留在本页面并显示请再次输入-->
+    <hr />
+</div>
+<div>
+	<h2>This is the resault of your search:</h2>
+    <table cellspacing="0" border="1" id="tabconv">
+		<tbody>
+        <tr>
+          <th>ISDN</th>
+          <th>Book name</th>
+          <th>Author name</th>
+        </tr>
+		</tbody>
+    </table>
+    <input type="button" value="back" onclick="clearTabHTML()" /> <!--todo:回到上一页重新开始搜索-->
+	<hr />
+</div>
+<div>
+	<h2>Administration tools:</h2>
+	<a href="#modi">- modify book information</a><br>
+	<a href="#add">- add a book</a> <br>
+	<a href="#delet">- delete a book</a><br><br>
+
+</div>
+<div>
+	<a name="modi"><h4>Modify the book information:</h4></a><br>
+		New ISDN:<input type="text" name="bookID"> <br>
+		New book name: <input type="text" name="bookNm"> <br>
+		New auther name: <input type="text" name="autherNm"> <br>
+		<input type="button" name="submit" value="OK" onclick="modifyRequest()"> <br><br><!--todo-->
+		<!--若所有输入都为空，则停留在本页面并显示请再次输入-->
+
+	<a name="add"><h4>Add a book:</h4></a><br>
+		New ISDN:<input type="text" name="bookID"> <br>
+		New book name: <input type="text" name="bookNm"> <br>
+		New auther name: <input type="text" name="autherNm"> <br>
+		<input type="button" name="submit" value="OK" onclick="addRequest()"> <br><br><!--todo-->
+
+	
+	<a name="delet"><h4>Delete a book:</h4></a><br>
+		Book ISDN:<input type="text" name="bookID"> <br>
+		<input type="button" name="submit" value="OK" onclick="deleteRequest()"><br><!--todo-->
+
+		
+</div>
+
+</body>
+</html>
