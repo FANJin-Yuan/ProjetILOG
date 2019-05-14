@@ -73,7 +73,9 @@ public class TwoWaySerialComm
             if ( commPort instanceof SerialPort )
             {
                 SerialPort serialPort = (SerialPort) commPort;
-                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+                serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+                
+                serialPort.setDTR(false);
                 
                 InputStream in = serialPort.getInputStream();
                 OutputStream out = serialPort.getOutputStream();             
