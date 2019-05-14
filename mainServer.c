@@ -17,6 +17,8 @@
 #include <netdb.h>
 #include <string.h>
 
+int gagne = 0;
+void *processJeuServer(void *arg);
 
 
 int main(int argc, const char * argv[]) {
@@ -24,7 +26,6 @@ int main(int argc, const char * argv[]) {
 	// Creation d'un entier aléatoire
 	srandom(time(NULL));
 	int nombreaTrouver = random()%1000;
-	int gagne = 0;
 	printf("%d\n",nombreaTrouver);
 
 	//Creation Serveur
@@ -43,37 +44,62 @@ int main(int argc, const char * argv[]) {
 
 	// Bloque en attente de connection par un client
 	int the_Sock = accept(aSock, (struct sockaddr *)&aSock_serv, &casock);
-	while (gagne==0){
-		char msgRecu[256] = {0};
-		printf("passe\n");
-		// Bloque en Attente de reception
-		long aNum = recv(the_Sock, msgRecu, 256, 0);
-		printf ("%s", msgRecu);
-		int nombreRecu = atoi(msgRecu);
-		printf("%d",nombreRecu);
+	pthread_t thread1;
 
-		//Comparaison nombreRecu et nombreaTrouver
-		char * msgEnvoye;
-		msgEnvoye = malloc(sizeof msgEnvoye);
-		if (nombreRecu==-1){
-			gagne=1;
-		}
-		else if (nombreRecu < nombreaTrouver){
-			msgEnvoye = "Plus  !";
-			printf("%d",nombreRecu);
-		} else if (nombreRecu > nombreaTrouver) {
-			msgEnvoye = "Moins !";
-		} else {
-			msgEnvoye = "Gagne !";
-			gagne=1;
-		}
-		printf("%s",msgEnvoye);
-		send (the_Sock,msgEnvoye,strlen(msgEnvoye),0);
-	}
+	char *message1 = "Thread 1";
+	int  iret1;
+	/* Create independent threads each of which will execute function */
+	int arg[2] = {the_Sock, nombreaTrouver};
+	iret1 = pthread_create( &thread1, NULL, processJeuServer, (void*) arg);
+
+	/* Wait till threads are complete before main continues. Unless we  */
+	/* wait we run the risk of executing an exit which will terminate   */
+	/* the process and all threads before the threads have completed.   */
+
+	pthread_join( thread1, NULL);
+
+	printf("Thread 1 returns: %d\n",iret1);
+	exit(0);
 
 	//Fermeture du server
 	close (aSock);
 	close (the_Sock);
 
 	return 0;
+}
+
+void *processJeuServer(void *arg){
+	int *argument= arg;
+	int the_Sock = argument[0];
+	int nombreaTrouver = argument[1];
+	printf("%d",the_Sock);
+	printf("%d",nombreaTrouver);
+	while (gagne==0){
+			char msgRecu[256] = {0};
+			printf("passe\n");
+			// Bloque en Attente de reception
+			long aNum = recv(the_Sock, msgRecu, 256, 0);
+			printf ("%s", msgRecu);
+			int nombreRecu = atoi(msgRecu);
+			printf("%d",nombreRecu);
+
+			//Comparaison nombreRecu et nombreaTrouver
+			char * msgEnvoye;
+			msgEnvoye = malloc(sizeof msgEnvoye);
+			if (nombreRecu==-1){
+				gagne=1;
+			}
+			else if (nombreRecu < nombreaTrouver){
+				msgEnvoye = "Plus  !";
+				printf("%d",nombreRecu);
+			} else if (nombreRecu > nombreaTrouver) {
+				msgEnvoye = "Moins !";
+			} else {
+				msgEnvoye = "Gagne !";
+				gagne=1;
+			}
+			printf("%s",msgEnvoye);
+			send (the_Sock,msgEnvoye,strlen(msgEnvoye),0);
+		}
+
 }
