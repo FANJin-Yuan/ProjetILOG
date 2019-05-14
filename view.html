@@ -4,78 +4,7 @@
 <meta charset="utf-8" />
 <title>Result-Online book search plateform</title>
 
-<script><!-- 
-	class Conversion {
-		constructor (json) {
-            var obj=JSON.parse(json);
-            this.tab=
-            [obj.temperature.value, obj.temperature.unit, 
-            obj.conversions[0].value, obj.conversions[0].unit,
-            obj.conversions[1].value, obj.conversions[1].unit];
-        }
-    }
-    
-	function sendRequest (){
-        var valeur = document.getElementById('value').value;
-        var units = document.getElementsByName('unit');
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = requestStateHandler; //An EventHandler that is called whenever the readyState attribute changes.
-		var strUrl = "convert.php";
-		
-		var unit;
-		for (var i=0; i<units.length; i++){
-			if (units[i].type==='radio'&& units[i].checked) {
-				unit = units[i].value;
-				try{
-					xhr.open('post',strUrl, true);//Initializes a request. This method is to be used from JavaScript code; 
-					xhr.setRequestHeader('Content-type',
-							'application/x-www-form-urlencoded');
-					//Sets the value of an HTTP request header. You must call setRequestHeader()after open(), but before send()
-					xhr.send('value='+valeur+'&unit='+unit);
-				}catch(err){
-					alert(err.name+' '+strUrl);
-				}
-			}
-		}
-
-	}
-	
-	function requestStateHandler(){
-		var xhr= this;
-		if(this.readyState == 4){
-			switch(xhr.status){//Returns an unsigned short with the status of the response of the request
-			case 200:
-				var conv = new Conversion(xhr.responseText);//reponseText Returns a DOMString that contains the response to the request as text, or null if the request was unsuccessful or has not yet been sent.
-				console.log(xhr.responseText)
-				updatePage(conv);
-				break;
-			default:
-				alert(xhr.status);
-			}	
-		}
-	}
-	
-	function updatePage(conv){
-        var tab=document.getElementById('tabconv');
-        var newRow = tab.insertRow(tab.rowslength);
-        var newCell1 = newRow.insertCell(0);
-        var newCell2 = newRow.insertCell(1);
-        var newCell3 = newRow.insertCell(2);
-        var newText = document.createTextNode(conv.tab[0]+' '+conv.tab[1]);
-        newCell1.appendChild(newText);
-        newText = document.createTextNode(conv.tab[2]+' '+conv.tab[3]);
-        newCell2.appendChild(newText);
-        newText = document.createTextNode(conv.tab[4]+' '+conv.tab[5]);
-        newCell3.appendChild(newText);
-	}
-	
-	function clearTabHTML() {
-        var tab=document.getElementById('tabconv');
-            for(var i=1; i<tab.rows.length;){
-                tab.deleteRow(i);
-            }
-		
-	} -->
+<script>
 	searchRequest(){}
 	modifyRequest(){}
 	addRequest(){}
