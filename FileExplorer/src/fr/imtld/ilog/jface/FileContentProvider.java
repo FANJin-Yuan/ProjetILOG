@@ -79,9 +79,9 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					return true;
 				else {
 					switch (FileUtils.getFileExtension(file)) {
-					case "zip":
+					case ".zip":
 						return true;
-					case "jar":
+					case ".jar":
 						return true;
 					default:
 						return false;
