@@ -17,6 +17,7 @@ public class OpenAction extends Action {
 
 	@Override
 	public void run() {
+		expl.setStatus(FileExplorer.Status.OPENING.getMsg());
 		TableViewer tbvw = expl.getTableViewer();
 		IStructuredSelection sel = (IStructuredSelection) tbvw.getSelection();
 		Object elt = sel.getFirstElement();
@@ -24,8 +25,10 @@ public class OpenAction extends Action {
 			try {
 				if (((FileObject) elt).isFile())
 					Program.launch(((FileObject) elt).getName().getFriendlyURI());
+				expl.setStatus(FileExplorer.Status.READY.getMsg());
 			} catch (FileSystemException e) {
-				e.printStackTrace();
+				expl.err(e.getMessage());
+				expl.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}
 		}
 	}

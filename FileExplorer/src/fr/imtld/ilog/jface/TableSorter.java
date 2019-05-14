@@ -6,6 +6,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
 public class TableSorter extends ViewerComparator {
+
+	private FileExplorer expl;
+
+	public TableSorter(FileExplorer explo) {
+		expl = explo;
+	}
+
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
@@ -16,7 +23,8 @@ public class TableSorter extends ViewerComparator {
 				return FileUtils.getTrueFileName(f1).compareToIgnoreCase(FileUtils.getTrueFileName(f2));
 			return b1 ? -1 : +1;
 		} catch (FileSystemException ex) {
-			ex.printStackTrace();
+			expl.err(ex.getMessage());
+			expl.setStatus(FileExplorer.Status.ERROR.getMsg());
 		}
 		return 0;
 	}

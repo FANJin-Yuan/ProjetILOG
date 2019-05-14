@@ -6,6 +6,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 public class TreeFilter extends ViewerFilter {
+	
+	private FileExplorer expl;
+	
+	public TreeFilter(FileExplorer explo)
+	{
+		expl = explo;
+	}
+	
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof FileObject) {
@@ -21,7 +29,8 @@ public class TreeFilter extends ViewerFilter {
 				}
 				return res;
 			} catch (FileSystemException e) {
-				e.printStackTrace();
+				expl.err(e.getMessage());
+				expl.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}
 		}
 		return false;

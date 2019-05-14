@@ -14,11 +14,18 @@ public class FileUtils {
 			fm = VFS.getManager();
 		return fm;
 	}
+	
+	public static boolean isArchive(FileObject file)
+	{
+		String extension = getFileExtension(file);
+		return extension.equals(".zip") || extension.equals(".jar");
+	}
 
-	/** Method used to get files and folder names. Had to program it 
-	* because the innate methods of FileObject and FileName didn't work
-	* with root and hard drives.
-	**/
+	/**
+	 * Method used to get files and folder names. Had to program it because the
+	 * innate methods of FileObject and FileName didn't work with root and hard
+	 * drives.
+	 **/
 	public static String getTrueFileName(FileObject file) {
 		String name = "";
 		if (file != null) {
@@ -30,6 +37,28 @@ public class FileUtils {
 				name = path.substring(path.lastIndexOf("/") + 1);
 		}
 		return name;
+	}
+
+	/**
+	 * Method used to get archive files parents. Had to program it because of the
+	 * archives FileObjects not retaining their parents
+	 **/
+	public static FileObject getArchiveParent(FileObject file) {
+		if (file != null) {
+			try {
+				String path = file.getName().getFriendlyURI();
+				String extension = getFileExtension(file);
+				path = path.replace("!/", "").replace("file:///", "");
+				path = path.replace(extension.substring(1) + ":", "");
+				path = path.substring(0, path.lastIndexOf("/"));
+				
+				FileObject parent = getFSManager().resolveFile(path);
+				return parent;
+			} catch (FileSystemException e) {
+				return null;
+			}
+		} else
+			return null;
 	}
 
 	public static String getFileExtension(FileObject file) {

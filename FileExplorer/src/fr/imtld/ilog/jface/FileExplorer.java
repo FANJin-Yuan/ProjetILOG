@@ -21,6 +21,9 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,6 +36,20 @@ import org.eclipse.swt.widgets.Tree;
 
 public class FileExplorer extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
 
+	public static enum Status {
+		READY("Ready"), SEARCHING("Searching..."), OPENING("Opening..."), ERROR("Error"), NO_PARENT("No parent directory");
+
+		private String msg;
+
+		Status(String msg) {
+			this.msg = msg;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+	}
+
 	protected Action exitAct;
 	protected OpenAction openAct;
 	protected ParentAction parentAct;
@@ -41,9 +58,15 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	protected FileContentProvider getContentProvider() {
 		if (cp == null)
-			cp = new FileContentProvider();
+			cp = new FileContentProvider(this);
 		return cp;
 	}
+
+	private SashForm sashExplorer;
+	private SashForm sashConsole;
+	private StyledText console;
+	private Color colBlue;
+	private Color colRed;
 
 	/**
 	 * Create the application window.
@@ -58,10 +81,12 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	@Override
 	protected Control createContents(Composite shell) {
-		Control container = createSashForm(shell);
+		createSashFormConsole(shell);
+		createActions();
 		createPopupMenu();
-		setStatus("Ready");
-		return container;
+		setStatus(Status.READY.getMsg());
+		return sashExplorer;
+
 	}
 
 	private void createActions() {
@@ -104,12 +129,48 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		table.setMenu(mnCtx);
 	}
 
-	protected Control createSashForm(Composite parent) {
-		SashForm sashForm = new SashForm(parent, SWT.NONE);
-		createTreeViewer(sashForm);
-		createTableViewer(sashForm);
-		sashForm.setWeights(new int[] { 1, 3 });
-		return sashForm;
+	protected SashForm createSashFormExplorer(Composite parent) {
+		sashExplorer = new SashForm(parent, SWT.NONE);
+		createTreeViewer(sashExplorer);
+		createTableViewer(sashExplorer);
+		sashExplorer.setWeights(new int[] { 1, 3 });
+		return sashExplorer;
+	}
+
+	protected void createSashFormConsole(Composite parent) {
+		sashConsole = new SashForm(parent, SWT.VERTICAL);
+		sashExplorer = createSashFormExplorer(sashConsole);
+		createConsole(sashConsole);
+		sashConsole.setWeights(new int[] { 3, 1 });
+	}
+
+	protected void createConsole(Composite parent) {
+		console = new StyledText(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		Display display = Display.getCurrent();
+		colBlue = display.getSystemColor(SWT.COLOR_BLUE);
+		colRed = display.getSystemColor(SWT.COLOR_RED);
+	}
+
+	protected void append(String msg, Color col) {
+		msg = msg + '\n';
+		console.append(msg);
+		StyleRange style = new StyleRange();
+		style.foreground = col;
+		style.length = msg.length();
+		style.start = console.getText().length() - style.length;
+		console.setStyleRange(style);
+	}
+
+	public void clear() {
+		console.setText("");
+	}
+
+	public void out(String msg) {
+		append(msg, colBlue);
+	}
+
+	public void err(String msg) {
+		append(msg, colRed);
 	}
 
 	@SuppressWarnings("unused")
@@ -122,7 +183,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		trvw.setContentProvider(cp);
 		trvw.setLabelProvider(cp);
 
-		ViewerFilter filter = new TreeFilter();
+		ViewerFilter filter = new TreeFilter(this);
 		trvw.setFilters(new ViewerFilter[] { filter });
 
 		trvw.setInput(new Root());
@@ -134,10 +195,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		tbvw.setContentProvider(cp);
 		tbvw.setLabelProvider(cp);
 
-		TableSorter sorter = new TableSorter();
+		TableSorter sorter = new TableSorter(this);
 		tbvw.setComparator(sorter);
 
-		ViewerFilter filter = new TableFilter();
+		ViewerFilter filter = new TableFilter(this);
 		tbvw.setFilters(new ViewerFilter[] { filter });
 
 		tbvw.addDoubleClickListener(this);
@@ -174,6 +235,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent arg) {
+		setStatus(Status.SEARCHING.getMsg());
 		ISelection sel = arg.getSelection();
 		if (sel instanceof TreeSelection) {
 			TreeSelection tsel = (TreeSelection) sel;
@@ -183,6 +245,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	@Override
 	public void doubleClick(DoubleClickEvent e) {
+		setStatus(Status.SEARCHING.getMsg());
 		ISelection sel = e.getSelection(); // sélection de la table
 		if (sel instanceof StructuredSelection) {
 			StructuredSelection ssel = (StructuredSelection) sel;
@@ -190,11 +253,11 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 			if (elt instanceof FileObject) {
 				try {
 					FileObject file = (FileObject) elt;
-					if (file.isFolder() || FileUtils.getFileExtension(file).equals(".zip")
-							|| FileUtils.getFileExtension(file).equals(".jar"))
+					if (file.isFolder() || FileUtils.isArchive(file))
 						tbvw.setInput(elt);
 				} catch (FileSystemException e1) {
-					e1.printStackTrace();
+					err(e1.getMessage());
+					setStatus(Status.ERROR.getMsg());
 				}
 			}
 		}

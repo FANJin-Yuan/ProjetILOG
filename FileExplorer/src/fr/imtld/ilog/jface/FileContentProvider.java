@@ -17,7 +17,14 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 	protected Image imgArchive = new Image(null, "Archive.gif");
 	protected Image imgFolder = new Image(null, "Folder.gif");
 	protected Image imgDoc = new Image(null, "Document.gif");
+	protected Image imgJar = new Image(null, "Jar.gif");
+	
+	private FileExplorer explo;
 
+	public FileContentProvider(FileExplorer explo) {
+		this.explo = explo;
+	}
+	
 	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof FileObject) {
@@ -25,7 +32,8 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 				FileObject file = (FileObject) parent;
 				return file.getChildren();
 			} catch (FileSystemException e) {
-				e.printStackTrace();
+				explo.err(e.getMessage());
+				explo.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}
 		}
 		return null;
@@ -33,38 +41,43 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 
 	@Override
 	public Object[] getElements(Object input) {
+		FileObject[] res = null;
 		try {
 			FileSystemManager fm = FileUtils.getFSManager();
 			if (input instanceof FileObject) {
 				FileObject file = (FileObject) input;
 				if (file.isFolder())
-					return file.getChildren();
+					res = file.getChildren();
 				else {
 					switch (FileUtils.getFileExtension(file)) {
 					case ".zip":
 						FileObject archive = fm.resolveFile("zip:" + file.getName());
-						return archive.getChildren();
+						res = archive.getChildren();
+						break;
 					case ".jar":
 						FileObject jar = fm.resolveFile("jar:" + file.getName());
-						return jar.getChildren();
+						res = jar.getChildren();
+						break;
 					default:
-						file.getChildren();
+						res = file.getChildren();
+						break;
 					}
 				}
 			} else if (input instanceof Root) {
 				Root root = (Root) input;
 				File[] files = root.listFiles();
-				FileObject[] fos = new FileObject[files.length];
+				res = new FileObject[files.length];
 				for (int i = 0; i < files.length; ++i) {
-					fos[i] = fm.toFileObject(files[i]);
+					res[i] = fm.toFileObject(files[i]);
 				}
-				return fos;
 			}
 
 		} catch (FileSystemException e) {
-			e.printStackTrace();
+			explo.err(e.getMessage());
+			explo.setStatus(FileExplorer.Status.ERROR.getMsg());
 		}
-		return null;
+		explo.setStatus(FileExplorer.Status.READY.getMsg());
+		return res;
 	}
 
 	@Override
@@ -80,17 +93,15 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 				if (file.isFolder())
 					return true;
 				else {
-					switch (FileUtils.getFileExtension(file)) {
-					case ".zip":
+					if(FileUtils.isArchive(file))
 						return true;
-					case ".jar":
-						return true;
-					default:
+					else
 						return false;
-					}
+					
 				}
 			} catch (FileSystemException e) {
-				e.printStackTrace();
+				explo.err(e.getMessage());
+				explo.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}
 		}
 		return false;
@@ -121,13 +132,14 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					case ".zip":
 						return imgArchive;
 					case ".jar":
-						return imgArchive;
+						return imgJar;
 					default:
 						return imgDoc;
 					}
 				}
-			} catch (FileSystemException e1) {
-				e1.printStackTrace();
+			} catch (FileSystemException e) {
+				explo.err(e.getMessage());
+				explo.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}
 		}
 		return null;
@@ -147,6 +159,7 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		imgDoc.dispose();
 		imgFolder.dispose();
 		imgArchive.dispose();
+		imgJar.dispose();
 	}
 
 	@Override
@@ -161,13 +174,14 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					case ".zip":
 						return imgArchive;
 					case ".jar":
-						return imgArchive;
+						return imgJar;
 					default:
 						return imgDoc;
 					}
 				}
-			} catch (FileSystemException e1) {
-				e1.printStackTrace();
+			} catch (FileSystemException e) {
+				explo.err(e.getMessage());
+				explo.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}
 		}
 		return null;
@@ -186,7 +200,8 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 			}
 
 		} catch (FileSystemException e) {
-			e.printStackTrace();
+			explo.err(e.getMessage());
+			explo.setStatus(FileExplorer.Status.ERROR.getMsg());
 		}
 		return null;
 	}
