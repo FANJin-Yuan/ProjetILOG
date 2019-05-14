@@ -5,6 +5,7 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -34,6 +35,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	protected Action exitAct;
 	protected OpenAction openAct;
+	protected ParentAction parentAct;
 	protected TableViewer tbvw;
 	protected FileContentProvider cp;
 
@@ -65,6 +67,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	private void createActions() {
 		exitAct = new ExitAction(this);
 		openAct = new OpenAction(this);
+		parentAct = new ParentAction(this);
 	}
 
 	@Override
@@ -81,6 +84,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		CoolBarManager coolBarManager = new CoolBarManager(style);
 		ToolBarManager tlbmain = new ToolBarManager();
 		tlbmain.add(exitAct);
+		tlbmain.add(new Separator());
+		tlbmain.add(parentAct);
 		coolBarManager.add(tlbmain);
 		return coolBarManager;
 	}
@@ -106,7 +111,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		sashForm.setWeights(new int[] { 1, 3 });
 		return sashForm;
 	}
-	
+
 	@SuppressWarnings("unused")
 	protected void createTreeViewer(SashForm sashForm) {
 		TreeViewer trvw = new TreeViewer(sashForm, SWT.BORDER);
@@ -131,6 +136,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 		TableSorter sorter = new TableSorter();
 		tbvw.setComparator(sorter);
+		
+		ViewerFilter filter = new TableFilter();
+		tbvw.setFilters(new ViewerFilter[] { filter });
 
 		tbvw.addDoubleClickListener(this);
 

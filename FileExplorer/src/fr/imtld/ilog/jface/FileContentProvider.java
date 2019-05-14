@@ -181,7 +181,7 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 			case 0: // colonne Name
 				return file.getName().getBaseName();
 			case 1: // colonne Size
-				return content.getSize() + " bytes";
+				return file.isFolder() ? "" : content.getSize() + " bytes";
 			}
 
 		} catch (FileSystemException e) {
