@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Result-Online book search plateform</title>
+
+<script>
+	searchRequest(){}
+	modifyRequest(){}
+	addRequest(){}
+	deleteRequest(){}
+</script>
+</head>
+<body>
+	<head><h1>Online book search system</h1></head>
+<hr />
+
+<div> 
+     <h2>please enter the book information to start search:</h2>
+		Search by ISBN:<input type="text" name="bookID"> <br>
+		Search by book name: <input type="text" name="bookNm"> <br>
+		Search by author name: <input type="text" name="autherNm"> <br>
+		<input type="button" name="submit" value="Search" onclick="sendRequest()"> <br><!--todo-->
+		<!--若所有输入都为空，则停留在本页面并显示请再次输入-->
+    <hr />
+</div>
+<div>
+	<h2>This is the resault of your search:</h2>
+    <table cellspacing="0" border="1" id="tabconv">
+		<tbody>
+        <tr>
+          <th>ISBN</th>
+          <th>Book name</th>
+          <th>Author name</th>
+        </tr>
+		</tbody>
+    </table>
+    <input type="button" value="back" onclick="clearTabHTML()" /> <!--todo:回到上一页重新开始搜索-->
+	<hr />
+</div>
+<div>
+	<h2>Administration tools:</h2>
+	<a href="#modi">- modify book information</a><br>
+	<a href="#add">- add a book</a> <br>
+	<a href="#delet">- delete a book</a><br><br>
+
+</div>
+<div>
+	<a name="modi"><h4>Modify the book information:</h4></a><br>
+		New ISBN:<input type="text" name="bookID"> <br>
+		New book name: <input type="text" name="bookNm"> <br>
+		New author name: <input type="text" name="autherNm"> <br>
+		<input type="button" name="submit" value="OK" onclick="modifyRequest()"> <br><br><!--todo-->
+		<!--若所有输入都为空，则停留在本页面并显示请再次输入-->
+
+	<a name="add"><h4>Add a book:</h4></a><br>
+		New ISBN:<input type="text" name="bookID"> <br>
+		New book name: <input type="text" name="bookNm"> <br>
+		New author name: <input type="text" name="autherNm"> <br>
+		<input type="button" name="submit" value="OK" onclick="addRequest()"> <br><br><!--todo-->
+
+	
+	<a name="delet"><h4>Delete a book:</h4></a><br>
+		Book ISBN:<input type="text" name="bookID"> <br>
+		<input type="button" name="submit" value="OK" onclick="deleteRequest()"><br><!--todo-->
+
+		
+</div>
+
+</body>
+</html>
