@@ -1,7 +1,7 @@
 package fr.imtld.ilog.jface;
 
-import java.io.File;
-
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -20,10 +20,13 @@ public class OpenAction extends Action {
 		TableViewer tbvw = expl.getTableViewer();
 		IStructuredSelection sel = (IStructuredSelection) tbvw.getSelection();
 		Object elt = sel.getFirstElement();
-		if (sel.size() == 1 && elt instanceof File) {
-			File file = (File) elt;
-			if (file.isFile())
-				Program.launch(file.getAbsolutePath());
+		if (sel.size() == 1 && elt instanceof FileObject) {
+			try {
+				if (((FileObject) elt).isFile())
+					Program.launch(((FileObject) elt).getName().getFriendlyURI());
+			} catch (FileSystemException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

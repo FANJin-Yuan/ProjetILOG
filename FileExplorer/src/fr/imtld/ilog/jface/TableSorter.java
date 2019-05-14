@@ -1,19 +1,23 @@
 package fr.imtld.ilog.jface;
 
-import java.io.File;
-
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
 public class TableSorter extends ViewerComparator {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		File f1 = (File) e1;
-		File f2 = (File) e2;
-		boolean b1 = f1.isDirectory();
-		if (b1 == f2.isDirectory())
-			return f1.getName().compareToIgnoreCase(f2.getName());
-		return b1 ? -1 : +1;
+		try {
+			FileObject f1 = (FileObject) e1;
+			FileObject f2 = (FileObject) e2;
+			boolean b1 = f1.isFolder();
+			if (b1 == f2.isFolder())
+				return FileUtils.getTrueFileName(f1).compareToIgnoreCase(FileUtils.getTrueFileName(f2));
+			return b1 ? -1 : +1;
+		} catch (FileSystemException ex) {
+			ex.printStackTrace();
+		}
+		return 0;
 	}
 }
-

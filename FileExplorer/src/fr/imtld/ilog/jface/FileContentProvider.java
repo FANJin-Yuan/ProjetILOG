@@ -2,6 +2,10 @@ package fr.imtld.ilog.jface;
 
 import java.io.File;
 
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -10,28 +14,53 @@ import org.eclipse.swt.graphics.Image;
 
 public class FileContentProvider implements ITreeContentProvider, ILabelProvider, ITableLabelProvider {
 
+	protected Image imgArchive = new Image(null, "Archive.gif");
 	protected Image imgFolder = new Image(null, "Folder.gif");
 	protected Image imgDoc = new Image(null, "Document.gif");
+	protected Image imgJar = new Image(null, "Document.gif");
 
 	@Override
 	public Object[] getChildren(Object parent) {
-		if (parent instanceof File) {
-			File file = (File) parent;
-			return file.listFiles();
+		if (parent instanceof FileObject) {
+			try {
+				FileObject file = (FileObject) parent;
+				return file.getChildren();
+			} catch (FileSystemException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
 
 	@Override
 	public Object[] getElements(Object input) {
-		if (input instanceof File) {
-			File filInput = (File) input;
-			return filInput.listFiles();
-		}
+		try {
+			FileSystemManager fm = FileUtils.getFSManager();
+			if (input instanceof FileObject) {
+				FileObject file = (FileObject) input;
+				if (file.isFolder())
+					return file.getChildren();
+				else {
+					switch (FileUtils.getFileExtension(file)) {
+					case ".zip":
+						FileObject archive = fm.resolveFile("zip:" + file.getName());
+						return archive.getChildren();
+					default:
+						file.getChildren();
+					}
+				}
+			} else if (input instanceof Root) {
+				Root root = (Root) input;
+				File[] files = root.listFiles();
+				FileObject[] fos = new FileObject[files.length];
+				for (int i = 0; i < files.length; ++i) {
+					fos[i] = fm.toFileObject(files[i]);
+				}
+				return fos;
+			}
 
-		if (input instanceof Root) {
-			Root root = (Root) input;
-			return root.listFiles();
+		} catch (FileSystemException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -43,9 +72,24 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof File) {
-			File file = (File) element;
-			return file.isDirectory();
+		if (element instanceof FileObject) {
+			try {
+				FileObject file = (FileObject) element;
+				if (file.isFolder())
+					return true;
+				else {
+					switch (FileUtils.getFileExtension(file)) {
+					case "zip":
+						return true;
+					case "jar":
+						return true;
+					default:
+						return false;
+					}
+				}
+			} catch (FileSystemException e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -65,20 +109,33 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof File) {
-			File file = (File) element;
-			return file.isFile() ? imgDoc : imgFolder;
+		if (element instanceof FileObject) {
+			try {
+				FileObject file = (FileObject) element;
+				if (file.isFolder())
+					return imgFolder;
+				else {
+					switch (FileUtils.getFileExtension(file)) {
+					case ".zip":
+						return imgArchive;
+					case ".jar":
+						return imgJar;
+					default:
+						return imgDoc;
+					}
+				}
+			} catch (FileSystemException e1) {
+				e1.printStackTrace();
+			}
 		}
 		return null;
 	}
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof File) {
-			File file = (File) element;
-			if (file.getParentFile() == null) // drive
-				return file.toString();
-			return file.getName();
+		if (element instanceof FileObject) {
+			FileObject file = (FileObject) element;
+			return FileUtils.getTrueFileName(file);
 		}
 		return null;
 	}
@@ -87,26 +144,48 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 	public void dispose() {
 		imgDoc.dispose();
 		imgFolder.dispose();
+		imgArchive.dispose();
+		imgJar.dispose();
 	}
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		File file = (File) element;
-		switch (columnIndex) {
-		case 0: // colonne Name
-			return file.isDirectory() ? imgFolder : imgDoc;
+		if (columnIndex == 0) {
+			try {
+				FileObject file = (FileObject) element;
+				if (file.isFolder())
+					return imgFolder;
+				else {
+					switch (FileUtils.getFileExtension(file)) {
+					case ".zip":
+						return imgArchive;
+					case ".jar":
+						return imgJar;
+					default:
+						return imgDoc;
+					}
+				}
+			} catch (FileSystemException e1) {
+				e1.printStackTrace();
+			}
 		}
 		return null;
 	}
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		File file = (File) element;
-		switch (columnIndex) {
-		case 0: // colonne Name
-			return file.getName();
-		case 1: // colonne Size
-			return file.isDirectory() ? "" : file.length() + " bytes";
+		try {
+			FileObject file = (FileObject) element;
+			FileContent content = file.getContent();
+			switch (columnIndex) {
+			case 0: // colonne Name
+				return file.getName().getBaseName();
+			case 1: // colonne Size
+				return content.getSize() + " bytes";
+			}
+
+		} catch (FileSystemException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

@@ -1,7 +1,7 @@
 package fr.imtld.ilog.jface;
 
-import java.io.File;
-
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -30,12 +30,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
 
-public class FileExplorer extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener{
+public class FileExplorer extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
 
 	protected Action exitAct;
 	protected OpenAction openAct;
 	protected TableViewer tbvw;
 	protected FileContentProvider cp;
+
 	protected FileContentProvider getContentProvider() {
 		if (cp == null)
 			cp = new FileContentProvider();
@@ -89,7 +90,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		StatusLineManager statusLineManager = new StatusLineManager();
 		return statusLineManager;
 	}
-	
+
 	protected void createPopupMenu() {
 		MenuManager mmCtx = new MenuManager();
 		mmCtx.add(openAct);
@@ -105,19 +106,20 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		sashForm.setWeights(new int[] { 1, 3 });
 		return sashForm;
 	}
-
+	
+	@SuppressWarnings("unused")
 	protected void createTreeViewer(SashForm sashForm) {
 		TreeViewer trvw = new TreeViewer(sashForm, SWT.BORDER);
 		trvw.addSelectionChangedListener(this);
 		Tree tree = trvw.getTree();
-		
+
 		cp = getContentProvider();
 		trvw.setContentProvider(cp);
 		trvw.setLabelProvider(cp);
-		
+
 		ViewerFilter filter = new TreeFilter();
-		trvw.setFilters(new ViewerFilter[] {filter});
-		
+		trvw.setFilters(new ViewerFilter[] { filter });
+
 		trvw.setInput(new Root());
 	}
 
@@ -126,12 +128,12 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		FileContentProvider cp = getContentProvider();
 		tbvw.setContentProvider(cp);
 		tbvw.setLabelProvider(cp);
-		
+
 		TableSorter sorter = new TableSorter();
 		tbvw.setComparator(sorter);
-		
+
 		tbvw.addDoubleClickListener(this);
-		
+
 		Table table = tbvw.getTable();
 		table.setHeaderVisible(true);
 		TableColumn tcName = new TableColumn(table, SWT.LEFT);
@@ -159,7 +161,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(600, 400);
+		return new Point(800, 500);
 	}
 
 	@Override
@@ -169,7 +171,6 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 			TreeSelection tsel = (TreeSelection) sel;
 			tbvw.setInput(tsel.getFirstElement());
 		}
-		
 	}
 
 	@Override
@@ -178,14 +179,18 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		if (sel instanceof StructuredSelection) {
 			StructuredSelection ssel = (StructuredSelection) sel;
 			Object elt = ssel.getFirstElement();
-			if (elt instanceof File) {
-				File file = (File) elt;
-				if (file.isDirectory())
-					tbvw.setInput(elt);
+			if (elt instanceof FileObject) {
+				try {
+					FileObject file = (FileObject) elt;
+					if (file.isFolder() || FileUtils.getFileExtension(file).equals(".zip"))
+						tbvw.setInput(elt);
+				} catch (FileSystemException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
