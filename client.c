@@ -52,10 +52,10 @@ void *print_message_function( void *ptr )
      printf("err : %d \n",err);
      if (err!=-1) {
        int valread;
-       char buffer[1024] = {0};
        int nb;
        int gagne = 0;
        while (gagne == 0) {
+         char buffer[256] = {0};
          printf("Donner un nombre : ");
          scanf("%d", &nb);
          printf("Nombre choisi : %d \n", nb);
@@ -64,10 +64,10 @@ void *print_message_function( void *ptr )
          printf("Nombre en char : %s \n", strnb);
          send (aSock,&strnb,strlen(&strnb),0);
          printf("Test \n");
-         valread = read( aSock , buffer, 1024);
+         valread = read( aSock , buffer, 256);
          printf("Valeur lu : %d \n", valread);
          printf("Buffer recu : %s \n", buffer);
-         if (buffer == "Gagne !") {
+         if (buffer[0] == 71) {
            gagne = 1;
          }
        }
