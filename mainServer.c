@@ -43,8 +43,8 @@ int main(int argc, const char * argv[]) {
 
 	// Bloque en attente de connection par un client
 	int the_Sock = accept(aSock, (struct sockaddr *)&aSock_serv, &casock);
-	char msgRecu[256];
 	while (gagne==0){
+		char msgRecu[256] = {0};
 		printf("passe\n");
 		// Bloque en Attente de reception
 		long aNum = recv(the_Sock, msgRecu, 256, 0);

@@ -54,16 +54,23 @@ void *print_message_function( void *ptr )
        int valread;
        char buffer[1024] = {0};
        int nb;
-       printf("Donner un nombre : ");
-       scanf("%d", &nb);
-       printf("Nombre choisi : %d \n", nb);
-       char strnb = nb + '0';
-       printf("Nombre en char : %c \n", strnb);
-       send (aSock,&strnb,strlen(&strnb),0);
-       printf("Test \n");
-       valread = read( aSock , buffer, 1024);
-       printf("Valeur lu : %d \n", valread);
-       printf("Buffer recu : %s \n", buffer);
+       int gagne = 0;
+       while (gagne == 0) {
+         printf("Donner un nombre : ");
+         scanf("%d", &nb);
+         printf("Nombre choisi : %d \n", nb);
+         char strnb[256] = {0};
+         sprintf(strnb, "%d", nb);
+         printf("Nombre en char : %s \n", strnb);
+         send (aSock,&strnb,strlen(&strnb),0);
+         printf("Test \n");
+         valread = read( aSock , buffer, 1024);
+         printf("Valeur lu : %d \n", valread);
+         printf("Buffer recu : %s \n", buffer);
+         if (buffer == "Gagne !") {
+           gagne = 1;
+         }
+       }
        close(aSock);
      }
 }
