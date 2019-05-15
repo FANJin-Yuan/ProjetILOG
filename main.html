@@ -18,51 +18,67 @@
 <title>Vanilla Local Calendar</title>
 
 <head>
-    Vanilla Local Calendar
+    <div id="title">
+        <h2>
+            Vanilla Local Calendar
+        </h2>
+    </div>
 </head>
 
 <body>
-    <h1>1. Import your ICS file</h1>
 
-    <!-- Input form -->
-    <form action="#">
-        <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="icsInput">
-            <label class="mdl-textfield__label" for="icsInput">Paste .ics file here ...</label>
-        </div>
-    </form>
-
-    <button onclick="importICS('INPUT')"
-        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-        Import
-    </button>
-
-    <!-- Example use button -->
-    <button onclick="importICS('EXAMPLE')"
-        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-        Use example
-    </button>
-
-    <!-- File Explorer -->
-    <input type="file" id="files" name="files[]" />
-
-    <!-- File Explorer Use Detector -->
-    <script>
-    document.getElementById('files').addEventListener('change', handleFileSelect, false);
-    </script>
-
-    <h1>2. Generate calendar</h1>
+    <div id="component">
+        <div id="leftSide">
     
-    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-        <div class="mdl-card__title">
-          <h2 class="mdl-card__title-text"> EVENT DATE --EVENT HOUR<br>EVENT NAME</h2>
-
+            <h1>I. Import your ICS file</h1>
+            <h3> From your clipboard ...</h3>
+            <div id="importLine1">
+                <!-- Input form -->
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" id="icsInput">
+                        <label class="mdl-textfield__label" for="icsInput">Paste .ics file here ...</label>
+                    </div>
+                </form>
+                <button onclick="importICS('INPUT')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    Import
+                </button>
+            </div>
+    
+            <h3> ... Or use the example data, even the file explorer !</h3>
+    
+            <!-- Example use button -->
+            <div id="importLine2">
+    
+                <button onclick="importICS('EXAMPLE')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    Use ILOG example data
+                </button>
+    
+                <!-- File Explorer -->
+                <input type="file" id="files" name="files[]" />
+            </div>
+    
+            <!-- File Explorer Use Detector -->
+            <script>
+                document.getElementById('files').addEventListener('change', handleFileSelect, false);
+            </script>
         </div>
-        <div class="mdl-card__supporting-text">
-          EVENT DESCRIPTION
+    
+        <div id="rightSide">
+            <h1>II. Generate calendar</h1>
+            
+            <div id="calendar"></div>
+    
         </div>
-      </div>
+    </div>
 
+    <!-- Snackbar -->
+    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+          </div>
 </body>
 
 </html>

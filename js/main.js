@@ -2,6 +2,7 @@
 
 var file = 'fileDefaultText';
 var eventsArray = [];
+var currentEvent = {};
 
 /**
  * Retrieves the correct ICS data according to which button has been pressed
@@ -69,6 +70,7 @@ const event =
     this.DTSTART = convDateString(data["DTSTART"]);
     this.DTEND = convDateString(data["DTEND"]);
     this.STATUS = data["STATUS"];
+    this.SOURCE = data["SOURCE"];
   },
 
   toString: function () {
@@ -78,7 +80,6 @@ const event =
 
 /*
 // ICS Parser
-// return array of events
 */
 function parseICS(rawICS) {
   console.log('FIRE parseICS')
@@ -97,18 +98,101 @@ function parseICS(rawICS) {
         }
       }
     }
+    _data["SOURCE"] = events[i].join();
     // add object to array
     const ev = Object.create(event);
-    ev.set(_data)
-    eventsArray.push(ev);
+    ev.set(_data);
+    if (i != 0)
+      eventsArray.push(ev);
   }
-  console.log('eventsArray', eventsArray);
-  writeDataToDiv();
+  eventsArray = sortEvents(eventsArray);
+  displayEvents(eventsArray);
 }
 
-function writeDataToDiv() {
-  console.log('FIRE writeDatatoDiv');
-}
+function sortEvents(events)
+    {
+        return events.sort((a, b) => {return a.DTSTART > b.DTSTART});
+    }
+
+function formatDate(date)
+    {
+		try 
+			{
+				var monthNames = ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"];
+				var day = date.getDate();
+				var monthIndex = date.getMonth();
+				var year = date.getFullYear();
+				return day + ' ' + monthNames[monthIndex] + ' ' + year;
+			}
+		catch
+			{
+				return "undefined";
+			}
+			
+    }
+
+function formatHour(date)
+    {
+		try 
+			{
+				function addZero(i){if (i < 10) {i = "0" + i;} return i;}
+				var h = addZero(date.getHours());
+				var m = addZero(date.getMinutes());
+				var s = addZero(date.getSeconds());
+				return h + ":" + m + ":" + s;
+			}
+		catch
+			{
+				return "undefined";
+			}
+    }
+
+function displayEvents(events)
+    {
+      console.log('FIRE displayEvents');
+        var innerCalendar = "";
+        var previousDate = 0;
+        for (var i =0; i < events.length; i++)
+            {
+              currentEvent = events[i];
+                if( previousDate !== currentEvent.DTSTART.getDate()) {
+                  innerCalendar += `<div class="eventHeader"> ${formatDate(currentEvent.DTSTART)} </div>`;
+                } 
+                previousDate = currentEvent.DTSTART.getDate();
+
+
+                innerCalendar += `
+                                  <div class="demo-card-event mdl-card mdl-shadow--2dp">
+                                  <div class="mdl-card__title mdl-card--expand">
+                                    <h4>
+                                      ${currentEvent.SUMMARY}<br>
+                                      ${formatHour(currentEvent.DTSTART)} to ${formatHour(currentEvent.DTEND)} (${formatDate(currentEvent.DTEND)})<br>
+                                      
+                                    </h4>
+                                  </div>
+                                  <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="copyToClipboard(currentEvent)">
+                                      Copy .ics
+                                     </a>
+                                  <div class="mdl-layout-spacer"></div>
+                                    <i class="material-icons">event</i>
+                                   </div>
+                                  </div> 
+                                `;
+       
+            }
+        document.getElementById("calendar").innerHTML = innerCalendar;
+    }
+
+
+    function copyToClipboard(str) {
+      const el = document.createElement('textarea');
+      el.value = str.SOURCE;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    };
 
 //Example data
 var ics = `BEGIN:VCALENDAR
