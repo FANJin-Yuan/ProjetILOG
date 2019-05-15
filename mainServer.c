@@ -22,11 +22,14 @@ int gagne = 0;
 void *processJeuServer(void *arg);
 void *thrServer(void *arg);
 static pthread_mutex_t mutex_solo_recv;
+static pthread_cond_t fermetureServeur;
 
 
 int main(int argc, const char * argv[]) {
 
 	pthread_mutex_init(&mutex_solo_recv,0);
+	pthread_cond_init(&fermetureServeur,0);
+
 	// Creation d'un entier aléatoire
 	srandom(time(NULL));
 	int nombreaTrouver = random()%1000;
@@ -35,8 +38,9 @@ int main(int argc, const char * argv[]) {
 	pthread_t thread1;
 	int iret1;
 	iret1 = pthread_create( &thread1, NULL, thrServer, (void*) nombreaTrouver);
-	pthread_join( thread1, NULL);
+	pthread_cond_wait(&fermetureServeur,&mutex_solo_recv);
 	pthread_mutex_destroy(&mutex_solo_recv);
+	pthread_cond_destroy(&fermetureServeur);
 	exit(0);
 	return 0;
 }
@@ -103,6 +107,7 @@ void *processJeuServer(void *arg){
 			msgEnvoye = "Gagne !";
 			gagne=1;
 			finServer=1;
+			pthread_cond_signal(&fermetureServeur);
 		}
 		send (the_Sock,msgEnvoye,strlen(msgEnvoye),0);
 		if (finServer==1){
