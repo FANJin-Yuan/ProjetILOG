@@ -28,17 +28,12 @@ int main()
 	/* the process and all threads before the threads have completed.   */
 
 	pthread_join( thread1, NULL);
-
-	printf("Thread 1 returns: %d\n",iret1);
 	exit(0);
 	return 0;
 }
 
 void *print_message_function( void *ptr )
 {
-	char *message;
-	message = (char *) ptr;
-	printf("%s \n", message);
 	struct hostent *hostinfo = NULL;
 	struct sockaddr_in Socka_imp = { 0 };
 	const char *hostname ="127.0.0.1";
@@ -49,7 +44,6 @@ void *print_message_function( void *ptr )
 	Socka_imp.sin_port=htons(49152);
 	Socka_imp.sin_addr= *(struct in_addr *) hostinfo->h_addr;
 	int err = connect(aSock, (struct sockaddr *)&Socka_imp, sizeof(struct sockaddr));
-	printf("err : %d \n",err);
 	if (err!=-1) {
 		int valread;
 		int nb;
@@ -58,19 +52,15 @@ void *print_message_function( void *ptr )
 			char buffer[256] = {0};
 			printf("Donner un nombre : ");
 			scanf("%d", &nb);
-			printf("Nombre choisi : %d \n", nb);
 			char strnb[256] = {0};
 			sprintf(strnb, "%d", nb);
-			printf("Nombre en char : %s \n", strnb);
 			int erreur = send (aSock,&strnb,strlen(&strnb),0);
-			printf("Test \n");
 			valread = read( aSock , buffer, 256);
 			if (valread!=7){
-				printf("Perdu !");
+				printf("Perdu ! Un autre client a deja trouve");
 				gagne=1;
-			}else{
-				printf("Valeur lu : %d \n", valread);
-				printf("Buffer recu : %s \n", buffer);
+			} else {
+				printf("%s \n", buffer);
 				if (buffer[0] == 71) {
 					gagne = 1;
 				}

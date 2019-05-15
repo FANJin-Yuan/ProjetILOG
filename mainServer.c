@@ -72,7 +72,6 @@ void *thrServer (void *arg){
 		/* Create independent threads each of which will execute function */
 		int arg[2] = {the_Sock, nombreaTrouver};
 		iret1 = pthread_create( &thread1, NULL, processJeuServer, (void*) arg);
-		printf("Thread 1 returns: %d\n",iret1);
 	}
 	//Fermeture du server
 	close (aSock);
@@ -89,9 +88,7 @@ void *processJeuServer(void *arg){
 		// Bloque en Attente de reception
 		long aNum = recv(the_Sock, msgRecu, 256, 0);
 		pthread_mutex_lock(&mutex_solo_recv);
-		printf ("%s", msgRecu);
 		int nombreRecu = atoi(msgRecu);
-		printf("%d",nombreRecu);
 
 		//Comparaison nombreRecu et nombreaTrouver
 		char * msgEnvoye;
