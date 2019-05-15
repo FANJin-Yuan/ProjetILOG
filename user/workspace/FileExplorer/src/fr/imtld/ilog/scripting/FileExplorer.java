@@ -256,7 +256,17 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		trvw.setLabelProvider(cp);
 		ViewerFilter filter = new TreeFilter();
 		trvw.setFilters(new ViewerFilter[] { filter });
-		trvw.setInput(new Root());
+		try {
+			Properties props = PropertyLoader.load("explorer.properties");
+			String chosenRootPath = props.getProperty("rootPath");
+			File rootFile;
+			if (chosenRootPath != null) {
+				rootFile = new File(chosenRootPath);
+				trvw.setInput(rootFile);
+			} else {
+				trvw.setInput(new Root());
+			}
+		} catch (Exception e) {}
 	}
 
 	protected FileContentProvider getContentProvider() {
