@@ -1,119 +1,4 @@
-'use strict';
-
-var file = 'fileDefaultText';
-var eventsArray = [];
-
-/**
- * Retrieves the correct ICS data according to which button has been pressed
- * INPUT is the  HTML input
- * FILE_EXPLORER is the file explorer
- * EXAMPLE is the .ics file in the assets
- */
-function importICS(type) {
-  console.log('fire import');
-    switch (type) {
-        case 'INPUT':
-            file = document.getElementById("icsInput").value;
-            break;
-        case 'EXAMPLE':
-            file = ics;
-            break;
-    }
-    parseICS(file);
-  }
-
-function handleFileSelect(evt) {
-    file = evt.target.files;
-    
-    //TODO parse file into str
-    var reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onloadend = (evt) => {
-        console.log('fire on load end');
-        file = evt.target.result;
-    }
-    ////////////////////////
-    //file = 'encours';
-    console.log(file);
-    importICS('FILE_EXPlORER');
-}
-
-/*
-// Convert date as String to a date Object
-// example : `TZID="Europe/Brussels":20190423T180000` -> Date object (2019,4,23,18,0,0)
-*/
-function convDateString(rawDate)
-    {
-        if (rawDate == undefined) return "undefined"
-        var stringDate = rawDate;
-        if (rawDate.includes(":"))
-            stringDate = rawDate.split(":")[1];
-        return new Date(stringDate.substring(0,4), stringDate.substring(4,6), stringDate.substring(6,8), stringDate.substring(9,11), stringDate.substring(11,13), stringDate.substring(13,15));
-    }
-
-/** 
-* event Object
-*/
-const event =
-    {
-        set: function(data)
-            {
-                this.UID = data["UID"];
-                this.SUMMARY = data["SUMMARY"];
-                this.DESCRIPTION =  data["DESCRIPTION"];
-                this.LOCATION =  data["LOCATION"];
-                this.ATTENDEE =  data["ATTENDEE"];
-                this.ORGANIZER =  data["ORGANIZER"];
-                this.DTSTART =  convDateString(data["DTSTART"]);
-                this.DTEND =  convDateString(data["DTEND"]);
-                this.STATUS =  data["STATUS"];
-            },
-
-        toString: function()
-            {
-                  console.log(`${this.UID};${this.SUMMARY};${this.DESCRIPTION};${this.LOCATION};${this.ATTENDEE};${this.ORGANIZER};${this.DTSTART};${this.DTEND};${this.STATUS}`);
-            }
-    };
-
-/*
-// ICS Parser
-// return array of events
-*/
-function parseICS(rawICS)
-    {
-        console.log('FIRE parseICS')
-        eventsArray = []
-        var events = rawICS.split("BEGIN:VEVENT");
-        var dataToProcess = ["UID", "SUMMARY", "DESCRIPTION", "LOCATION", "ATTENDEE", "ORGANIZER", "DTSTART", "DTEND", "STATUS"]
-        for (var i=0; i<events.length; i++) // for each event bloc
-            {
-                events[i] = events[i].split("\n");
-                var _data = {};
-                for (var j=0; j<events[i].length; j++) // for each line
-                    {
-                        for (var k=0; k<dataToProcess.length; k++)
-                            {
-                                if (events[i][j].substring(0, dataToProcess[k].length) == dataToProcess[k] && _data[dataToProcess[k]] == undefined)
-                                    {
-                                        _data[dataToProcess[k]] = events[i][j].substring(dataToProcess[k].length +1);
-                                    }
-                            }
-                    }
-                // add object to array
-                const ev = Object.create(event);
-                ev.set(_data)
-                eventsArray.push(ev);
-            }
-            console.log('eventsArray',eventsArray);
-            writeDataToDiv();
-    }
-
-    function writeDataToDiv(){
-      console.log('FIRE writeDatatoDiv');
-    }
-
-//Example data
-  var ics = `BEGIN:VCALENDAR
+var cal = `BEGIN:VCALENDAR
 X-WR-CALNAME:ILOG
 X-WR-CALID:3a239bef-087f-43c4-a363-35c8831b3d05:35109
 PRODID:Zimbra-Calendar-Provider
@@ -207,7 +92,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Production 
   logiciel 1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : "TP info B13S" <b13s@telecom-lille.fr>\; b12s@tel
  ecom-lille.fr [MODIFIÉ]\nRessources : "TP info B13S" <b13s@telecom-lille.fr>
- \; b12s@telecom-lille.fr \nHeure: Mardi 23 Avril 2019\, 14:45:00 - 16:15:00 
+ \; b12s@telecom-lille.fr \nHeure: Mardi 23 Avril 2019\, 14:45:00 - 16:15:00
  GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*
  ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Product
  ion du logiciel 1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle
@@ -247,14 +132,14 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Productio
  2s@telecom-lille.fr \nHeure: Mardi 23 Avril 2019\, 16:30:00 - 18:00:00 GMT +
  01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nL
  a réunion suivante a été modifiée :\n\nSujet : TP Production du logiciel 1 \
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : "TP info B13S" <b13s@telecom-lille.fr>\; b12s@telecom-lille.fr
   [MODIFIÉ]\nRessources : "TP info B13S" <b13s@telecom-lille.fr>\; b12s@telec
  om-lille.fr \nHeure: Mardi 23 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Br
  uxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\
  nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Production du logici
  el 1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lill
- e.fr> \n\nEndroit : "TP info B13S" <b13s@telecom-lille.fr>\; "TP info B12S" 
+ e.fr> \n\nEndroit : "TP info B13S" <b13s@telecom-lille.fr>\; "TP info B12S"
  <b12s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr
  >\; b12s@telecom-lille.fr \nHeure: Mardi 23 Avril 2019\, 14:45:00 - 16:30:00
   GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~
@@ -373,7 +258,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:013a1737-8b5b-48a4-9be4-7a0d55f9b17e
 SUMMARY:TP JNI 2 CT
-DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP JNI 2 CT 
+DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP JNI 2 CT
  \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
   \n\nEndroit : "TP info B13S" <b13s@telecom-lille.fr>\; b12s@telecom-lille.f
  r \nRessources : "TP info B13S" <b13s@telecom-lille.fr>\; b12s@telecom-lille
@@ -381,7 +266,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP JNI 2 CT
  es\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle deman
  de de réunion ci-dessous :\n\nSujet : TP JNI 1 CT \nOrganisateur: "Christoph
  e TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B1
- 3S" <b13s@telecom-lille.fr>\; b12s@telecom-lille.fr \nRessources : "TP info 
+ 3S" <b13s@telecom-lille.fr>\; b12s@telecom-lille.fr \nRessources : "TP info
  B13S" <b13s@telecom-lille.fr>\; b12s@telecom-lille.fr \nHeure: Mercredi 24 A
  vril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
   Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\n
@@ -393,7 +278,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP JNI 2 CT
  MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous
   :\n\nSujet : TP Production du logiciel 1 \nOrganisateur: "Christophe TOMBEL
  LE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B13S" <b13
- s@telecom-lille.fr>\; "TP info B12S" <b12s@telecom-lille.fr> \nRessources : 
+ s@telecom-lille.fr>\; "TP info B12S" <b12s@telecom-lille.fr> \nRessources :
  "TP info B13S" <b13s@telecom-lille.fr>\; b12s@telecom-lille.fr \nHeure: Mard
  i 23 Avril 2019\, 14:45:00 - 16:30:00 GMT +01:00 Bruxelles\, Copenhague\, Ma
  drid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
@@ -445,7 +330,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Class loade
   CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille
  .fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessour
  ces : "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFI
- É]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, 
+ É]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\,
  Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
   réunion ci-dessous :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christ
  ophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info
@@ -484,7 +369,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Class loade
  ateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndr
  oit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP inf
  o B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Je
- udi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, 
+ udi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\,
  Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-d
  essous :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE
  " <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@
@@ -523,14 +408,14 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nO
  LE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.
  fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15
  :00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~
- *~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class 
+ *~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class
  loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@teleco
  m-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n
  @telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:0
  0 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*
  ~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT \n
  Organisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \
- n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : 
+ n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources :
  "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHe
  ure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenh
  ague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réuni
@@ -584,12 +469,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP SWT 2 CT [M
  vante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Chris
  tophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP inf
  o B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP info B13S" <b13s
- @telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 
+ @telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril
  2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pari
  s\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nS
  ujet : TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe
  .tombelle@telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille
- .fr>\; "TP info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S" 
+ .fr>\; "TP info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S"
  <b13s@telecom-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 G
  MT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\
  n\n\n
@@ -722,7 +607,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : COU UML 2 ER
   A15N \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lil
  le.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "
  TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 26 Av
- ril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ ril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : COU UML 1 ER A15N \nOrganisateur: "Christophe TOMBELLE" <christop
  he.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lil
@@ -828,12 +713,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
   2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Par
  is\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\n
  Sujet : TP Réflexion CT \nOrganisateur: "Christophe TOMBELLE" <christophe.to
- mbelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : 
+ mbelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources :
  b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00 - 11:45:00 GMT
   +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\
  nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrgan
  isateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEn
- droit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n@telecom-lille.fr 
+ droit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n@telecom-lille.fr
  [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxe
  lles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion s
  uivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Chr
@@ -875,19 +760,19 @@ SUMMARY:TP Programmation générique 1 GV salle B02N
 DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  tion générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
  le@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \n
- Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: 
+ Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure:
  Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\
  , Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modi
  fiée :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christoph
  e TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B0
  2N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lill
- e.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT 
+ e.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT
  +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*
  ~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Programmati
  on générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle
  @telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRe
  ssources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lu
- ndi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, 
+ ndi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\,
  Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-d
  essous :\n\nSujet : TP SWT 1 CT \nOrganisateur: "Christophe TOMBELLE" <chris
  tophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nResso
@@ -895,13 +780,13 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  0:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~
  *~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP SWT 2 CT [MODIFI
  É]\nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.f
- r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr 
+ r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr
  \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle de
  mande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nOrganisateur: "Christoph
  e TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@teleco
  m-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019
- \, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n 
+ \, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n
  \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet
   : TP Réflexion CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombell
  e@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@
@@ -921,7 +806,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  t : TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.to
  mbelle@telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille.fr
  >\; "TP info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S" <b1
- 3s@telecom-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT 
+ 3s@telecom-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT
  +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n
  \n
 LOCATION:"TP info B02N" <b02n@telecom-lille.fr>
@@ -954,7 +839,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
  ources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lund
  i 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Ma
  drid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réun
- ion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: 
+ ion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur:
  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "
  TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@te
  lecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:
@@ -971,10 +856,10 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
  ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nS
  ujet : TP	SWT 1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@t
  elecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@tel
- ecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 
+ ecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvell
  e demande de réunion ci-dessous :\n\nSujet : TP Réflexion CT \nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25
   Avril 2019\, 10:15:00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid
  \, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n
@@ -982,7 +867,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
  phe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]
  \nRessources : b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\,
   08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n
- \n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP 
+ \n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP
  Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@
  telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODI
  FIÉ]\nRessources : "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lil
@@ -1026,11 +911,11 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : COU Programm
  N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille
  .fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +
  01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nL
- a réunion suivante a été modifiée :\n\nSujet : TP Programmation générique 1 
+ a réunion suivante a été modifiée :\n\nSujet : TP Programmation générique 1
  GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.
- fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP 
+ fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP
  info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 20
- 19\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris 
+ 19\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris
  [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessou
  s :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe T
  OMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N"
@@ -1038,7 +923,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : COU Programm
  r> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01
  :00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNou
  velle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT \nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25
   Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid
  \, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n
@@ -1050,12 +935,12 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : COU Programm
   1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.
  fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr
   \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, C
- openhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de 
- réunion ci-dessous :\n\nSujet : TP Réflexion CT \nOrganisateur: "Christophe 
+ openhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
+ réunion ci-dessous :\n\nSujet : TP Réflexion CT \nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-
  lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\,
   10:15:00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n
- \n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP 
+ \n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP
  Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@
  telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources 
  : b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 1
@@ -1064,7 +949,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : COU Programm
   CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille
  .fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessour
  ces : "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFI
- É]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, 
+ É]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\,
  Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
   réunion ci-dessous :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christ
  ophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info
@@ -1099,13 +984,13 @@ SUMMARY:TP Programmation fonctionnelle 1 GV salle B02N
 DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  tion fonctionnelle 1 GV B02N \nOrganisateur: "Christophe TOMBELLE" <christop
  he.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lil
- le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) 
+ le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N)
  \nHeure: Mardi 30 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de r
  éunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateu
  r: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit 
  : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n
- @telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 
+ @telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 -
  16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~
  *~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Programmatio
  n générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@
@@ -1114,12 +999,12 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  di 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, M
  adrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réu
  nion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@t
  elecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14
  :30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~
  *~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT \
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nH
  eure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copen
  hague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a ét
@@ -1187,8 +1072,8 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : Travail pers
  phe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-li
  lle.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N)
   \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, C
- openhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante 
- a été modifiée :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: 
+ openhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante
+ a été modifiée :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur:
  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "
  TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@te
  lecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:
@@ -1203,14 +1088,14 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : Travail pers
  LE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.
  fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 13:00
  :00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~
- *~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP SWT 2 
+ *~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP SWT 2
  CT [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom
  -lille.fr \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Brux
  elles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nN
- ouvelle demande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nOrganisateur: 
+ ouvelle demande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nOrganisateur:
  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b
- 02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 
+ 02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25
  Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\
  , Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous 
  :\n\nSujet : TP Réflexion CT \nOrganisateur: "Christophe TOMBELLE" <christop
@@ -1220,10 +1105,10 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : Travail pers
  ~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT \n
  Organisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \
  n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n@telecom-lill
- e.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 
+ e.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réun
  ion suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP info B13S
  " <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25
   Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid
@@ -1266,13 +1151,13 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Travail person
  drid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-des
  sous :\n\nSujet : Travail personnel CT B02N \nOrganisateur: "Christophe TOMB
  ELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b
- 02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> 
+ 02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr>
  \nHeure: Mardi 30 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de r
  éunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateu
  r: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit 
  : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n
- @telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 
+ @telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 -
  16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~
  *~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Programmatio
  n générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@
@@ -1281,12 +1166,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Travail person
  di 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, M
  adrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réu
  nion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@t
  elecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14
  :30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~
  *~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT \
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nH
  eure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copen
  hague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a ét
@@ -1393,13 +1278,13 @@ SUMMARY:TP Design Patterns 2 CT salle B02N
 DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  tterns 2 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessourc
- es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2 
- Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2
+ Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TOMBE
  LLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b0
  2n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (
- TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 
+ TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réun
  ion suivante a été modifiée :\n\nSujet : TP Programmation générique 1 GV \nO
  rganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n
@@ -1411,7 +1296,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  E" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n
  @telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP
   info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Br
- uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle 
+ uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle
  demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT \nOrganisateur: "Chri
  stophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@t
  elecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril
@@ -1430,14 +1315,14 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  LE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.
  fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15
  :00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~
- *~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class 
+ *~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class
  loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@teleco
  m-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n
  @telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:0
  0 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*
  ~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT \n
  Organisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \
- n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : 
+ n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources :
  "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHe
  ure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenh
  ague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réuni
@@ -1474,12 +1359,12 @@ SUMMARY:TP Design Patterns 1 CT salle B02N
 DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  tterns 1 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessourc
- es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2 
- Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2
+ Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : TP Design Patterns 2 CT \nOrganisateur: "Christophe TOMBELLE" <ch
  ristophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telec
- om-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info 
+ om-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info
  B02N) \nHeure: Jeudi 2 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\,
   Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande d
  e réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisa
@@ -1490,9 +1375,9 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  ~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Programma
  tion générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
  le@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \n
- Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: 
+ Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure:
  Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\
- , Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de 
+ , Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
  réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisate
  ur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit
   : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02
@@ -1500,10 +1385,10 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
   14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*
  ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 C
  T \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.f
- r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr 
+ r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr
  \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a
-  été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe 
+  été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-
  lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\,
   14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MOD
@@ -1530,7 +1415,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  uvelle demande de réunion ci-dessous :\n\nSujet : TP Class loaders CT \nOrga
  nisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nE
  ndroit : "TP info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@telec
- om-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: 
+ om-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure:
  Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\
  , Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
 LOCATION:"TP info B02N" <b02n@telecom-lille.fr>
@@ -1563,7 +1448,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JFace 1 CT 
  P info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@tel
  ecom-lille.fr> (TP info B02N) \nHeure: Vendredi 3 Mai 2019\, 08:30:00 - 10:0
  0:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~
- *~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP JFace 1 CT B12S 
+ *~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP JFace 1 CT B12S
  B13S [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@tel
  ecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessou
  rces : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendre
@@ -1581,7 +1466,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JFace 1 CT 
  MT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\
  n\nLa réunion suivante a été modifiée :\n\nSujet : TP Programmation génériqu
  e 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-li
- lle.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : 
+ lle.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources :
  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avri
  l 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pa
  ris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-de
@@ -1620,8 +1505,8 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JFace 1 CT 
  DIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelle
  s\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demand
  e de réunion ci-dessous :\n\nSujet : TP Class loaders CT \nOrganisateur: "Ch
- ristophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP 
- info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@telecom-lille.fr> 
+ ristophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP
+ info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@telecom-lille.fr>
  \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Jeudi 25 Avri
  l 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pa
  ris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
@@ -1651,7 +1536,7 @@ UID:1b5331b8-8831-418f-93ba-b1fe454720c6
 SUMMARY:TP JFace 2 CT salle B02N
 DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP JFace 2 C
  T B02N \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-li
- lle.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : 
+ lle.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources :
  "TP info B02N" <b02n@telecom-lille.fr> \nHeure: Vendredi 3 Mai 2019\, 10:15:
  00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*
  ~*~*~*~*~*~*~*\n\n\n
@@ -1681,7 +1566,7 @@ UID:a3400d77-7258-4583-93de-fa133f4a0f69
 SUMMARY:TP Scripting applicatif 1 CT salle B02N
 DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Scripting
   applicatif 1 CT B02N \nOrganisateur: "Christophe TOMBELLE" <christophe.tomb
- elle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> 
+ elle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr>
  \nRessources : "TP info B02N" <b02n@telecom-lille.fr> \nHeure: Vendredi 3 Ma
  i 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pa
  ris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
@@ -1718,7 +1603,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Scripting a
  nion ci-dessous :\n\nSujet : TP Programmation fonctionnelle 1 GV \nOrganisat
  eur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroi
  t : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b0
- 2n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 3 Mai 2019\, 14:45:00 
+ 2n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 3 Mai 2019\, 14:45:00
  - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~
  *~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Progra
  mmation générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tom
@@ -1763,12 +1648,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Scripting a
  vante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Chris
  tophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP inf
  o B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP info B13S" <b13s
- @telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 
+ @telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril
  2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pari
  s\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nS
  ujet : TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe
  .tombelle@telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille
- .fr>\; "TP info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S" 
+ .fr>\; "TP info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S"
  <b13s@telecom-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 G
  MT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\
  n\n\n
@@ -1842,7 +1727,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
   <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.f
  r> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01
  :00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~
- *~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Programmation 
+ *~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Programmation
  générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@te
  lecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nResso
  urces : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi
@@ -1853,25 +1738,25 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  es : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:0
  0 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*
  ~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nH
  eure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copen
  hague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle deman
  de de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nOrganisateur: "Christophe T
  OMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-l
- ille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 
+ ille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\,
  13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\
- n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : 
+ n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet :
  TP Réflexion CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@t
  elecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@tel
- ecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00 - 11:45:00 GMT +01:00 
+ ecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00 - 11:45:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réun
  ion suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n@telecom-lille.fr [MODIFIÉ
  ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, C
- openhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante 
- a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christophe 
+ openhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante
+ a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N
  " <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP info B13S" <b13s@telec
  om-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\,
@@ -1921,10 +1806,10 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  onctionnelle 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle
  @telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRe
  ssources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Ve
- ndredi 3 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, 
+ ndredi 3 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\,
  Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-d
  essous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christo
- phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info 
+ phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info
  B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-li
  lle.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GM
  T +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n
@@ -1937,7 +1822,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  sous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christoph
  e TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B0
  2N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lill
- e.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT 
+ e.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT
  +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n
  Nouvelle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT \nOrganisate
  ur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit
@@ -1948,19 +1833,19 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  istophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRes
  sources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16
  :15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~
- *~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP	
+ *~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP
  SWT 1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lil
  le.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille
  .fr \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\
- , Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande 
+ , Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande
  de réunion ci-dessous :\n\nSujet : TP Réflexion CT \nOrganisateur: "Christop
  he TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telec
  om-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 201
  9\, 10:15:00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n
-  \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : 
+  \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet :
  TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
  le@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]\nRessourc
- es : b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 
+ es : b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00
  - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~
  *~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class load
  ers CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-li
@@ -2001,7 +1886,7 @@ SUMMARY:TP Programmation fonctionnelle 4 GV salle B02N
 DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmation
   fonctionnelle 4 GV [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <christop
  he.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lil
- le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) 
+ le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N)
  \nHeure: Lundi 6 Mai 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copen
  hague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réun
  ion ci-dessous :\n\nSujet : TP Programmation fonctionnelle 3 GV \nOrganisate
@@ -2027,14 +1912,14 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
  i 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Ma
  drid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée
   :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TO
- MBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" 
+ MBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N"
  <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr
  > (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:
  00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*
  ~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Programmation g
  énérique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@tel
  ecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessou
- rces : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 
+ rces : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi
  29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madr
  id\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-desso
  us :\n\nSujet : TP SWT 1 CT \nOrganisateur: "Christophe TOMBELLE" <christoph
@@ -2055,7 +1940,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
  lecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@tele
  com-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00 - 11:45:00 GMT +01:00 B
  ruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réuni
- on suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: 
+ on suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur:
  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b
  02n@telecom-lille.fr [MODIFIÉ]\nRessources : b02n@telecom-lille.fr [MODIFIÉ]
  \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Co
@@ -2063,11 +1948,11 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Programmati
   été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christophe T
  OMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N"
   <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP info B13S" <b13s@teleco
- m-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 
+ m-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\,
  08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\
- n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : 
+ n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet :
  TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
- le@telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille.fr>\; 
+ le@telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille.fr>\;
  "TP info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@t
  elecom-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:
  00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
@@ -2152,16 +2037,16 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : COU Injection 
  @telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille.fr>\; "T
  P info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@tel
  ecom-lille.fr> \nHeure: Mardi 7 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Br
- uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle 
+ uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle
  demande de réunion ci-dessous :\n\nSujet : TP Design Patterns 1 CT \nOrganis
  ateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndr
  oit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <
  b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2 Mai 2019\, 13:00:00 -
   14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*
- ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Design 
+ ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Design
  Patterns 2 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@tel
  ecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessou
- rces : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 
+ rces : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi
  2 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\
  , Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous 
  :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TOM
@@ -2170,7 +2055,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : COU Injection 
   (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:0
  0 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa ré
  union suivante a été modifiée :\n\nSujet : TP Programmation générique 1 GV \
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info
   B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\,
   16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MOD
@@ -2178,7 +2063,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : COU Injection 
  n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TOMBE
  LLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b0
  2n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (
- TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 
+ TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvell
  e demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT \nOrganisateur: "Ch
  ristophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n
@@ -2187,10 +2072,10 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : COU Injection 
  aris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSu
  jet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <christophe
  .tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources
-  : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 
+  : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00
  GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*
  ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nH
  eure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copen
  hague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réun
@@ -2203,7 +2088,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : COU Injection 
  com-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIFIÉ]\nRessources : b0
  2n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00
  :00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*
- ~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT 
+ ~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT
  \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
   \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources 
  : "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\n
@@ -2236,7 +2121,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:62b66ee3-9cae-4ce0-b352-fb4d5ce9bae7
 SUMMARY:TP Injection de dépendances 1 GV salles B12S et B13S
-DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection de 
+DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection de
  dépendances 1 GV B12S B13S [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <c
  hristophe.tombelle@telecom-lille.fr> \n\nEndroit : b12s@telecom-lille.fr\; "
  TP info B13S" <b13s@telecom-lille.fr> \nRessources : b12s@telecom-lille.fr\;
@@ -2249,7 +2134,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
  lille.fr> \nHeure: Mardi 7 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxell
  es\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle deman
  de de réunion ci-dessous :\n\nSujet : TP JUnit 1 CT \nOrganisateur: "Christo
- phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info 
+ phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info
  B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@telecom-lille.fr> \nRes
  sources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 7 Mai 2019\,
   13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n
@@ -2258,15 +2143,15 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
  ombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.f
  r> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHe
  ure: Jeudi 2 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhagu
- e\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion 
- ci-dessous :\n\nSujet : TP Design Patterns 2 CT \nOrganisateur: "Christophe 
+ e\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion
+ ci-dessous :\n\nSujet : TP Design Patterns 2 CT \nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N
  " <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.
  fr> (TP info B02N) \nHeure: Jeudi 2 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:0
  0 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouve
- lle demande de réunion ci-dessous :\n\nSujet : TP Programmation générique 1 
+ lle demande de réunion ci-dessous :\n\nSujet : TP Programmation générique 1
  GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.
- fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP 
+ fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP
  info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 20
  19\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\
  n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet :
@@ -2279,24 +2164,24 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
   \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr
  > \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP in
  fo B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019
- \, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n 
+ \, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n
  \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet
   : TP SWT 1 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@te
  lecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@tele
  com-lille.fr \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 B
  ruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réuni
  on suivante a été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur:
-  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : 
+  "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
  b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25
   Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid
- \, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion 
+ \, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion
  ci-dessous :\n\nSujet : TP	SWT 1 \nOrganisateur: "Christophe TOMBELLE" <chri
  stophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRess
  ources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:
  30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*
  ~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Réflexion C
  T \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.f
- r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr 
+ r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr
  \nHeure: Jeudi 25 Avril 2019\, 10:15:00 - 11:45:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a
   été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Christophe T
@@ -2341,14 +2226,14 @@ END:VEVENT
 BEGIN:VEVENT
 UID:0264b10f-00a7-4e12-90e8-a94a6bbbbc07
 SUMMARY:TP Injection de dépendances 2 GV salles B12S et B13S
-DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection de 
+DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection de
  dépendances 2 GV B12S B13S [MODIFIÉ]\nOrganisateur: christophe.tombelle@tele
  com-lille.fr \nEnvoyé par: "Valérie DELATTRE" <valerie.delattre@imt-lille-do
  uai.fr> \n\nEndroit : b12s@telecom-lille.fr\; "TP info B13S" <b13s@telecom-l
  ille.fr> \nRessources : b12s@telecom-lille.fr\; "TP info B13S" <b13s@telecom
  -lille.fr> \nHeure: Mardi 7 Mai 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxel
  les\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion su
- ivante a été modifiée :\n\nSujet : TP Injection de dépendances 2 GVB12 B13S 
+ ivante a été modifiée :\n\nSujet : TP Injection de dépendances 2 GVB12 B13S
  [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-
  lille.fr> \n\nEndroit : b12s@telecom-lille.fr\; "TP info B13S" <b13s@telecom
  -lille.fr> \nRessources : b12s@telecom-lille.fr\; "TP info B13S" <b13s@telec
@@ -2357,8 +2242,8 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
  mande de réunion ci-dessous :\n\nSujet : TP JUnit 3 CT \nOrganisateur: "Chri
  stophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b12s@t
  elecom-lille.fr\; "TP info B13S" <b13s@telecom-lille.fr> \nRessources : b12s
- @telecom-lille.fr\; "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 7 
- Mai 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ @telecom-lille.fr\; "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 7
+ Mai 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : TP JUnit 2 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.t
  ombelle@telecom-lille.fr> \n\nEndroit : b12s@telecom-lille.fr\; "TP info B13
@@ -2369,13 +2254,13 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
  anisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\n
  Endroit : "TP info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@tele
  com-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure:
-  Mardi 7 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, 
+  Mardi 7 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\,
  Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-d
  essous :\n\nSujet : TP Design Patterns 1 CT \nOrganisateur: "Christophe TOMB
  ELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b
- 02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> 
+ 02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr>
  (TP info B02N) \nHeure: Jeudi 2 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Br
- uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle 
+ uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle
  demande de réunion ci-dessous :\n\nSujet : TP Design Patterns 2 CT \nOrganis
  ateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndr
  oit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <
@@ -2383,19 +2268,19 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
   16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*
  ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Program
  mation générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tomb
- elle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> 
+ elle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr>
  \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure
  : Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhagu
  e\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été mo
  difiée :\n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christo
- phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info 
+ phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info
  B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-li
  lle.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GM
  T +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*
  ~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Programma
  tion générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
  le@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \n
- Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: 
+ Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure:
  Lundi 29 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\
  , Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci
  -dessous :\n\nSujet : TP SWT 1 CT \nOrganisateur: "Christophe TOMBELLE" <chr
@@ -2405,8 +2290,8 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Injection d
  *~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP SWT 2 CT [MODI
  FIÉ]\nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille
  .fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.f
- r \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, 
- Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle 
+ r \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\,
+ Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle
  demande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nOrganisateur: "Christo
  phe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@tele
  com-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 20
@@ -2485,7 +2370,7 @@ SUMMARY:TP Refactorisation 1 CT salle B02N
 DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisati
  on 1 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-l
  ille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources :
-  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 9 Mai 
+  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 9 Mai
  2019\, 10:15:00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pari
  s [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dess
  ous :\n\nSujet : TP Refactorisation 1 CT \nOrganisateur: "Christophe TOMBELL
@@ -2501,12 +2386,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  ~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Design Pa
  tterns 1 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessourc
- es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2 
- Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 2
+ Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : TP Design Patterns 2 CT \nOrganisateur: "Christophe TOMBELLE" <ch
  ristophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telec
- om-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info 
+ om-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info
  B02N) \nHeure: Jeudi 2 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\,
   Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande d
  e réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisa
@@ -2517,9 +2402,9 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  ~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Programma
  tion générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
  le@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \n
- Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: 
+ Ressources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure:
  Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\
- , Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de 
+ , Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
  réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisate
  ur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit
   : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02
@@ -2527,10 +2412,10 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
   14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*
  ~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 C
  T \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.f
- r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr 
+ r> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr
  \nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a
-  été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe 
+  été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-
  lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\,
   14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MOD
@@ -2557,7 +2442,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  uvelle demande de réunion ci-dessous :\n\nSujet : TP Class loaders CT \nOrga
  nisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nE
  ndroit : "TP info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@telec
- om-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: 
+ om-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure:
  Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\
  , Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
 LOCATION:"TP info B02N" <b02n@telecom-lille.fr>
@@ -2587,7 +2472,7 @@ SUMMARY:TP Refactorisation 2 CT salle B02N
 DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisati
  on 2 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-l
  ille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources :
-  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 9 Mai 
+  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Jeudi 9 Mai
  2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pari
  s [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dess
  ous :\n\nSujet : TP Refactorisation 2 CT \nOrganisateur: "Christophe TOMBELL
@@ -2603,12 +2488,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  elle demande de réunion ci-dessous :\n\nSujet : TP JUnit 1 CT \nOrganisateur
  : "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit :
   "TP info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b13s@telecom-lille
- .fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 7 
- Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ .fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 7
+ Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : TP Design Patterns 1 CT \nOrganisateur: "Christophe TOMBELLE" <ch
  ristophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telec
- om-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info 
+ om-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info
  B02N) \nHeure: Jeudi 2 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\,
   Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande d
  e réunion ci-dessous :\n\nSujet : TP Design Patterns 2 CT \nOrganisateur: "C
@@ -2625,12 +2510,12 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  n\nSujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TOMBE
  LLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b0
  2n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (
- TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 
+ TP info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\
  n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Programmation géné
  rique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@teleco
  m-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessource
- s : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 
+ s : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29
  Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\
  , Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous 
  :\n\nSujet : TP SWT 1 CT \nOrganisateur: "Christophe TOMBELLE" <christophe.t
@@ -2650,7 +2535,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  éflexion CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom
  -lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00 - 11:45:00 GMT +01:00 Brux
- elles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion 
+ elles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion
  suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrganisateur: "Ch
  ristophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n
  @telecom-lille.fr [MODIFIÉ]\nRessources : b02n@telecom-lille.fr [MODIFIÉ]\nH
@@ -2661,11 +2546,11 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP Refactorisa
  02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP info B13S" <b13s@telecom-l
  ille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:
  30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~
- *~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP 
+ *~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP
  Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@
  telecom-lille.fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille.fr>\; "TP
   info B13S" <b13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@tele
- com-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 
+ com-lille.fr> \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
 LOCATION:"TP info B02N" <b02n@telecom-lille.fr>
 ATTENDEE;CN=TP info B02N;CUTYPE=RESOURCE;ROLE=NON-PARTICIPANT;PARTSTAT=ACCEP
@@ -2699,18 +2584,18 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Travail Person
  IFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : Travail Personnel \nOrganisateur: "Christophe TOMBELLE" <christop
  he.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lil
- le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) 
+ le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N)
  \nHeure: Jeudi 9 Mai 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Copen
  hague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réun
  ion ci-dessous :\n\nSujet : Travail Personnel \nOrganisateur: "Christophe TO
- MBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" 
+ MBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N"
  <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr
- > \nHeure: Vendredi 3 Mai 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, 
+ > \nHeure: Vendredi 3 Mai 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\,
  Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
   réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisat
  eur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroi
  t : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b0
- 2n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 
+ 2n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00
  - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~
  *~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Programmat
  ion générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombell
@@ -2721,16 +2606,16 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Travail Person
  éunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nOrganisateu
  r: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit 
  : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n
- @telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 - 
+ @telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\, 13:00:00 -
  14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~
  *~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP SWT 1 CT
   \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr
  > \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \
  nHeure: Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Cop
- enhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a 
+ enhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a
  été modifiée :\n\nSujet : TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe T
  OMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-l
- ille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 
+ ille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\,
  14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODI
  FIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n
  \nSujet : TP	SWT 1 \nOrganisateur: "Christophe TOMBELLE" <christophe.tombell
@@ -2746,7 +2631,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Travail Person
  stophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr [MODIF
  IÉ]\nRessources : b02n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 201
  9\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n
-  \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : 
+  \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet :
  TP Class loaders CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombel
  le@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> [M
  ODIFIÉ]\nRessources : "TP info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-
@@ -2818,7 +2703,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 3 CT 
  es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi
   10 Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madri
  d\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessou
- s :\n\nSujet : TP Injection de dépendances 2 GV \nOrganisateur: "Christophe 
+ s :\n\nSujet : TP Injection de dépendances 2 GV \nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N
  " <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.
  fr> (TP info B02N) \nHeure: Vendredi 10 Mai 2019\, 13:00:00 - 14:30:00 GMT +
@@ -2830,21 +2715,21 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 3 CT 
  ai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, P
  aris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n
  \nSujet : TP Programmation fonctionnelle 3 GV \nOrganisateur: "Christophe TO
- MBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" 
+ MBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N"
  <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr
- > (TP info B02N) \nHeure: Lundi 6 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 
+ > (TP info B02N) \nHeure: Lundi 6 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00
  Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvell
- e demande de réunion ci-dessous :\n\nSujet : TP Programmation fonctionnelle 
+ e demande de réunion ci-dessous :\n\nSujet : TP Programmation fonctionnelle
  1 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lill
  e.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "T
- P info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 3 Mai 
+ P info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 3 Mai
  2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Pari
  s\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nS
  ujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TOMBELLE"
   <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@t
  elecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP i
  nfo B02N) \nHeure: Lundi 29 Avril 2019\, 14:45:00 - 16:15:00 GMT +01:00 Brux
- elles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion 
+ elles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion
  suivante a été modifiée :\n\nSujet : TP Programmation générique 1 GV \nOrgan
  isateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEn
  droit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N"
@@ -2860,19 +2745,19 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 3 CT 
  he TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telec
  om-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 201
  9\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n
-  \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : 
+  \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet :
  TP SWT 2 CT [MODIFIÉ]\nOrganisateur: "Christophe TOMBELLE" <christophe.tombe
  lle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \nRessources : b02
  n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 14:45:00 - 16:15:00 GMT +0
  1:00 Bruxelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*
  ~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP	SWT 1 \nOrgan
  isateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEn
- droit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure: 
+ droit : b02n@telecom-lille.fr \nRessources : b02n@telecom-lille.fr \nHeure:
  Jeudi 25 Avril 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\
  , Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci
- -dessous :\n\nSujet : TP Réflexion CT \nOrganisateur: "Christophe TOMBELLE" 
+ -dessous :\n\nSujet : TP Réflexion CT \nOrganisateur: "Christophe TOMBELLE"
  <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b02n@telecom-lille.fr \
- nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00 
+ nRessources : b02n@telecom-lille.fr \nHeure: Jeudi 25 Avril 2019\, 10:15:00
  - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~
  *~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP Class load
  ers CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-li
@@ -2881,7 +2766,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 3 CT 
  T +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n
  \nLa réunion suivante a été modifiée :\n\nSujet : TP Class loaders CT \nOrga
  nisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nE
- ndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP 
+ ndroit : "TP info B02N" <b02n@telecom-lille.fr> [MODIFIÉ]\nRessources : "TP
  info B13S" <b13s@telecom-lille.fr>\; b02n@telecom-lille.fr [MODIFIÉ]\nHeure:
   Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Copenhague
  \, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion c
@@ -2921,7 +2806,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 2 CT 
  es : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi
   10 Mai 2019\, 10:15:00 - 11:45:00 GMT +01:00 Bruxelles\, Copenhague\, Madri
  d\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessou
- s :\n\nSujet : TP Injection de dépendances 1 GV \nOrganisateur: "Christophe 
+ s :\n\nSujet : TP Injection de dépendances 1 GV \nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N
  " <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.
  fr> (TP info B02N) \nHeure: Vendredi 10 Mai 2019\, 10:15:00 - 11:45:00 GMT +
@@ -2929,8 +2814,8 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 2 CT 
  ouvelle demande de réunion ci-dessous :\n\nSujet : TP Injection de dépendanc
  es 2 GV \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-l
  ille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources :
-  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 10 
- Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+  "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Vendredi 10
+ Mai 2019\, 13:00:00 - 14:30:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : TP Programmation fonctionnelle 2 GV \nOrganisateur: "Christophe T
  OMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N"
@@ -2947,16 +2832,16 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 2 CT 
  E" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n
  @telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP
   info B02N) \nHeure: Vendredi 3 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Br
- uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle 
+ uxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle
  demande de réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \
- nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr> 
+ nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.fr>
  \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr> \nRessources : "TP info
   B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeure: Lundi 29 Avril 2019\,
   14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n
- \n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP 
+ \n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : TP
  Programmation générique 1 GV \nOrganisateur: "Christophe TOMBELLE" <christop
  he.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lil
- le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) 
+ le.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N)
  \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle de
  mande de réunion ci-dessous :\n\nSujet : TP Programmation générique 1 GV \nO
@@ -2993,10 +2878,10 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : TP JUnit 2 CT 
  lle.fr> [MODIFIÉ]\nRessources : "TP info B13S" <b13s@telecom-lille.fr>\; b02
  n@telecom-lille.fr [MODIFIÉ]\nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:
  00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~
- *~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Class loaders 
+ *~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : TP Class loaders
  CT \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telecom-lille.
  fr> \n\nEndroit : "TP info B12S" <b12s@telecom-lille.fr>\; "TP info B13S" <b
- 13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> 
+ 13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr>
  \nHeure: Jeudi 25 Avril 2019\, 08:30:00 - 10:00:00 GMT +01:00 Bruxelles\, Co
  penhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\n\n
 LOCATION:"TP info B02N" <b02n@telecom-lille.fr>
@@ -3033,7 +2918,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : Travail Pers
  belle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@telecom-lille.fr>
   \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP info B02N) \nHeur
  e: Jeudi 9 Mai 2019\, 14:45:00 - 16:15:00 GMT +01:00 Bruxelles\, Copenhague\
- , Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de 
+ , Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de
  réunion ci-dessous :\n\nSujet : Travail Personnel \nOrganisateur: "Christoph
  e TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B0
  2N" <b02n@telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lill
@@ -3052,7 +2937,7 @@ DESCRIPTION:Nouvelle demande de réunion ci-dessous :\n\nSujet : Travail Pers
   Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\n
  Sujet : TP Programmation générique 1 GV \nOrganisateur: "Christophe TOMBELLE
  " <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B02N" <b02n@
- telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP 
+ telecom-lille.fr> \nRessources : "TP info B02N" <b02n@telecom-lille.fr> (TP
  info B02N) \nHeure: Lundi 29 Avril 2019\, 16:30:00 - 18:00:00 GMT +01:00 Bru
  xelles\, Copenhague\, Madrid\, Paris [MODIFIÉ]\n \n\n*~*~*~*~*~*~*~*~*~*\n\n
  Nouvelle demande de réunion ci-dessous :\n\nSujet : TP Programmation génériq
@@ -3149,7 +3034,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Projet ILOG \n
  P info B13S" <b13s@telecom-lille.fr> (TP info B13S) \nHeure: Lundi 13 Mai 20
  19\, 13:00:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\
  n \nInvités: b02s@telecom-lille.fr \n\n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion s
- uivante a été modifiée :\n\nSujet : Projet ILOG \nOrganisateur: "Christophe 
+ uivante a été modifiée :\n\nSujet : Projet ILOG \nOrganisateur: "Christophe
  TOMBELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : b13s@telecom-
  lille.fr [MODIFIÉ]\nRessources : "TP info B13S" <b13s@telecom-lille.fr> [MOD
  IFIÉ]\nHeure: Lundi 13 Mai 2019\, 13:00:00 - 18:00:00 GMT +01:00 Bruxelles\,
@@ -3246,7 +3131,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Projet \nOrgan
  di 14 Mai 2019\, 13:00:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Mad
  rid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dess
  ous :\n\nSujet : Projet \nOrganisateur: "Christophe TOMBELLE" <christophe.to
- mbelle@telecom-lille.fr> \n\nEndroit : b02s@telecom-lille.fr \nRessources : 
+ mbelle@telecom-lille.fr> \n\nEndroit : b02s@telecom-lille.fr \nRessources :
  "TP info B02S" <b02s@telecom-lille.fr> \nHeure: Lundi 13 Mai 2019\, 13:00:00
   - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*
  ~*~*~*~*~*~*\n\n\n
@@ -3281,7 +3166,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Projet ILOG [M
  di 15 Mai 2019\, 13:00:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Mad
  rid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dess
  ous :\n\nSujet : Projet \nOrganisateur: "Christophe TOMBELLE" <christophe.to
- mbelle@telecom-lille.fr> \n\nEndroit : b12s@telecom-lille.fr \nRessources : 
+ mbelle@telecom-lille.fr> \n\nEndroit : b12s@telecom-lille.fr \nRessources :
  "TP info B12S" <b12s@telecom-lille.fr> \nHeure: Mercredi 15 Mai 2019\, 13:00
  :00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~
  *~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSujet : Proje
@@ -3336,8 +3221,8 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Projet ILOG [M
  adrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-de
  ssous :\n\nSujet : Projet \nOrganisateur: "Christophe TOMBELLE" <christophe.
  tombelle@telecom-lille.fr> \n\nEndroit : "TP info B13S" <b13s@telecom-lille.
- fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 14 
- Mai 2019\, 13:00:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\, 
+ fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> \nHeure: Mardi 14
+ Mai 2019\, 13:00:00 - 18:00:00 GMT +01:00 Bruxelles\, Copenhague\, Madrid\,
  Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\
  n\nSujet : Projet \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle
  @telecom-lille.fr> \n\nEndroit : b02s@telecom-lille.fr \nRessources : "TP in
@@ -3431,7 +3316,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Présentation 
  n\n*~*~*~*~*~*~*~*~*~*\n\nLa réunion suivante a été modifiée :\n\nSujet : Pr
  ésentation des projets - Amphi ??? [MODIFIÉ]\nOrganisateur: "Christophe TOMB
  ELLE" <christophe.tombelle@telecom-lille.fr> \n\nEndroit : "TP info B13S" <b
- 13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr> 
+ 13s@telecom-lille.fr> \nRessources : "TP info B13S" <b13s@telecom-lille.fr>
  (TP info B13S) \nHeure: Vendredi 17 Mai 2019\, 08:30:00 - 11:45:00 GMT +01:0
  0 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouve
  lle demande de réunion ci-dessous :\n\nSujet : Présentation des projets \nOr
@@ -3457,7 +3342,7 @@ DESCRIPTION:La réunion suivante a été modifiée :\n\nSujet : Présentation 
  n \n\n*~*~*~*~*~*~*~*~*~*\n\nNouvelle demande de réunion ci-dessous :\n\nSuj
  et : Projet \nOrganisateur: "Christophe TOMBELLE" <christophe.tombelle@telec
  om-lille.fr> \n\nEndroit : b02s@telecom-lille.fr \nRessources : "TP info B02
- S" <b02s@telecom-lille.fr> \nHeure: Lundi 13 Mai 2019\, 13:00:00 - 18:00:00 
+ S" <b02s@telecom-lille.fr> \nHeure: Lundi 13 Mai 2019\, 13:00:00 - 18:00:00
  GMT +01:00 Bruxelles\, Copenhague\, Madrid\, Paris\n \n\n*~*~*~*~*~*~*~*~*~*
  \n\n\n
 LOCATION:b01n@telecom-lille.fr
@@ -3513,4 +3398,6 @@ LAST-MODIFIED:20190506T081442Z
 DTSTAMP:20190506T081442Z
 SEQUENCE:0
 END:VEVENT
-END:VCALENDAR`;
+END:VCALENDAR
+
+`
