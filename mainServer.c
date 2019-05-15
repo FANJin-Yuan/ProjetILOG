@@ -21,12 +21,12 @@ int finServer=0;
 int gagne = 0;
 void *processJeuServer(void *arg);
 void *thrServer(void *arg);
-static pthread_mutex_t mutex_stock;
+static pthread_mutex_t mutex_solo_recv;
 
 
 int main(int argc, const char * argv[]) {
 
-	pthread_mutex_init(&mutex_stock,0);
+	pthread_mutex_init(&mutex_solo_recv,0);
 	// Creation d'un entier aléatoire
 	srandom(time(NULL));
 	int nombreaTrouver = random()%1000;
@@ -36,8 +36,7 @@ int main(int argc, const char * argv[]) {
 	int iret1;
 	iret1 = pthread_create( &thread1, NULL, thrServer, (void*) nombreaTrouver);
 	pthread_join( thread1, NULL);
-	pthread_mutex_destroy(&mutex_stock);
-	printf("Thread 1 returns: %d\n",iret1);
+	pthread_mutex_destroy(&mutex_solo_recv);
 	exit(0);
 	return 0;
 }
@@ -80,13 +79,12 @@ void *processJeuServer(void *arg){
 	int *argument= arg;
 	int the_Sock = argument[0];
 	int nombreaTrouver = argument[1];
-	printf("%d",the_Sock);
-	printf("%d",nombreaTrouver);
 	while (gagne==0){
 		char msgRecu[256] = {0};
-		printf("passe\n");
+
 		// Bloque en Attente de reception
 		long aNum = recv(the_Sock, msgRecu, 256, 0);
+		pthread_mutex_lock(&mutex_solo_recv);
 		printf ("%s", msgRecu);
 		int nombreRecu = atoi(msgRecu);
 		printf("%d",nombreRecu);
@@ -99,7 +97,6 @@ void *processJeuServer(void *arg){
 		}
 		else if (nombreRecu < nombreaTrouver){
 			msgEnvoye = "Plus  !";
-			printf("%d",nombreRecu);
 		} else if (nombreRecu > nombreaTrouver) {
 			msgEnvoye = "Moins !";
 		} else {
@@ -107,11 +104,12 @@ void *processJeuServer(void *arg){
 			gagne=1;
 			finServer=1;
 		}
-		printf("%s",msgEnvoye);
 		send (the_Sock,msgEnvoye,strlen(msgEnvoye),0);
 		if (finServer==1){
 			exit(0);
 		}
+		pthread_mutex_unlock(&mutex_solo_recv);
+
 	}
 
 }
