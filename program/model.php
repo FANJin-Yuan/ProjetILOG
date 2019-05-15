@@ -1,10 +1,8 @@
-<?php
-
+<?php 
 $isbn = $_POST["isbn"];
 $bookName = $_POST["bookName"];
 $author = $_POST["author"];
 $operation = $_POST["operation"];
-
 function add($id,$name,$author){
 	$file = fopen('C:\wamp64\www\projet mvvm\base\basebiblio.csv','a+');
   
@@ -12,7 +10,6 @@ function add($id,$name,$author){
     
     fclose($file);
 }
-
 function search($id,$name,$author){
     	$file = fopen('C:\wamp64\www\projet mvvm\base\basebiblio.csv','a+');
     if($id!==null){
@@ -22,9 +19,10 @@ function search($id,$name,$author){
             if($id == $cell[0]){
                 $isbn=$cell[0];
                 $bookName=$cell[1];
-                $author=$cell[2];
+             $author = str_replace(array("\r", "\n"), "", $cell[2]);
+                $result = array($isbn,$bookName,$author);
                 fclose($file);
-                return($bookName);
+                return($result);
             }
         }
     }
@@ -35,9 +33,12 @@ function search($id,$name,$author){
             if($name == $cell[1]){
                 $isbn=$cell[0];
                 $bookName=$cell[1];
-                $author=$cell[2];
+             $author = str_replace(array("\r", "\n"), "", $cell[2]);
+              $result = array($isbn,$bookName,$author);
                 fclose($file);
-                return($isbn);
+                return($result);
+            }
+        }
     }
     elseif($author!= null){
       while($array = fgets($file)){
@@ -45,43 +46,18 @@ function search($id,$name,$author){
             if($id == $cell[0]){
                 $isbn=$cell[0];
                 $bookName=$cell[1];
-                $author=$cell[2];
+             $author = str_replace(array("\r", "\n"), "", $cell[2]);
+              $result = array($isbn,$bookName,$author);
                 fclose($file);
-                return($isbn);
+                return($result);
+            }
+        }
     }
     else{
-       
-    }
+       return "wrong input";
     }
 
-    function delet($id,$name,$author){
-    	$file = fopen('C:\wamp64\www\projet mvvm\base\basebiblio.csv','a+');
-  
-    while(!feof(file)){
-        search($id,$name,$author);
-        fputcsv($file,array($name,$author,$id));
-    }
-   
-    
-    fclose($file);
-	
 }
-
-function modifier($id,$name,$author){
-	$file = fopen('C:\wamp64\www\projet mvvm\base\basebiblio.csv','a+');
-  
-    while(!feof(file)){
-        search($id,$name,$author);
-        fputcsv($file,array($name,$author,$id));
-    }
-   
-    
-    fclose($file);
-}
-
-
-
-
 
 function operation($id,$name,$author,$case){
 	
@@ -102,10 +78,7 @@ function operation($id,$name,$author,$case){
 			echo "wrong opreation";
 	}
 }
-
 operation($isbn,$bookName,$author,$operation);
-
-
 // echo '{';
 // echo '  "book" : {';
 // echo '          "isbn" : "'.$isbn.'", "name" : "'.$bookName.'", "author" : "'.$author.'"';
@@ -113,7 +86,7 @@ operation($isbn,$bookName,$author,$operation);
 // echo '}';
 echo '{';
 echo '  "book" : {';
-echo '          "isbn" : "'.$isbn.'", "name" : "'.search($isbn,$bookName,$author).'", "author" : "'.$author.'"';
+echo '          "isbn" : "'.search($isbn,$bookName,$author)[0].'", "name" : "'.search($isbn,$bookName,$author)[1].'", "author" : "'.search($isbn,$bookName,$author)[2].'"';
 echo '  }';
-echo '}';
+echo '}'; 
 ?>

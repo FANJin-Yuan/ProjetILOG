@@ -28,6 +28,7 @@ function requestStateHandler(){
 		switch(xhr.status){
 		case 200:
 			{
+            var re = xhr.responseText;
 			var responseJSON = JSON.parse(xhr.responseText);
 			var tab = document.getElementById('tabconv');
 			var rows = tab.rows.length;
@@ -45,3 +46,11 @@ function requestStateHandler(){
 		}
 	}
 }
+
+	function clearTabHTML() {
+        var tab=document.getElementById('tabconv');
+            for(var i=1; i<tab.rows.length;){
+                tab.deleteRow(i);
+            }
+		
+	}
