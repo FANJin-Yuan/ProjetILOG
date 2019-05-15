@@ -1,6 +1,8 @@
 package fr.imtld.ilog.jface;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
@@ -18,13 +20,13 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 	protected Image imgFolder = new Image(null, "Folder.gif");
 	protected Image imgDoc = new Image(null, "Document.gif");
 	protected Image imgJar = new Image(null, "Jar.gif");
-	
+
 	private FileExplorer explo;
 
 	public FileContentProvider(FileExplorer explo) {
 		this.explo = explo;
 	}
-	
+
 	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof FileObject) {
@@ -93,11 +95,11 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 				if (file.isFolder())
 					return true;
 				else {
-					if(FileUtils.isArchive(file))
+					if (FileUtils.isArchive(file))
 						return true;
 					else
 						return false;
-					
+
 				}
 			} catch (FileSystemException e) {
 				explo.err(e.getMessage());
@@ -197,6 +199,14 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 				return file.getName().getBaseName();
 			case 1: // colonne Size
 				return file.isFolder() ? "" : content.getSize() + " bytes";
+			case 2: // colonne Date
+				if (file.isFile()) {
+					long time = content.getLastModifiedTime();
+					Date date = new Date(time);
+					SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy hh:mm");
+					return df2.format(date);
+				} else
+					return "";
 			}
 
 		} catch (FileSystemException e) {

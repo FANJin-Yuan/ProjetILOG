@@ -207,10 +207,13 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		table.setHeaderVisible(true);
 		TableColumn tcName = new TableColumn(table, SWT.LEFT);
 		tcName.setText("Name");
-		tcName.setWidth(300);
+		tcName.setWidth(250);
 		TableColumn tcSize = new TableColumn(table, SWT.RIGHT);
 		tcSize.setText("Size");
 		tcSize.setWidth(150);
+		TableColumn tcDate = new TableColumn(table, SWT.RIGHT);
+		tcDate.setText("Last modified");
+		tcDate.setWidth(150);
 	}
 
 	public static void main(String args[]) {
@@ -255,6 +258,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 					FileObject file = (FileObject) elt;
 					if (file.isFolder() || FileUtils.isArchive(file))
 						tbvw.setInput(elt);
+					else
+						openAct.run();
 				} catch (FileSystemException e1) {
 					err(e1.getMessage());
 					setStatus(Status.ERROR.getMsg());

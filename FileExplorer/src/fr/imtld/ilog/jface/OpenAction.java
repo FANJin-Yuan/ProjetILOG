@@ -24,7 +24,11 @@ public class OpenAction extends Action {
 		if (sel.size() == 1 && elt instanceof FileObject) {
 			try {
 				if (((FileObject) elt).isFile())
-					Program.launch(((FileObject) elt).getName().getFriendlyURI());
+				{
+					String path = FileUtils.getFriendlyFilePath(((FileObject) elt));
+					expl.out("Opening file : " + path);
+					Program.launch(path);
+				}
 				expl.setStatus(FileExplorer.Status.READY.getMsg());
 			} catch (FileSystemException e) {
 				expl.err(e.getMessage());
