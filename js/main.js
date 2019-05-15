@@ -11,109 +11,107 @@ var eventsArray = [];
  */
 function importICS(type) {
   console.log('fire import');
-    switch (type) {
-        case 'INPUT':
-            file = document.getElementById("icsInput").value;
-            break;
-        case 'EXAMPLE':
-            file = ics;
-            break;
-    }
-    parseICS(file);
+  switch (type) {
+    case 'INPUT':
+      file = document.getElementById("icsInput").value;
+      break;
+    case 'EXAMPLE':
+      file = ics;
+      break;
   }
+  parseICS(file);
+}
 
 function handleFileSelect(evt) {
-    file = evt.target.files;
-    
-    //TODO parse file into str
-    var reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onloadend = (evt) => {
-        console.log('fire on load end');
-        file = evt.target.result;
-    }
-    ////////////////////////
-    //file = 'encours';
-    console.log(file);
-    importICS('FILE_EXPlORER');
+  file = evt.target.files;
+
+  //Check the support for the File API support 
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+    var fileSelected = document.getElementById('files');
+      //Set the extension for the file 
+      //Get the file object 
+      var fileTobeRead = fileSelected.files[0];
+      //Check of the extension match 
+        //Initialize the FileReader object to read the 2file 
+        var fileReader = new FileReader();
+        fileReader.onload = function () {
+          file = fileReader.result;
+          importICS('FILE_EXPlORER');
+        }
+        fileReader.readAsText(fileTobeRead);
+  }
 }
 
 /*
 // Convert date as String to a date Object
 // example : `TZID="Europe/Brussels":20190423T180000` -> Date object (2019,4,23,18,0,0)
 */
-function convDateString(rawDate)
-    {
-        if (rawDate == undefined) return "undefined"
-        var stringDate = rawDate;
-        if (rawDate.includes(":"))
-            stringDate = rawDate.split(":")[1];
-        return new Date(stringDate.substring(0,4), stringDate.substring(4,6), stringDate.substring(6,8), stringDate.substring(9,11), stringDate.substring(11,13), stringDate.substring(13,15));
-    }
+function convDateString(rawDate) {
+  if (rawDate == undefined) return "undefined"
+  var stringDate = rawDate;
+  if (rawDate.includes(":"))
+    stringDate = rawDate.split(":")[1];
+  return new Date(stringDate.substring(0, 4), stringDate.substring(4, 6), stringDate.substring(6, 8), stringDate.substring(9, 11), stringDate.substring(11, 13), stringDate.substring(13, 15));
+}
 
 /** 
 * event Object
 */
 const event =
-    {
-        set: function(data)
-            {
-                this.UID = data["UID"];
-                this.SUMMARY = data["SUMMARY"];
-                this.DESCRIPTION =  data["DESCRIPTION"];
-                this.LOCATION =  data["LOCATION"];
-                this.ATTENDEE =  data["ATTENDEE"];
-                this.ORGANIZER =  data["ORGANIZER"];
-                this.DTSTART =  convDateString(data["DTSTART"]);
-                this.DTEND =  convDateString(data["DTEND"]);
-                this.STATUS =  data["STATUS"];
-            },
+{
+  set: function (data) {
+    this.UID = data["UID"];
+    this.SUMMARY = data["SUMMARY"];
+    this.DESCRIPTION = data["DESCRIPTION"];
+    this.LOCATION = data["LOCATION"];
+    this.ATTENDEE = data["ATTENDEE"];
+    this.ORGANIZER = data["ORGANIZER"];
+    this.DTSTART = convDateString(data["DTSTART"]);
+    this.DTEND = convDateString(data["DTEND"]);
+    this.STATUS = data["STATUS"];
+  },
 
-        toString: function()
-            {
-                  console.log(`${this.UID};${this.SUMMARY};${this.DESCRIPTION};${this.LOCATION};${this.ATTENDEE};${this.ORGANIZER};${this.DTSTART};${this.DTEND};${this.STATUS}`);
-            }
-    };
+  toString: function () {
+    console.log(`${this.UID};${this.SUMMARY};${this.DESCRIPTION};${this.LOCATION};${this.ATTENDEE};${this.ORGANIZER};${this.DTSTART};${this.DTEND};${this.STATUS}`);
+  }
+};
 
 /*
 // ICS Parser
 // return array of events
 */
-function parseICS(rawICS)
+function parseICS(rawICS) {
+  console.log('FIRE parseICS')
+  eventsArray = []
+  var events = rawICS.split("BEGIN:VEVENT");
+  var dataToProcess = ["UID", "SUMMARY", "DESCRIPTION", "LOCATION", "ATTENDEE", "ORGANIZER", "DTSTART", "DTEND", "STATUS"]
+  for (var i = 0; i < events.length; i++) // for each event bloc
+  {
+    events[i] = events[i].split("\n");
+    var _data = {};
+    for (var j = 0; j < events[i].length; j++) // for each line
     {
-        console.log('FIRE parseICS')
-        eventsArray = []
-        var events = rawICS.split("BEGIN:VEVENT");
-        var dataToProcess = ["UID", "SUMMARY", "DESCRIPTION", "LOCATION", "ATTENDEE", "ORGANIZER", "DTSTART", "DTEND", "STATUS"]
-        for (var i=0; i<events.length; i++) // for each event bloc
-            {
-                events[i] = events[i].split("\n");
-                var _data = {};
-                for (var j=0; j<events[i].length; j++) // for each line
-                    {
-                        for (var k=0; k<dataToProcess.length; k++)
-                            {
-                                if (events[i][j].substring(0, dataToProcess[k].length) == dataToProcess[k] && _data[dataToProcess[k]] == undefined)
-                                    {
-                                        _data[dataToProcess[k]] = events[i][j].substring(dataToProcess[k].length +1);
-                                    }
-                            }
-                    }
-                // add object to array
-                const ev = Object.create(event);
-                ev.set(_data)
-                eventsArray.push(ev);
-            }
-            console.log('eventsArray',eventsArray);
-            writeDataToDiv();
+      for (var k = 0; k < dataToProcess.length; k++) {
+        if (events[i][j].substring(0, dataToProcess[k].length) == dataToProcess[k] && _data[dataToProcess[k]] == undefined) {
+          _data[dataToProcess[k]] = events[i][j].substring(dataToProcess[k].length + 1);
+        }
+      }
     }
+    // add object to array
+    const ev = Object.create(event);
+    ev.set(_data)
+    eventsArray.push(ev);
+  }
+  console.log('eventsArray', eventsArray);
+  writeDataToDiv();
+}
 
-    function writeDataToDiv(){
-      console.log('FIRE writeDatatoDiv');
-    }
+function writeDataToDiv() {
+  console.log('FIRE writeDatatoDiv');
+}
 
 //Example data
-  var ics = `BEGIN:VCALENDAR
+var ics = `BEGIN:VCALENDAR
 X-WR-CALNAME:ILOG
 X-WR-CALID:3a239bef-087f-43c4-a363-35c8831b3d05:35109
 PRODID:Zimbra-Calendar-Provider

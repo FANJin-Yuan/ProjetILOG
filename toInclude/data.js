@@ -11,8 +11,8 @@ function convDateString(rawDate)
         return new Date(stringDate.substring(0,4), stringDate.substring(4,6), stringDate.substring(6,8), stringDate.substring(9,11), stringDate.substring(11,13), stringDate.substring(13,15));
     }
 
-/*
-// event Object
+/** 
+* event Object
 */
 const event =
     {
