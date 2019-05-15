@@ -28,8 +28,12 @@ public class AllTests {
 		serialPort = SerialPort.getCommPort("COM3");
 		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
 		if (serialPort.openPort()) {
+			PrintWriter output = new PrintWriter(serialPort.getOutputStream());
+			output.print(result.wasSuccessful());
+			output.flush();
 
-			// create a new thread for sending data to the arduino
+
+			/*// create a new thread for sending data to the arduino
 			Thread thread = new Thread() {
 				@Override
 				public void run() {
@@ -51,7 +55,7 @@ public class AllTests {
 					}
 				}
 			};
-			thread.start();
+			thread.start();*/
 
 		}
 
