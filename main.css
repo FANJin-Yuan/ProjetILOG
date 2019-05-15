@@ -21,6 +21,12 @@ h3{
   justify-content: space-evenly
 }
 
+#calendar{
+  max-height: 500px;
+  overflow-y: scroll;
+  
+}
+
 .eventHeader{
   width: 512px;
   background-color: #0d2751;
