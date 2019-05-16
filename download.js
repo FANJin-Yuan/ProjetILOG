@@ -38,13 +38,13 @@ buttonUpload.addEventListener('change', evt => {
                 var lines = content.split(';');
                 for (var i = 2; i < lines.length-1; i = i + 2) {
                     if (lines[i] != undefined && lines[i + 1] != undefined) {
-                        table.insertRow(0).insertCell(0).innerHTML = lines[i];
+                        table.insertRow(1).insertCell(0).innerHTML = lines[i];
                         if (lines[i + 1].length > 33) {
                             var str_url = '<a href="' + lines[i + 1] + '" target="_blank">' + lines[i + 1].substring(0, 30) + "...</a>"
-                            table.rows[0].insertCell(1).innerHTML = str_url;
+                            table.rows[1].insertCell(1).innerHTML = str_url;
                         }
                         else
-                            table.rows[0].insertCell(1).innerHTML = '<a href="' + lines[i + 1] + '" target="_blank">' + lines[i + 1] + "</a>";
+                            table.rows[1].insertCell(1).innerHTML = '<a href="' + lines[i + 1] + '" target="_blank">' + lines[i + 1] + "</a>";
                     }
                 }
             });
