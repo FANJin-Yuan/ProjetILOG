@@ -15,7 +15,7 @@ ___Un conteneur d'application qui permet aux utilisateurs de lancer plusieurs ap
 	- Ajouter le projet ___Conteneur___ dans le Java Build Path du projet ___Applications___.
 	- Importer le projet ___Applications___, il y a des squelettes des applications.
 	- Definir les comportements de votre application dans les méthodes: init(), start(), stop() et destroy();
-	- Créer un dossier prope pour cette nouvelle application sous le dossier ***jars*** du projet ___Conteneur___ et exporter votre 	application en *.jar.
+	- Créer un dossier propre pour cette nouvelle application sous le dossier ***jars*** du projet ___Conteneur___ et exporter votre 	application en *.jar.
 	- Lancer le conteneur.
 	- Pour lancer les applications correctement, il faut respecter le cycle de vie de l’application.
 - 4. __Deploiement <<à chaud>>__
