@@ -1,4 +1,4 @@
 [autorun]
 open=run.exe
-icon=icon.ico
-label=Explorer App
+icon=logo.ico
+label=FlyUSB
