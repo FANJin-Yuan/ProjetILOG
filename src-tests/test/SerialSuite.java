@@ -25,14 +25,14 @@ import com.fazecast.jSerialComm.SerialPort;
  * and send the results to the serial port.
  *
  */
-public class SuitePlus extends Suite {
+public class SerialSuite extends Suite {
 
 	static int iTestNb;
 	static ArrayList<String> listTests = new ArrayList<String>();
 	static ArrayList<Result> listResults = new ArrayList<Result>();
 	static String message = "";
 
-	public SuitePlus(Class<?> klass, RunnerBuilder builder) throws InitializationError {
+	public SerialSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
 		super(klass, builder);
 	}
 
