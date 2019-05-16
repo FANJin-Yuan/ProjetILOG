@@ -1,46 +1,66 @@
-#Documentation Développeur JAVA
+# Documentation DÃ©veloppeur JAVA
 
-## Pré-requis : Cloner en local le projet github, disposer de JUnit 4 ou ultérieur, se référer à la documentation utilisateur d’initialisation d’un projet. 
-## Architecture et concepts utilisés en vue de la modification de l’application : La classe SerialSuite hérite de Suite, qui permet l’exécution d’une suite de tests paramétrés grâce à l’annotation SuiteClasses.
-La méthode run est exécutée sur le runner principal de la classe. Nous avons gardé l’implémentation originale de celle-ci, en lui ajoutant du code permettant d’obtenir le nombre de classes de test appartenant à la suite de tests, ainsi que le port série défini dans l’annotation SetCommPort de la JUnit Test Suite.
-La méthode runChild quant à elle est exécutée pour chaque test de la suite et elle prend en charge l’ajout des noms des tests ainsi que leurs résultats dans des listes prévues à cet effet, à travers l’utilisation des ClassLoaders. Elle gère également l’envoi de ces résultats sur le port série.
-## Axes d’amélioration : Pour améliorer l’application, on pourrait viser à optimiser le code et éventuellement proposer une meilleure factorisation de celui-ci. En termes de fonctionnalités, l’ajout des résultats individuels des sous-tests ainsi qu’un message indiquant la raison de l’échec du test, le cas échéant, serait la bienvenue.
+## PrÃ©-requis
 
-#Documentation Développeur Arduino
+Cloner en local le projet github, disposer de JUnit 4 ou ultÃ©rieur, se rÃ©fÃ©rer Ã  la documentation utilisateur dâ€™initialisation dâ€™un projet.
 
-## Pré-requis : Installation IDE Arduino, téléchargement des bibliothèques RGB_lcd.h et Keypad.h
-## Architecture, concepts du code Arduino :
-### Initialisation : 
-	-Import des bibliothèques relatives à l’écran LCD et au clavier 12 touches
--Définition de certaines variables (taille des tableaux, longueur des cases…)
--Création d’une matrice pour utiliser les touches du clavier.
--Définition des variables
-### Setup() :
-	-Initialisation de la lecture sur port série
-	-Initialisation de l’écran LCD RGB
-	-Affichage d’un message initial d’attente 
+## Architecture et concepts utilisÃ©s en vue de la modification de lâ€™application
+
+La classe SerialSuite hÃ©rite de Suite, qui permet lâ€™exÃ©cution dâ€™une suite de tests paramÃ©trÃ©s grÃ¢ce Ã  lâ€™annotation SuiteClasses.
+La mÃ©thode run est exÃ©cutÃ©e sur le runner principal de la classe. Nous avons gardÃ© lâ€™implÃ©mentation originale de celle-ci, en lui ajoutant du code permettant dâ€™obtenir le nombre de classes de test appartenant Ã  la suite de tests, ainsi que le port sÃ©rie dÃ©fini dans lâ€™annotation SetCommPort de la JUnit Test Suite.
+La mÃ©thode runChild quant Ã  elle est exÃ©cutÃ©e pour chaque test de la suite et elle prend en charge lâ€™ajout des noms des tests ainsi que leurs rÃ©sultats dans des listes prÃ©vues Ã  cet effet, Ã  travers lâ€™utilisation des ClassLoaders. Elle gÃ¨re Ã©galement lâ€™envoi de ces rÃ©sultats sur le port sÃ©rie.
+
+## Axes dâ€™amÃ©lioration
+
+Pour amÃ©liorer lâ€™application, on pourrait viser Ã  optimiser le code et Ã©ventuellement proposer une meilleure factorisation de celui-ci. En termes de fonctionnalitÃ©s, lâ€™ajout des rÃ©sultats individuels des sous-tests ainsi quâ€™un message indiquant la raison de lâ€™Ã©chec du test, le cas Ã©chÃ©ant, serait la bienvenue.
+
+# Documentation DÃ©veloppeur Arduino
+
+## PrÃ©-requis
+
+Installation IDE Arduino, tÃ©lÃ©chargement des bibliothÃ¨ques RGB_lcd.h et Keypad.h
+
+## Architecture, concepts du code Arduino
+
+### Initialisation
+
+	-Import des bibliothÃ¨ques relatives Ã  lâ€™Ã©cran LCD et au clavier 12 touches
+-DÃ©finition de certaines variables (taille des tableaux, longueur des casesâ€¦)
+-CrÃ©ation dâ€™une matrice pour utiliser les touches du clavier.
+-DÃ©finition des variables
+
+### Setup()
+
+	-Initialisation de la lecture sur port sÃ©rie
+	-Initialisation de lâ€™Ã©cran LCD RGB
+	-Affichage dâ€™un message initial dâ€™attente 
 	-Initialisation des index
-### Loop() : 
--Initialisation d’un tableau pour les tests et d’un « char » pour la récupération des touches appuyées
-	-Quand signal repéré sur le port série : 
-		-Récupération d’une « String », mise au format « char* »
--Isolement de chaque test de la « String » repérés grâce à un séparateur (« ; ») et mise de chaque test dans une des cases du tableau
-		-Récupération du nombre de tests trouvé
-		-Signification à l’utilisateur que les tests sont récupérés et présents dans le tableau
-	-A l’appui d’une touche du Keypad (4 ou 6) :
-		- On se déplace dans le tableau et on affiche le test.
-- La fonction « afficher() » affiche le nom, le statut et les touches de navigation.
-			- Si le nom est trop long, il va défiler vers la gauche jusqu’à la fin.
-		- On récupère le dernier caractère qui indique le statut du test.
-		- En fonction de ce statut, on change la couleur grâce à la fonction « choixCouleur ».
+### Loop()
+
+-Initialisation dâ€™un tableau pour les tests et dâ€™un Â«Â charÂ Â» pour la rÃ©cupÃ©ration des touches appuyÃ©es
+	-Quand signal repÃ©rÃ© sur le port sÃ©rieÂ : 
+		-RÃ©cupÃ©ration dâ€™une Â«Â StringÂ Â», mise au format Â«Â char*Â Â»
+-Isolement de chaque test de la Â«Â StringÂ Â» repÃ©rÃ©s grÃ¢ce Ã  un sÃ©parateur (Â«Â ;Â Â») et mise de chaque test dans une des cases du tableau
+		-RÃ©cupÃ©ration du nombre de tests trouvÃ©
+		-Signification Ã  lâ€™utilisateur que les tests sont rÃ©cupÃ©rÃ©s et prÃ©sents dans le tableau
+	-A lâ€™appui dâ€™une touche du Keypad (4 ou 6)Â :
+		- On se dÃ©place dans le tableau et on affiche le test.
+- La fonction Â«Â afficher()Â Â» affiche le nom, le statut et les touches de navigation.
+			- Si le nom est trop long, il va dÃ©filer vers la gauche jusquâ€™Ã  la fin.
+		- On rÃ©cupÃ¨re le dernier caractÃ¨re qui indique le statut du test.
+		- En fonction de ce statut, on change la couleur grÃ¢ce Ã  la fonction Â«Â choixCouleurÂ Â».
 
 
 
-## Axes d’amélioration : 
-### Code Arduino : Axes d’améliorations
-Utilisation de tableaux à taille dynamique pour stocker les tests. 
-Optimisation de l’occupation de la mémoire.
+## Axes dâ€™amÃ©lioration
+
+### Code ArduinoÂ : Axes dâ€™amÃ©liorations
+
+Utilisation de tableaux Ã  taille dynamique pour stocker les tests. 
+Optimisation de lâ€™occupation de la mÃ©moire.
 Optimisation du code, factorisation de certaines fonctions.
-### Axes d’améliorations générales du projet :
-Possibilité de pouvoir parcourir les sous-tests de chaque classe test sur l’Arduino.
-Lire les rapports d’erreur, afficher plus de détail sur l’erreur obtenue.
+
+### Axes dâ€™amÃ©liorations gÃ©nÃ©rales du projet
+
+PossibilitÃ© de pouvoir parcourir les sous-tests de chaque classe test sur lâ€™Arduino.
+Lire les rapports dâ€™erreur, afficher plus de dÃ©tail sur lâ€™erreur obtenue.
