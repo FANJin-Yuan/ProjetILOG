@@ -9,6 +9,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/*
+*	La côte Client de HttpServer
+*/
 public class Client {
 	public static void main(String[] args) {
 		// forsure http request uri

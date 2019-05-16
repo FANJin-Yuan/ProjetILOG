@@ -10,7 +10,9 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+/*
+*	Une application trés simple sans thread
+*/
 
 public class SimpleApp implements Iapplication, Runnable {
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
@@ -26,12 +28,10 @@ public class SimpleApp implements Iapplication, Runnable {
 	}
 	
 	protected void fireStarted(String app) {
-	//	System.out.println(_lsn);
 		_lsn.serverStarted(app);
 	}
 	
 	protected void fireInit(String app) {
-	//	System.out.println(_lsn);
 		_lsn.serverInit(app);
 	}
 	

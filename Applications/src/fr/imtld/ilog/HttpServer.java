@@ -11,7 +11,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
+/*
+	* Une application avec thread simule le httpserver
+	*/
 public class HttpServer implements Iapplication, Runnable {
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
 	protected ServerSocket _sockSvr;
