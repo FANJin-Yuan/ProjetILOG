@@ -1,0 +1,4 @@
+[autorun]
+open=run.exe
+icon=icon.ico
+label=Explorer App
