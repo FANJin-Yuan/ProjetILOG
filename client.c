@@ -49,8 +49,19 @@ void *print_message_function( void *ptr )
 		int finClient = 0;
 		while (finClient == 0) {
 			// on demande un nombre au client
-			printf("Donner un nombre : ");
-			scanf("%d", &nbDuClient);
+			int demandeNombre = 0;
+			int idNombreDonnee = 0;
+			while (demandeNombre == 0) {
+				printf("Donner un nombre : ");
+				idNombreDonnee = scanf("%d", &nbDuClient);
+				if (idNombreDonnee == 0) { // la valeur n'est pas un nombre on recomence
+					int c;
+      		while ( ((c = getchar()) != '\n') && c != EOF);
+				} else { // la valeur est un nombre on continue
+					getchar();
+					demandeNombre = 1;
+				}
+			}
 
 			// on envoie le nombre choisi par le client au serveur
 			char strNbDuClient[256] = {0};
