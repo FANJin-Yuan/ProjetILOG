@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  */
 
 @RunWith (JUnit4.class)
-public class FifoTest2 {
+public class FifoTestUnPeuPlusLong {
 	/** Objects used by the test */
 	private Object o3, o4, o5;
 	/** Objects used by the test */
