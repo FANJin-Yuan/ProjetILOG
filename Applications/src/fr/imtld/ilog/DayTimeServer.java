@@ -11,6 +11,8 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+
+//Une application DayTimeServer avec thread 
 public class DayTimeServer implements Iapplication,Runnable{
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
 	protected ServerSocket _sockSvr;
@@ -18,7 +20,6 @@ public class DayTimeServer implements Iapplication,Runnable{
 	protected volatile int port = 2013;
 	protected ServerListener _lsn;
 
-//Une application DayTimeServer avec thread 
 	
 	public void addServerlistener(ServerListener lsn) {
 		if(_lsn==null)
