@@ -29,6 +29,34 @@ h3{
 
 }
 
+
+
+#importLine1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#importLine1 form{
+  margin-right: 50px;
+}
+
+#importLine2{
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+#importLine2 input{
+  margin-left:50px;
+}
+
+#dateFilters, #customFilter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .eventHeader{
   width: 512px;
   background-color: #0d2751;
@@ -60,32 +88,6 @@ h3{
 .demo-card-event > .mdl-card__actions,
 .demo-card-event > .mdl-card__actions > .mdl-button {
   color: #fff;
-}
-
-#importLine1{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#importLine1 form{
-  margin-right: 50px;
-}
-
-#importLine2{
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-}
-
-#importLine2 input{
-  margin-left:50px;
-}
-
-#dateFilters, #customFilter{
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 
