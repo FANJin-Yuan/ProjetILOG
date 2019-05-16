@@ -1,35 +1,21 @@
 package fr.imtld.ilog.scripting;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileReader;
 
+import java.io.FilenameFilter;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -37,11 +23,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-//import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,6 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
 public class Ihm extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
+	private static final String repertoireUsers = "D:\\ilog\\users";
 	protected Action actExit;
 	protected TableViewer tbvw;
 //	protected OpenAction actOpen;
@@ -115,9 +99,36 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
         Composite composite_1 = new Composite(shlWelcome, SWT.NONE);
         composite_1.setLayoutData(new RowData(377, 117));
         
-        Button btnContinuer = new Button(composite_1, SWT.NONE);
-        btnContinuer.setBounds(292, 82, 75, 25);
-        btnContinuer.setText("Continuer");
+        Button buttonContinuer = new Button(composite_1, SWT.NONE);
+        buttonContinuer.setBounds(292, 82, 75, 25);
+        buttonContinuer.setText("Continuer");
+        
+        buttonContinuer.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+            	//Utilisateur par défaut
+            	if (buttonDefaultUser.getSelection()) {
+            		FileExplorer.main(null);
+            	}
+            	
+            	//Utilisateur spécifique
+            	if (buttonOtherUser.getSelection()) {
+            		if (txtEnterUser.getText().isEmpty()) {
+            			//throw new IllegalStateException("Vous devez saisir un nom d'utilisateur");
+            			MessageBox messageBox = new MessageBox(shlWelcome, SWT.ICON_WARNING | SWT.ABORT | SWT.RETRY | SWT.IGNORE);           	        
+            	        messageBox.setText("Warning");
+            	        messageBox.setMessage("You have to choose enter a UserName");
+            	        messageBox.open();
+            		}else if (checkIfInListOfUsersDirectory(txtEnterUser.getText())) {
+            			shlWelcome.close();  
+            			FileExplorer.main(null);          			
+            		}else {
+            			new File(repertoireUsers + "\\" + txtEnterUser.getText().toString()).mkdir();
+            			shlWelcome.close();  
+            			FileExplorer.main(null);   
+            		}
+            	}
+              }
+            });
 
         SelectionListener selectionListener = new SelectionAdapter () {
             public void widgetSelected(SelectionEvent event) {
@@ -139,6 +150,23 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
     }
 	
 
+	public Boolean checkIfInListOfUsersDirectory(String str) {
+		Boolean contains=false;
+		File file = new File(repertoireUsers);
+		String[] directories = file.list(new FilenameFilter() {
+		  @Override
+		  public boolean accept(File current, String name) {
+		    return new File(current, name).isDirectory();
+		  }
+		});
+		for (int i=0; i<directories.length;i++) {
+			if(str.equals(directories[i])) {
+				contains=true;
+				return contains;
+			}
+		}
+		return contains;
+	}
 	@Override
 	public void doubleClick(DoubleClickEvent arg0) {
 		// TODO Auto-generated method stub

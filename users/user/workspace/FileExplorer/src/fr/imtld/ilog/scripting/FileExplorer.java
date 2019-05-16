@@ -3,6 +3,7 @@ package fr.imtld.ilog.scripting;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
+import java.util.Properties;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
