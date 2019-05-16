@@ -9,7 +9,14 @@ import org.eclipse.swt.program.Program;
 import fr.imtld.ilog.jface.FileExplorer;
 import fr.imtld.ilog.jface.utils.FileUtils;
 
+/**
+ * Action used to open a file.
+ * Uses Program.launch to open the selected file with the default program used by the system.
+ */
 public class OpenAction extends Action {
+	/**
+	 * The FileExplorer using this action.
+	 */
 	protected FileExplorer expl;
 
 	public OpenAction(FileExplorer e) {

@@ -1,8 +1,5 @@
 package fr.imtld.ilog.jface;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.action.Action;
@@ -45,8 +42,17 @@ import fr.imtld.ilog.jface.utils.TableFilter;
 import fr.imtld.ilog.jface.utils.TableSorter;
 import fr.imtld.ilog.jface.utils.TreeFilter;
 
+/**
+ * Main class of the program.
+ * A file explorer using a ContentProvider based on Apache VFS library, allowing to browse folders as well as archive files.
+ * The browser consists of a tree representation of the file system on the left of the screen, and a table containing the selection's 
+ * children : folders and files. It is possible to open the files directly from this explorer.
+ */
 public class FileExplorer extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
 
+	/**
+	 * Possible statuses of the file explorer
+	 */
 	public static enum Status {
 		READY("Ready"), SEARCHING("Searching..."), OPENING("Opening..."), ERROR("Error"),
 		NO_PARENT("No parent directory");
@@ -62,24 +68,28 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		}
 	}
 
-	protected Action exitAct;
-	protected OpenAction openAct;
-	protected ParentAction parentAct;
-	protected TableViewer tbvw;
-	protected TreeViewer trvw;
-	protected FileContentProvider cp;
-
-	protected FileContentProvider getContentProvider() {
-		if (cp == null)
-			cp = new FileContentProvider(this);
-		return cp;
-	}
+	private Action exitAct;
+	private OpenAction openAct;
+	private ParentAction parentAct;
+	private TableViewer tbvw;
+	private TreeViewer trvw;
+	private FileContentProvider cp;
 
 	private SashForm sashExplorer;
 	private SashForm sashConsole;
 	private StyledText console;
 	private Color colBlue;
 	private Color colRed;
+
+	/**
+	 * Getter for the FileContentProvider instance used by the FileExplorer.
+	 * @return the FileContentProvider used by the explorer
+	 */
+	protected FileContentProvider getContentProvider() {
+		if (cp == null)
+			cp = new FileContentProvider(this);
+		return cp;
+	}
 
 	/**
 	 * Create the application window.
@@ -92,6 +102,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		addStatusLine();
 	}
 
+	/**
+	 * Create the controls of the explorer's interface.
+	 * @return the main container Control
+	 */
 	@Override
 	protected Control createContents(Composite shell) {
 		createSashFormConsole(shell);
@@ -102,12 +116,19 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	}
 
+	/**
+	 * Create the actions used by the explorer.
+	 */
 	private void createActions() {
 		exitAct = new ExitAction(this);
 		openAct = new OpenAction(this);
 		parentAct = new ParentAction(this);
 	}
 
+	/**
+	 * Create the menu bar and different sub-menus/buttons.
+	 * @return the main menu bar
+	 */
 	@Override
 	protected MenuManager createMenuManager() {
 		MenuManager mmBar = new MenuManager("menu");
@@ -117,6 +138,11 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		return mmBar;
 	}
 
+	/**
+	 * Create a secondary menu bar and its buttons.
+	 * @param style the style used for this CoolBarManager
+	 * @return the secondary menu bar
+	 */
 	@Override
 	protected CoolBarManager createCoolBarManager(int style) {
 		CoolBarManager coolBarManager = new CoolBarManager(style);
@@ -126,12 +152,19 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		return coolBarManager;
 	}
 
+	/**
+	 * Create the status line.
+	 * @return the status line
+	 */
 	@Override
 	protected StatusLineManager createStatusLineManager() {
 		StatusLineManager statusLineManager = new StatusLineManager();
 		return statusLineManager;
 	}
 
+	/**
+	 * Create a popup menu for the contextual actions inside the TableViewer.
+	 */
 	protected void createPopupMenu() {
 		MenuManager mmCtx = new MenuManager();
 		mmCtx.add(openAct);
@@ -140,6 +173,11 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		table.setMenu(mnCtx);
 	}
 
+	/**
+	 * Create the container for the explorer.
+	 * @param parent the parent container of this SashForm
+	 * @return the SashForm used to contain the explorer (treeview and tableview)
+	 */
 	protected SashForm createSashFormExplorer(Composite parent) {
 		sashExplorer = new SashForm(parent, SWT.NONE);
 		createTreeViewer(sashExplorer);
@@ -148,6 +186,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		return sashExplorer;
 	}
 
+	/**
+	 * Create the container for the console.
+	 * @param parent the parent container of this SashForm
+	 */
 	protected void createSashFormConsole(Composite parent) {
 		sashConsole = new SashForm(parent, SWT.VERTICAL);
 		sashExplorer = createSashFormExplorer(sashConsole);
@@ -155,13 +197,22 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		sashConsole.setWeights(new int[] { 3, 1 });
 	}
 
+	/**
+	 * Create the console.
+	 * @param parent the parent container of the console
+	 */
 	protected void createConsole(Composite parent) {
 		console = new StyledText(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		Display display = Display.getCurrent();
 		colBlue = display.getSystemColor(SWT.COLOR_BLUE);
 		colRed = display.getSystemColor(SWT.COLOR_RED);
 	}
-
+	
+	/**
+	 * Appends some colored text in the console.
+	 * @param msg the message to print in the console
+	 * @param col the color of the message
+	 */
 	protected void append(String msg, Color col) {
 		msg = msg + '\n';
 		console.append(msg);
@@ -172,18 +223,33 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		console.setStyleRange(style);
 	}
 
+	/**
+	 * Clears the console.
+	 */
 	public void clear() {
 		console.setText("");
 	}
 
+	/**
+	 * Append a message in the console with the color blue
+	 * @param msg the message to print in the console
+	 */
 	public void out(String msg) {
 		append(msg, colBlue);
 	}
 
+	/**
+	 * Append a message in the console with the color red
+	 * @param msg the message to print in the console
+	 */
 	public void err(String msg) {
 		append(msg, colRed);
 	}
 
+	/**
+	 * Create the TreeView on the left of the explorer
+	 * @param sashForm the parent container of the TreeView
+	 */
 	@SuppressWarnings("unused")
 	protected void createTreeViewer(SashForm sashForm) {
 		trvw = new TreeViewer(sashForm, SWT.BORDER);
@@ -200,6 +266,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		trvw.setInput(new Root());
 	}
 
+	/**
+	 * Create the TableView on the right of the explorer
+	 * @param sashForm the parent container of the TableView
+	 */
 	protected void createTableViewer(SashForm sashForm) {
 		tbvw = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		FileContentProvider cp = getContentProvider();
@@ -227,6 +297,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		tcDate.setWidth(150);
 	}
 
+	/**
+	 * Entry point of the program.
+	 * Creates a new FileExplorer and runs it.
+	 */
 	public static void main(String args[]) {
 		try {
 			FileExplorer window = new FileExplorer();
@@ -236,17 +310,28 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		}
 	}
 
+	/**
+	 * Opens the FileExplorer.
+	 */
 	protected void run() {
 		setBlockOnOpen(true);
 		open();
 		Display.getCurrent().dispose();
 	}
 
+	/**
+	 * Sets the initial size of the FileExplorer window.
+	 * @return a Point representing the size of the window
+	 */
 	@Override
 	protected Point getInitialSize() {
 		return new Point(800, 500);
 	}
 
+	/**
+	 * Event triggering when a new element is selected in the TreeView.
+	 * @param arg the triggering event
+	 */
 	@Override
 	public void selectionChanged(SelectionChangedEvent arg) {
 		setStatus(Status.SEARCHING.getMsg());
@@ -257,6 +342,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		}
 	}
 
+	/**
+	 * Event triggering when an element is double-clicked in the TableView.
+	 * @param e the triggering event
+	 */
 	@Override
 	public void doubleClick(DoubleClickEvent e) {
 		setStatus(Status.SEARCHING.getMsg());
@@ -279,6 +368,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		}
 	}
 
+	/**
+	 * Configure the window Shell (text and icon)
+	 * @param newShell the Shell to configure
+	 */
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -286,10 +379,18 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		newShell.setImage(FileUtils.loadImage("Folder.gif", true));
 	}
 
+	/**
+	 * Getter for the TableViewer
+	 * @return the explorer's TableViewer
+	 */
 	public TableViewer getTableViewer() {
 		return tbvw;
 	}
 	
+	/**
+	 * Getter for the TreeViewer
+	 * @return the explorer's TreeViewer
+	 */
 	public TreeViewer getTreeViewer() {
 		return trvw;
 	}

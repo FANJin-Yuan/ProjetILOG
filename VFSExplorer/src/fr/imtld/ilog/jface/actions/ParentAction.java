@@ -8,6 +8,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import fr.imtld.ilog.jface.FileExplorer;
 import fr.imtld.ilog.jface.utils.FileUtils;
 
+/**
+ * Action used to go to a parent folder in the TableViewer.
+ */
 public class ParentAction extends Action {
 	protected FileExplorer expl;
 
@@ -29,6 +32,8 @@ public class ParentAction extends Action {
 					tb.setInput(parent);
 				else if (FileUtils.isArchive(fo))
 				{
+					// We are using a custom method to get the parent because it is lost by the ZipFileObject
+					// after going f+1 in the file tree
 					tb.setInput(FileUtils.getArchiveParent(fo));
 				}
 				else

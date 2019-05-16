@@ -7,8 +7,13 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import fr.imtld.ilog.jface.FileExplorer;
 
+/**
+ * The filter used by the TreeViewer of the FileExplorer.
+ */
 public class TreeFilter extends ViewerFilter {
-	
+	/**
+	 * The FileExplorer using this filter.
+	 */
 	private FileExplorer expl;
 	
 	public TreeFilter(FileExplorer explo)
@@ -16,6 +21,10 @@ public class TreeFilter extends ViewerFilter {
 		expl = explo;
 	}
 	
+	/**
+	 * Selecting method of the filter.
+	 * Selects elements that are existing folders.
+	 */
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof FileObject) {

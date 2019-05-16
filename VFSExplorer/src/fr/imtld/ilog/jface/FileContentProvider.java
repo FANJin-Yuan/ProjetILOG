@@ -17,19 +17,32 @@ import org.eclipse.swt.graphics.Image;
 import fr.imtld.ilog.jface.utils.FileUtils;
 import fr.imtld.ilog.jface.utils.Root;
 
+/**
+ * The ContentProvider used by the FileExplorer to display elements in its Viewers.
+ * Works with the Apache VFS API, allowing greater flexibility compared to the basic java.io library.
+ */
 public class FileContentProvider implements ITreeContentProvider, ILabelProvider, ITableLabelProvider {
 
-	protected Image imgArchive = FileUtils.loadImage("Archive.gif", true);
-	protected Image imgFolder = FileUtils.loadImage("Folder.gif", true);
-	protected Image imgDoc = FileUtils.loadImage("Document.gif", true);
-	protected Image imgJar = FileUtils.loadImage("Jar.gif", true);
+	private Image imgArchive = FileUtils.loadImage("Archive.gif", true);
+	private Image imgFolder = FileUtils.loadImage("Folder.gif", true);
+	private Image imgDoc = FileUtils.loadImage("Document.gif", true);
+	private Image imgJar = FileUtils.loadImage("Jar.gif", true);
 
 	private FileExplorer explo;
-
+	
+	/**
+	 * Create the content provider.
+	 * @param explo the FileExplorer using this provider
+	 */
 	public FileContentProvider(FileExplorer explo) {
 		this.explo = explo;
 	}
 
+	/**
+	 * Get the children elements of a given parent.
+	 * @param parent the element to explore
+	 * @return an array of the children elements of the parent
+	 */
 	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof FileObject) {
@@ -44,6 +57,12 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		return null;
 	}
 
+	/**
+	 * Method called when the input of the controls using this provider is set.
+	 * Determines what elements are to be displayed by those controls.
+	 * @param input the input Object
+	 * @return an array of the children elements of the input
+	 */
 	@Override
 	public Object[] getElements(Object input) {
 		FileObject[] res = null;
@@ -68,7 +87,7 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 						break;
 					}
 				}
-			} else if (input instanceof Root) {
+			} else if (input instanceof Root) { // First call of the method
 				Root root = (Root) input;
 				File[] files = root.listFiles();
 				res = new FileObject[files.length];
@@ -76,7 +95,6 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 					res[i] = fm.toFileObject(files[i]);
 				}
 			}
-
 		} catch (FileSystemException e) {
 			explo.err(e.getMessage());
 			explo.setStatus(FileExplorer.Status.ERROR.getMsg());
@@ -85,11 +103,19 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		return res;
 	}
 
+	/**
+	 * Unused method.
+	 */
 	@Override
 	public Object getParent(Object arg0) {
 		return null;
 	}
 
+	/**
+	 * Determines if an element has children elements.
+	 * @param element the Object to analyze
+	 * @return true if the element has children, else false
+	 */
 	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof FileObject) {
@@ -112,19 +138,34 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		return false;
 	}
 
+	/**
+	 * Unused method.
+	 */
 	@Override
 	public void addListener(ILabelProviderListener arg0) {
 	}
 
+	/**
+	 * Unused method.
+	 */
 	@Override
 	public boolean isLabelProperty(Object arg0, String arg1) {
 		return false;
 	}
 
+	/**
+	 * Unused method.
+	 */
 	@Override
 	public void removeListener(ILabelProviderListener arg0) {
 	}
 
+	/**
+	 * Returns the icon to be displayed next to the element,
+	 * based on its file extension
+	 * @param element the Object to analyze
+	 * @return the Image to display
+	 */
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof FileObject) {
@@ -150,6 +191,11 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		return null;
 	}
 
+	/**
+	 * Returns the text representing an element in the Viewers (here, its file/folder name)
+	 * @param element the Object to analyze
+	 * @return the text to display
+	 */
 	@Override
 	public String getText(Object element) {
 		if (element instanceof FileObject) {
@@ -159,6 +205,9 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		return null;
 	}
 
+	/**
+	 * Dispose the images
+	 */
 	@Override
 	public void dispose() {
 		imgDoc.dispose();
@@ -167,6 +216,13 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		imgJar.dispose();
 	}
 
+	/**
+	 * Returns the icon to be displayed next to the element in the tableviewer,
+	 * based on its file extension
+	 * @param element the Object to analyze
+	 * @param columnIndex the column in which the image has to be displayed
+	 * @return the Image to display
+	 */
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
@@ -192,6 +248,12 @@ public class FileContentProvider implements ITreeContentProvider, ILabelProvider
 		return null;
 	}
 
+	/**
+	 * Returns the text representing an element in the different columns of the tableViewer
+	 * @param element the Object to analyze
+	 * @param columnIndex the column in which the text has to be displayed
+	 * @return the text to display in the column
+	 */
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		try {

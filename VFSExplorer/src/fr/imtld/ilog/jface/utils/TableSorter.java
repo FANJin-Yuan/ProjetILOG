@@ -7,14 +7,23 @@ import org.eclipse.jface.viewers.ViewerComparator;
 
 import fr.imtld.ilog.jface.FileExplorer;
 
+/**
+ * The sorter used by the TableViewer of the FileExplorer.
+ */
 public class TableSorter extends ViewerComparator {
-
+	/**
+	 * The FileExplorer using this sorter.
+	 */
 	private FileExplorer expl;
 
 	public TableSorter(FileExplorer explo) {
 		expl = explo;
 	}
 
+	/**
+	 * Comparing method of the filter.
+	 * Sorts elements by name.
+	 */
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
