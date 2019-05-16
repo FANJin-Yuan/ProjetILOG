@@ -3,7 +3,7 @@ Apache VFS Virtual File System : VFS Explorer
 
 # Documentation développeur :
 
-**Outils requis (non présents dans ilog.zip) : **
+**Outils requis (non présents dans ilog.zip) :**
 
 - Librairie Apache VFS Commons (inclue dans le dossier "lib" du projet)
 
