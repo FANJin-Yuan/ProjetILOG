@@ -1,9 +1,9 @@
 Notre jeu/projet “Projet_Simax” est un jeu où l’on doit mémoriser des séquences de couleurs aléatoires 
 puis les renseigner dans la console. Chaque réussite de retranscription d’une séquence enclenchera le tour
-suivant qui ajoutera une nouvelle couleur à la séquence. En cas d’échec la console est bloqué et il est 
+suivant qui ajoutera une nouvelle couleur à la séquence. En cas d’échec la console est bloquée et il est 
 nécessaire de relancer le jeu à l’aide du bouton RST de la carte TTGO
 
-Commencez par télécharger l’IDE Arduino. Une fois l’installation réussi suivez les étapes ci-dessous :
+Commencez par télécharger l’IDE Arduino. Une fois l’installation réussie, suivez les étapes ci-dessous :
 
   - Créer un dossier à l’adresse suivante  : Arduino/hardware/espressif/esp32
   - En faire un clone de https://github.com/espressif/arduino-esp32.git
