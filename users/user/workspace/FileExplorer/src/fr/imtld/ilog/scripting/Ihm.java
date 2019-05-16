@@ -32,7 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
 public class Ihm extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
-	private static final String repertoireUsers = "D:\\ilog\\users";
+	private static final String repertoireUsers = System.getProperty("user.dir") + "\\users";
 	protected Action actExit;
 	protected TableViewer tbvw;
 //	protected OpenAction actOpen;
@@ -75,7 +75,7 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
         shlWelcome.setLayout(rl_shlWelcome);
 
         Group defaultUser = new Group(shlWelcome, SWT.NONE);
-        defaultUser.setLayoutData(new RowData(109, 61));
+        defaultUser.setLayoutData(new RowData(132, 86));
         defaultUser.setLayout(new RowLayout(SWT.VERTICAL));
  
         Label lblChooseYourUser = new Label(defaultUser, SWT.NONE);
@@ -87,26 +87,27 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
         Button buttonOtherUser = new Button(defaultUser, SWT.RADIO);
         buttonOtherUser.setText("Other User");
  
-        shlWelcome.setSize(400, 250);
+        shlWelcome.setSize(456, 273);
         
         Composite composite = new Composite(shlWelcome, SWT.NONE);
-        composite.setLayoutData(new RowData(167, 77));
+        composite.setLayoutData(new RowData(167, 93));
         
         txtEnterUser = new Text(composite, SWT.BORDER);
-        txtEnterUser.setBounds(0, 56, 157, 21);
+        txtEnterUser.setBounds(0, 72, 157, 21);
         txtEnterUser.setEditable(false);
         
         Composite composite_1 = new Composite(shlWelcome, SWT.NONE);
-        composite_1.setLayoutData(new RowData(377, 117));
+        composite_1.setLayoutData(new RowData(421, 84));
         
         Button buttonContinuer = new Button(composite_1, SWT.NONE);
-        buttonContinuer.setBounds(292, 82, 75, 25);
+        buttonContinuer.setBounds(336, 49, 75, 25);
         buttonContinuer.setText("Continuer");
         
         buttonContinuer.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent event) {
             	//Utilisateur par défaut
             	if (buttonDefaultUser.getSelection()) {
+            		shlWelcome.close(); 
             		FileExplorer.main(null);
             	}
             	
@@ -114,15 +115,16 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
             	if (buttonOtherUser.getSelection()) {
             		if (txtEnterUser.getText().isEmpty()) {
             			//throw new IllegalStateException("Vous devez saisir un nom d'utilisateur");
-            			MessageBox messageBox = new MessageBox(shlWelcome, SWT.ICON_WARNING | SWT.ABORT | SWT.RETRY | SWT.IGNORE);           	        
+            			MessageBox messageBox = new MessageBox(shlWelcome, SWT.ICON_WARNING | SWT.OK);           	        
             	        messageBox.setText("Warning");
-            	        messageBox.setMessage("You have to choose enter a UserName");
+            	        messageBox.setMessage("You have to type a user name");
             	        messageBox.open();
             		}else if (checkIfInListOfUsersDirectory(txtEnterUser.getText())) {
             			shlWelcome.close();  
             			FileExplorer.main(null);          			
             		}else {
             			new File(repertoireUsers + "\\" + txtEnterUser.getText().toString()).mkdir();
+            			new File(repertoireUsers + "\\" + txtEnterUser.getText().toString() + "\\" + "workspace").mkdir();
             			shlWelcome.close();  
             			FileExplorer.main(null);   
             		}
