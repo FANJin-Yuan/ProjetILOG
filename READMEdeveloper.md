@@ -46,7 +46,7 @@ Installation IDE Arduino, téléchargement des bibliothèques RGB_lcd.h et Keypa
 		* Signification à l’utilisateur que les tests sont récupérés et présents dans le tableau
 	* A l’appui d’une touche du Keypad (4 ou 6) :
 		* On se déplace dans le tableau et on affiche le test.
-* La fonction « afficher() » affiche le nom, le statut et les touches de navigation.
+			* La fonction « afficher() » affiche le nom, le statut et les touches de navigation.
 			* Si le nom est trop long, il va défiler vers la gauche jusqu’à la fin.
 		* On récupère le dernier caractère qui indique le statut du test.
 		* En fonction de ce statut, on change la couleur grâce à la fonction « choixCouleur ».
@@ -66,4 +66,5 @@ Optimisation du code, factorisation de certaines fonctions.
 ### Axes d’améliorations générales du projet
 
 Possibilité de pouvoir parcourir les sous-tests de chaque classe test sur l’Arduino.
+
 Lire les rapports d’erreur, afficher plus de détail sur l’erreur obtenue.
