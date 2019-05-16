@@ -13,24 +13,22 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
-    <a class="navbar-brand" href="mailto://ksoltani@elv.telecom-lille.fr">Historique</a>
-    <ul class="navbar-nav">
-    </ul>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Nom fichier :</span>
-        </div>
-        <input type="text" class="form-control" placeholder="sans extension" id="inputName">
-        <button class="btn btn-primary" id='downloadButton'>Sauvegarder</button>
-        <br>
-        <input type="file" id="buttonUpload">  
-    </div>
-  </nav>
 <center>
     <h2></h2>
 </center>
-<table id='mytable' class="table table-striped table-light">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+  <a class="navbar-brand" href="mailto://ksoltani@elv.telecom-lille.fr">Historique</a>
+  <ul class="navbar-nav">
+  </ul>
+  <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Nom fichier :</span>
+      </div>
+      <input type="text" class="form-control" placeholder="sans extension" id="inputName">
+      <button class="btn btn-primary" id='downloadButton'>Sauvegarder</button> 
+  </div>
+</nav>
+<table id='mytable'  width="500px">
     <thead class="thead-dark">
         <tr>
           <th>Date</th>
@@ -40,6 +38,6 @@
     <tbody>
     </tbody>
 </table>
-
+<input type="file" id="buttonUpload"> 
 <script src="hist.js"></script>
 <script src="download.js"></script>
