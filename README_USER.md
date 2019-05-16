@@ -1,6 +1,6 @@
 
 ## C'est quoi notre produit
-___Un application conteneur qui permet aux utilisateurs de lancer plusieurs applications en même temps.Les applications sont isolées dans le conteneur.___
+___Un conteneur d'application qui permet aux utilisateurs de lancer plusieurs applications en même temps. Les applications sont isolées dans le conteneur.___
 
 ## Comment utiliser votre conteneur 
 
