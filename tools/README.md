@@ -1,0 +1,2 @@
+# Répertoire tools
+Ce répertoire laissé vide sur le repository GitHub permet à l'utilisateur de la clé d'y entreposer ses différents outils 32 bits (comme par exemple un dossier Java Runtime Environment).

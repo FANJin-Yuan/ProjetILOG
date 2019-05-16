@@ -1,0 +1,2 @@
+# Répertoire tools64
+Ce répertoire laissé vide sur le repository GitHub permet à l'utilisateur de la clé d'y entreposer ses différents outils 64 bits (comme par exemple un dossier Java Runtime Environment).
