@@ -1,89 +1,92 @@
 # ILOG2019
-IHM de clé USB "Ilog".
+IHM de clÃ© USB "Ilog".
 
-L'arborescence en racine de ce repository GitHub représente la racine de la clé USB que vous pourrez utiliser pour travailler :
-* sur différents modules
-* sur différents ordinateurs et différents systèmes d'exploitation (Windows, Linux)
-* sur différents workspaces (contexte multi-utilisateurs)
-* en restant toujours sur la clé USB sans jamais modifier le système hôte
+L'arborescence en racine de ce repository GitHub reprÃ©sente la racine de la clÃ© USB que vous pourrez utiliser pour travailler :
+* sur diffÃ©rents modules
+* sur diffÃ©rents ordinateurs et diffÃ©rents systÃ¨mes d'exploitation (Windows, Linux)
+* sur diffÃ©rents workspaces (contexte multi-utilisateurs)
+* en restant toujours sur la clÃ© USB sans jamais modifier le systÃ¨me hÃ´te
 
 ## Utilisation
 
-### Prérequis
-L'arborescence en racine de ce repository GitHub représente la racine de la clé USB.
+### PrÃ©requis
+L'arborescence en racine de ce repository GitHub reprÃ©sente la racine de la clÃ© USB.
 En revanche, un simple clonage ne suffira pas pour l'utiliser correctement.
-Il faudra à minima :
-* posséder une archive de Java Runtime Environment (peu importe votre OS)
+Il faudra Ã  minima :
+* possÃ©der une archive de Java Runtime Environment (peu importe votre OS)
 
 ### Installation
 * Cloner le projet
-* Copier son contenu sur une clé USB préalablement formatée
-* Placer votre archive de JRE décompressée dans l'un des répertoires prévus pour les outils (à savoir tools pour les outils 32bits et tools64 pour les outils 64bits)
+* Copier son contenu sur une clÃ© USB prÃ©alablement formatÃ©e
+* Placer votre archive de JRE dÃ©compressÃ©e dans l'un des rÃ©pertoires prÃ©vus pour les outils (Ã  savoir tools pour les outils 32bits et tools64 pour les outils 64bits)
 
-En fonction de votre OS, il faudra ensuite ajouter le bin de votre JRE à la variable PATH :
-* Sur Linux : modifier le script run.sh
-Exemple avec le JRE 9.0.4 sous Linux 64 bits : > export PATH=$PATH:${PWD}/bin:${PWD}/tools64/jre-9.0.4_linux-x64/bin
-* Sur Windows : modifier le script run.bat
-Exemple (avec %~dp0 représentant le répertoire courant) : > set PATH=%~dp0bin;%~dp0tools64\jre\bin
+En fonction de votre OS, il faudra ensuite ajouter le bin de votre JRE Ã  la variable PATH :
+* Sous Linux : modifier le script **run.sh**  
+Exemple avec le JRE 9.0.4 sous Linux 64 bits :  
+`export PATH=$PATH:${PWD}/bin:${PWD}/tools64/jre-9.0.4_linux-x64/bin`
+* Sous Windows : modifier le script **run.bat**  
+Exemple (avec %~dp0 reprÃ©sentant le rÃ©pertoire courant) :  
+`set PATH=%~dp0bin;%~dp0tools64\jre\bin`
 
-Pour lancer l'application, il ne vous restera plus qu'à :
-* Sur Linux : exécuter le script run.sh (au moyen de la commande bash)
-* Sur Windows : double-cliquer sur le raccourci run.exe
+Pour lancer l'application, il ne vous restera plus qu'Ã  :
+* Sous Linux : exÃ©cuter le script **run.sh** (au moyen de la commande bash)
+* Sous Windows : double-cliquer sur le raccourci **run.exe**
 
-Par la suite, il est possible, en fonction des paramètres de votre système d'exploitation, que le programme se lance automatiquement au branchement de la clé USB.
-Cela est rendu possible par la présence d'un fichier autorun.inf à la racine de la clé spécifiant une action à réaliser à l'ouverture, ainsi qu'un titre et un logo.
-Cependant, sur les systèmes d'exploitation les plus récents, les paramètres par défaut bloquent ce type de mécanismes (autoplay/autorun) pour des raisons de sécurité.
+Par la suite, il est possible, en fonction des paramÃ¨tres de votre systÃ¨me d'exploitation, que le programme se lance automatiquement au branchement de la clÃ© USB.
+Cela est rendu possible par la prÃ©sence d'un fichier **autorun.inf** Ã  la racine de la clÃ© spÃ©cifiant une action Ã  rÃ©aliser Ã  l'ouverture, ainsi qu'un titre et un logo.
+Cependant, sur les systÃ¨mes d'exploitation les plus rÃ©cents, les paramÃ¨tres par dÃ©faut bloquent ce type de mÃ©canismes (autoplay/autorun) pour des raisons de sÃ©curitÃ©.
 
 ### Configuration
-Pour configurer différents outils comme vu précédemment avec le JRE, vous pouvez utiliser les répertoires
+Pour configurer diffÃ©rents outils comme vu prÃ©cÃ©demment avec le JRE, vous pouvez utiliser les rÃ©pertoires :
 * bin
 * tools
 * tools64
 
-Le dossier scripts est un répertoire accueillant différents scripts js pouvant être intégrés à l'application, veuillez vous référer à la documentation développeur si vous souhaitez en savoir plus sur le développement de nouveaux scripts
+Le dossier **scripts** est un rÃ©pertoire accueillant diffÃ©rents scripts **.js** pouvant Ãªtre intÃ©grÃ©s Ã  l'application, veuillez vous rÃ©fÃ©rer Ã  la documentation dÃ©veloppeur si vous souhaitez en savoir plus sur le dÃ©veloppement de nouveaux scripts.
 
-Le dossier users est un répertoire accueillant des sous-dossiers représentant chaque utilisateur de la clé, si besoin, chacun ayant son propre workspace et ses propres projets (l'utilisateur par défaut étant "user")
+Le dossier **users** est un rÃ©pertoire accueillant des sous-rÃ©pertoires reprÃ©sentant chaque utilisateur de la clÃ©, si besoin, chacun ayant son propre workspace et ses propres projets (l'utilisateur par dÃ©faut Ã©tant "user").
 
-Par défaut, l'application d'explorer démarre sur la racine de la clé, afin de permettre à l'utilisateur d'avoir accès aux différents répertoires de la clé.
-Cependant, si vous souhaitez changer ce répertoire de lancement par défaut, vous pouvez le faire au moyen du fichier explorer.properties, en modifiant la variable rootPath.
-Exemple (pour une exploration à partir du dossier users) : > rootPath=./users/
-En commentant simplement la ligne pour qu'elle ne soit plus effective, l'exploration s'effectuera à partir de la racine du disque dur de l'ordinateur hôte.
-Exemple (pour une exploration à partir du disque dur hôte) : > #rootPath=./
+Par dÃ©faut, l'application d'explorer dÃ©marre sur la racine de la clÃ©, afin de permettre Ã  l'utilisateur d'avoir accÃ¨s aux diffÃ©rents rÃ©pertoires de la clÃ©.
+Cependant, si vous souhaitez changer ce rÃ©pertoire de lancement par dÃ©faut, vous pouvez le faire au moyen du fichier **explorer.properties**, en modifiant la variable **rootPath**.  
+Exemple (pour une exploration Ã  partir du dossier users) : `rootPath=./users/`
+En commentant simplement la ligne avec un # pour qu'elle ne soit plus effective, l'exploration s'effectuera Ã  partir de la racine du disque dur de l'ordinateur hÃ´te : `#rootPath=./`
 
 ### Mode d'emploi
-Une fois l'application lancée avec run.exe (si vous êtes sous Windows) ou run.sh (si vous êtes sur Linux), vous pourrez choisir de continuer en tant qu'utilisateur par défaut (user) ou en tant qu'utilisateur custom.
-Si vous choisissez d'être utilisateur custom, renseignez un pseudo et cliquez sur "Continuer". Un répertoire utilisateur et un workspace seront automatiquement créés s'ils ne l'étaient pas déjà.
-Vous pouvez ensuite utiliser l'explorateur et lancer par exemple un de vos outils présents dans le répertoire bin (comme Eclipse ou Netbeans) pour commencer à travailler et utiliser votre propre workspace.
-L'intérêt de travailler sur la clé USB est de pouvoir bouger facilement son outil de travail sans se soucier ni de l'ordinateur sur lequel brancher la clé ni sur son système d'exploitation.
-La clé USB devient en quelque sorte un "ordinateur de travail portable".
+Une fois l'application lancÃ©e avec **run.exe** (si vous Ãªtes sous Windows) ou **run.sh** (si vous Ãªtes sur Linux), vous pourrez choisir de continuer en tant qu'utilisateur par dÃ©faut (user) ou en tant qu'utilisateur custom.
 
-## Développement
-Si vous souhaitez effectuer du développement pour améliorer l'application ou corriger certains bugs, sachez que le code source du projet "FileExplorer" est disponible dans le workspace de l'utilisateur par défaut "user".
+Si vous choisissez d'Ãªtre utilisateur custom, renseignez un pseudo et cliquez sur "*Continuer*". Un rÃ©pertoire utilisateur et un workspace seront automatiquement crÃ©Ã©s s'ils ne l'Ã©taient pas dÃ©jÃ .
 
-### Outils à installer
-Il n'y a aucun outil à installer si vous possédez l'archive ilog.zip disponible sur whippet.
-Vous trouverez dans celle-ci les différents outils dont vous aurez besoin pour développer (le logiciel eclipse, le jdk, le jre, les jars des bibliothèques etc).
+Vous pouvez ensuite utiliser l'explorateur et lancer par exemple un de vos outils prÃ©sents dans le rÃ©pertoire **bin** (comme Eclipse ou Netbeans) pour commencer Ã  travailler et utiliser votre propre workspace.
 
-### Config environnement de développement
-Pour ouvrir le projet et être capable de le lancer ou le débugger :
+L'intÃ©rÃªt de travailler sur la clÃ© USB est de pouvoir bouger facilement son outil de travail sans se soucier ni de l'ordinateur sur lequel brancher la clÃ© ni de son systÃ¨me d'exploitation. La clÃ© USB devient en quelque sorte un **"ordinateur de travail ultra-portable"**.
+
+## DÃ©veloppement
+Si vous souhaitez effectuer du dÃ©veloppement pour amÃ©liorer l'application ou corriger certains bugs, sachez que le code source du projet "FileExplorer" est disponible dans le workspace de l'utilisateur par dÃ©faut "user".
+
+### Outils Ã  installer
+Il n'y a aucun outil Ã  installer si vous possÃ©dez l'archive **ilog.zip** disponible sur whippet.
+Vous trouverez dans celle-ci les diffÃ©rents outils dont vous aurez besoin pour dÃ©velopper (le logiciel eclipse, le jdk, le jre, les jars des bibliothÃ¨ques etc).
+
+### Config environnement de dÃ©veloppement
+Pour ouvrir le projet et Ãªtre capable de le lancer ou le dÃ©bugger :
 * Ouvrir Eclipse
 * File > Open Project from File System...
-* Choisir le projet "FileExplorer" dans le workspace du user par défaut
-* Régler les éventuels problèmes de compatibilité en fonction de votre JDK ou de votre OS (certains jars spécifiques à changer comme celui de SWT sous Linux)
+* Choisir le projet "FileExplorer" dans le workspace du user par dÃ©faut
+* RÃ©gler les Ã©ventuels problÃ¨mes de compatibilitÃ© en fonction de votre JDK ou de votre OS (certains jars spÃ©cifiques Ã  changer comme celui de SWT sous Linux)
 
-Vous pouvez maintenant exécuter l'application, la débugger, et avez la possibilité d'ajouter des scripts dans les dossiers :
+Vous pouvez maintenant exÃ©cuter l'application, la dÃ©bugger, et avez la possibilitÃ© d'ajouter des scripts dans les dossiers :
 * scripts/contextMenus
 * scripts/menus
 
-Pour regénérer un jar et l'utiliser sur la clé USB :
+Pour regÃ©nÃ©rer un jar et l'utiliser sur la clÃ© USB :
 * Cliquer droit sur le projet
 * Export...
 * Jave / Runnable JAR file
-* Choisir comme point d'entrée le Main de la classe Ihm
-* Choisir la racine de la clé comme export destination
+* Choisir comme point d'entrÃ©e le Main de la classe Ihm
+* Choisir la racine de la clÃ© comme export destination
 * Nommer le jar "explorer.jar"
 * Finish
 
-### Présentation de l'architecture, des concepts
+### PrÃ©sentation de l'architecture, des concepts
 
 ### Documentation du code
