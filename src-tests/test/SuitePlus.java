@@ -17,6 +17,7 @@ import org.junit.runners.model.RunnerBuilder;
 import org.junit.runners.model.Statement;
 
 import com.fazecast.jSerialComm.SerialPort;
+
 /**
  * Using SerialSuite as a runner allows you to manually build a suite containing tests from many classes and send
  * the results to a serial port. To use it, annotate a class with @RunWith(SerialSuite.class) and 
@@ -36,14 +37,12 @@ public class SuitePlus extends Suite {
 	}
 
 	/**
-	 * Runs the test for this runner and finds the number of tests classes in the suite.
+	 * Runs the test for this runner and sets the number of tests classes in the suite.
 	 */
 	@Override
 	public void run(final RunNotifier notifier) {
 		Annotation[] arrAnnotation = AllTests.class.getDeclaredAnnotations();
 		for (Annotation annotation : arrAnnotation) {
-			System.out.println(annotation.toString());
-			System.out.println(annotation.annotationType().toString());
 			if (annotation.annotationType().toString().equals("interface org.junit.runners.Suite$SuiteClasses")) {
 				SuiteClasses testSuiteAnnotation = (SuiteClasses) annotation;
 				iTestNb = testSuiteAnnotation.value().length;
@@ -51,6 +50,7 @@ public class SuitePlus extends Suite {
 
 		}
 
+		//Default run implementation of class ParentRunner<Runner> which Suite extends.
 		EachTestNotifier testNotifier = new EachTestNotifier(notifier, getDescription());
 		testNotifier.fireTestStarted();
 		try {
@@ -68,7 +68,8 @@ public class SuitePlus extends Suite {
 	}
 
 	/**
-	 * Runs the test corresponding to child
+	 * Runs the test corresponding to child runner.
+	 * Performs connection to serial port and sends defined message.
 	 */
 	@Override
 	protected void runChild(Runner runner, final RunNotifier notifier) {
@@ -87,7 +88,7 @@ public class SuitePlus extends Suite {
 				SerialPort serialPort = setSerialPort();
 				if (serialPort.openPort()) {
 					PrintWriter output = new PrintWriter(serialPort.getOutputStream());
-					messageFormat();
+					messageSet();
 					Thread.sleep(2000);
 					output.print(message);
 					output.flush();
@@ -99,8 +100,8 @@ public class SuitePlus extends Suite {
 
 
 	/**
-	 * 
-	 * @return
+	 * Gives serial port corresponding to input value.
+	 * @return Said serial port
 	 */
 	private SerialPort setSerialPort() {
 		// attempt to connect to the serial port
@@ -110,9 +111,11 @@ public class SuitePlus extends Suite {
 	}
 	
 	/**
-	 * 
+	 * Sets the message to send based on the following format.
+	 * Example for testName1 that was a success and testName2 that failed 2 tests out of 7 :
+	 * testName1|ok;nomTest2|5/7|ko
 	 */
-	private void messageFormat() {
+	private void messageSet() {
 		for (int i = 0; i < listTests.size(); i++) {
 			String status;
 			if (listResults.get(i).wasSuccessful()) {
@@ -125,12 +128,18 @@ public class SuitePlus extends Suite {
 		}
 	}
 
+	/**
+	 * Concatenates each test name and result to message according to preset format.
+	 * @param i index of results and test names lists
+	 * @param status 
+	 */
 	private void messageCat(int i, String status) {
 		message = message + listTests.get(i) + "|" + status + ";";
 	}
 
 	/**
-	 * 
+	 * Defines string to be sent to serial port when a test is successful.
+	 * @return String to be sent to serial port when a test is successful.
 	 */
 	private String successStatus() {
 		String status;
@@ -139,9 +148,9 @@ public class SuitePlus extends Suite {
 	}
 
 	/**
-	 * 
-	 * @param i
-	 * @return
+	 * Defines string to be sent to serial port when a test failed.
+	 * @param i index of test result being checked
+	 * @return String to be sent to serial port when a test failed.
 	 */
 	private String failureStatus(int i) {
 		String status;
@@ -151,9 +160,9 @@ public class SuitePlus extends Suite {
 	}
 
 	/**
-	 * 
-	 * @param runner
-	 * @return
+	 * Gets the test class for runner passed in parameters
+	 * @param runner handling the test class
+	 * @return Said test class
 	 */
 	private Class<?> getTestClass(Runner runner) {
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
