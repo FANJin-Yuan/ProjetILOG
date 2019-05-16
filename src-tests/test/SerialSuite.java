@@ -2,6 +2,11 @@ package test;
 
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationTypeMismatchException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 
 import org.junit.AssumptionViolatedException;
@@ -27,7 +32,14 @@ import com.fazecast.jSerialComm.SerialPort;
  */
 public class SerialSuite extends Suite {
 
+	@Retention(RetentionPolicy.RUNTIME)  
+	@Target(ElementType.TYPE)  
+	@interface SetCommPort{  
+		String value();  
+		}
+	
 	static int iTestNb;
+	static String commPort;
 	static ArrayList<String> listTests = new ArrayList<String>();
 	static ArrayList<Result> listResults = new ArrayList<Result>();
 	static String message = "";
@@ -47,7 +59,12 @@ public class SerialSuite extends Suite {
 				SuiteClasses testSuiteAnnotation = (SuiteClasses) annotation;
 				iTestNb = testSuiteAnnotation.value().length;
 			}
-
+			else if (annotation.annotationType().toString().equals("interface test.SerialSuite$SetCommPort")) {
+				
+				SetCommPort commPortAnnotation = (SetCommPort) annotation;
+				commPort = commPortAnnotation.value();
+				System.out.println(commPort);
+			}
 		}
 
 		//Default run implementation of class ParentRunner<Runner> which Suite extends.
@@ -105,7 +122,7 @@ public class SerialSuite extends Suite {
 	 */
 	private SerialPort setSerialPort() {
 		// attempt to connect to the serial port
-		SerialPort serialPort = SerialPort.getCommPort("COM3");
+		SerialPort serialPort = SerialPort.getCommPort(commPort);
 		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
 		return serialPort;
 	}
