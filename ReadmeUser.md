@@ -12,7 +12,7 @@ Commencez par télécharger l’IDE Arduino. Une fois l’installation réussi s
       - Connecter le câble USB entre la carte TTGO et l’ordinateur
       - Le gestionnaire de périphérique affiche un appareil “CP210x USB to UART Bridge” sans driver
       - L’installation automatique du driver ne fonctionne pas
-      - télécharger et dézipper les drivers zipper depuis silabs
+      - télécharger et dézipper les drivers zipper depuis https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
       - installer le driver en désignant cette emplacement
   - Relancer l’IDE Arduino et sélectionner le port COM
   - Choisissez le “WRover module” dans la section ESP32
