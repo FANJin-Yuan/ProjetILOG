@@ -57,8 +57,10 @@ Installation IDE Arduino, téléchargement des bibliothèques RGB_lcd.h et Keypa
 
 ### Code Arduino : Axes d’améliorations
 
-Utilisation de tableaux à taille dynamique pour stocker les tests. 
+Utilisation de tableaux à taille dynamique pour stocker les tests.
+
 Optimisation de l’occupation de la mémoire.
+
 Optimisation du code, factorisation de certaines fonctions.
 
 ### Axes d’améliorations générales du projet
