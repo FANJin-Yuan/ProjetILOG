@@ -68,10 +68,16 @@ function dateFilter()
 			}
 		var startDate = document.getElementById("startDate").value;
 		var endDate = document.getElementById("endDate").value;
-		if (!(isDateOk(startDate) && isDateOk(endDate)))
-			return false
-		var _startDate = new Date(parseInt(startDate.substring(6, 10)), parseInt(startDate.substring(4, 6))-1, parseInt(startDate.substring(0, 2)), 0, 0, 0);
-		var _endDate = new Date(parseInt(endDate.substring(6, 10)), parseInt(endDate.substring(4, 6))-1, parseInt(endDate.substring(0, 2)), 23, 59, 59);
+		
+		if (!(isDateOk(startDate)))
+			var _startDate = new Date(1900, 1, 1, 0, 0, 0);
+		else 
+			var _startDate = new Date(parseInt(startDate.substring(6, 10)), parseInt(startDate.substring(4, 6))-1, parseInt(startDate.substring(0, 2)), 0, 0, 0);
+		if (!(isDateOk(endDate)))
+			var _endDate = new Date(2100, 12, 31, 0, 0, 0);
+		else 
+			var _endDate = new Date(parseInt(endDate.substring(6, 10)), parseInt(endDate.substring(4, 6))-1, parseInt(endDate.substring(0, 2)), 23, 59, 59);
+
 		if (!(_startDate < _endDate))
 			return false
 		
@@ -81,14 +87,14 @@ function dateFilter()
 				if (events[i].DTSTART != undefined && events[i].DTEND != undefined && events[i].DTSTART > _startDate && events[i].DTEND < _endDate)
 					filteredEvents.push(events[i]);
 			}
-		console.log(filteredEvents);
 		return filteredEvents;
 	}
 
 function updateWithFilter()
 	{
 		var filteredEvents = dateFilter();
-		displayEvents(filteredEvents);
+		if (filteredEvents)
+			displayEvents(filteredEvents);
 	}
 
 /*
@@ -234,10 +240,10 @@ function displayEvents(events)
 
     function applyCustom(){
       console.log('Fire apply custom');
-      eventsArray.filter( e => e.SUMMARY === "FERIE" );
+      // eventsArray = eventsArray.filter(a => a.SUMMARY == "FERIE");
+      eval(document.getElementById("custom").value);
       console.log(eventsArray);
-      var test = `console.log('testfuction')`;
-      eval(test);
+      displayEvents(eventsArray);
     }
 
 
