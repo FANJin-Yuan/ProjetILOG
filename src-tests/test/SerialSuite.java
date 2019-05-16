@@ -21,7 +21,7 @@ import com.fazecast.jSerialComm.SerialPort;
 /**
  * Using SerialSuite as a runner allows you to manually build a suite containing tests from many classes and send
  * the results to a serial port. To use it, annotate a class with @RunWith(SerialSuite.class) and 
- * @SuiteClasses(TestClass1.class, ...). When you run this class, it will run all the tests in all the suite classes
+ * {@literal @}SuiteClasses(TestClass1.class, ...). When you run this class, it will run all the tests in all the suite classes
  * and send the results to the serial port.
  *
  */
