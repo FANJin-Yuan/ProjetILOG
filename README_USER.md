@@ -10,14 +10,14 @@ ___Un conteneur d'application qui permet aux utilisateurs de lancer plusieurs ap
  - 2. __Configuration le fichier conteneur.properties:__
 	- Ajouter les noms des applications que vous voulez lancer dans la propriété ***applis***.
 	- Ajouter les propriétés *.jarsFolder pour le chemin de dossiers contenant des .jar ou des .class.
-	- Ajouter les propriétés *.class qui contient le nom de package+le nom de classe.
+	- Ajouter les propriétés *.class qui contient le nom de package + le nom de classe.
 - 3. __Personnaliser votre application__
 	- Ajouter le projet ___Conteneur___ dans le Java Build Path du projet ___Applications___.
-	- Importer le projet ___Applications___, il y a des squelette des applications.
-	- Definir les comportement de votre l'application dans les méthodes: init(), start(), stop() et destroy();
-	- Créer un dossier prope pour cette nouvelle application sous le dossier ***jars*** et exporter votre application 		      en *.jar.
+	- Importer le projet ___Applications___, il y a des squelettes des applications.
+	- Definir les comportements de votre application dans les méthodes: init(), start(), stop() et destroy();
+	- Créer un dossier prope pour cette nouvelle application sous le dossier ***jars*** du projet ___Conteneur___ et exporter votre 	application en *.jar.
 	- Lancer le conteneur.
-	- Pour lancer les applications correctement, il faut respecter le cycle la vie de l’application.
+	- Pour lancer les applications correctement, il faut respecter le cycle de vie de l’application.
 - 4. __Deploiement <<à chaud>>__
-	- Après vous avez modifié votre application, n'arrêtez pas  le conteneur! Juste reexporter votre application et                 écraser ancien fichier .jar et recliquer le bouton init() de cette appli pour le recharger.
-	- Après vous peuvent lancer cette nouvelle application grâce au bouton start.
+	- Si vous avez modifié votre application, n'arrêtez pas le conteneur! Juste réexporter votre application et écraser ancien fichier .jar et recliquer le bouton init() de cette application pour la recharger.
+	- Après vous pouvez lancer cette nouvelle application grâce au bouton start().
