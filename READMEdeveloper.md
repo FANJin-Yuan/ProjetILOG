@@ -24,23 +24,24 @@ Installation IDE Arduino, téléchargement des bibliothèques RGB_lcd.h et Keypa
 
 ### Initialisation
 
-	-Import des bibliothèques relatives à l’écran LCD et au clavier 12 touches
+-Import des bibliothèques relatives à l’écran LCD et au clavier 12 touches
 -Définition de certaines variables (taille des tableaux, longueur des cases…)
 -Création d’une matrice pour utiliser les touches du clavier.
 -Définition des variables
 
 ### Setup()
 
-	-Initialisation de la lecture sur port série
-	-Initialisation de l’écran LCD RGB
-	-Affichage d’un message initial d’attente 
-	-Initialisation des index
+-Initialisation de la lecture sur port série
+-Initialisation de l’écran LCD RGB
+-Affichage d’un message initial d’attente 
+-Initialisation des index
+
 ### Loop()
 
 -Initialisation d’un tableau pour les tests et d’un « char » pour la récupération des touches appuyées
-	-Quand signal repéré sur le port série : 
+-Quand signal repéré sur le port série : 
 		-Récupération d’une « String », mise au format « char* »
--Isolement de chaque test de la « String » repérés grâce à un séparateur (« ; ») et mise de chaque test dans une des cases du tableau
+	-Isolement de chaque test de la « String » repérés grâce à un séparateur (« ; ») et mise de chaque test dans une des cases du tableau
 		-Récupération du nombre de tests trouvé
 		-Signification à l’utilisateur que les tests sont récupérés et présents dans le tableau
 	-A l’appui d’une touche du Keypad (4 ou 6) :
