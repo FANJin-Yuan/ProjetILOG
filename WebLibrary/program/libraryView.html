@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Online Library</title>
+<script type="text/javascript" src="adminiRequest.js"></script>
+<script type="text/javascript" src="clearTabHTML.js"></script>
+<script type="text/javascript" src="searchRequest.js"></script>
+</head>
+<body>
+<body>
+	<head><h1>Online book search system</h1></head>
+<hr />
+
+<!--Search with ISBN, book name or author name -->
+<div> 
+     <h2>pleas entre the book information to start search:</h2>
+		Search by ISBN:<input type="text" name="bookID" id="sBookID"> <br>
+		Search by book name: <input type="text" name="bookNm" id="sBookNm"> <br>
+		Search by author name: <input type="text" name="authorNm" id="sAuthorNm"> <br>
+		Search Result:	<span type=text id="searchResult"></span><br>
+		<input type="button" name="submit" value="Search" onclick="javascript:searchRequest(document.getElementById('sBookID').value,document.getElementById('sBookNm').value,document.getElementById('sAuthorNm').value,'search')"> <br>
+
+    <hr />
+</div>
+
+<!--Record all the administrative operation -->
+<div>
+	<h2>Operation history:</h2>
+    <table cellspacing="0" border="1" id="tabOpera">
+		<tbody>
+        <tr>
+          <th>ISBN</th>
+          <th>Book Name</th>
+          <th>Author Name</th>
+		  <th>Operation</th>
+        </tr>
+		</tbody>
+    </table>
+
+    <input type="button" value="clear" onclick="javascript:clearTabHTML()" /> <!-- button clean the operation history -->
+	<hr />
+</div>
+
+
+<div>
+	<h2>Administration tools:</h2>
+	<a href="#modi">- modify book information</a><br>
+	<a href="#add">- add a book</a> <br>
+	<a href="#delet">- delete a book</a><br><br>
+
+</div>
+<div>
+	<!--modify the book information-->
+	<a name="modi"><h4>Modify the book information:</h4></a><br>
+	    Old ISBN:<input type="text" name="bookID" id="oBookID"> <br>
+		New ISBN:<input type="text" name="bookID" id="nBookID"> <br>
+		New book name: <input type="text" name="bookNm" id = "nBookNm"> <br>
+		New author name: <input type="text" name="autherNm" id= "nAutherNm"> <br>
+		<input type="button" name="submit" value="OK" onclick="javascript:adminiRequest(document.getElementById('oBookID').value,document.getElementById('nBookID').value,document.getElementById('nBookNm').value,document.getElementById('nAutherNm').value)"> <br><br>
+		
+	<!--add a new book -->
+	<a name="add"><h4>Add a book:</h4></a><br>
+		New ISDN:<input type="text" name="bookID" id="adBookID" > <br>
+		New book name: <input type="text" name="bookNm" id="adBookNm"> <br>
+		New auther name: <input type="text" name="autherNm" id="adAutherNm"> <br>
+		<input type="button" name="submit" value="OK" onclick="javascript:adminiRequest(document.getElementById('adBookID').value,document.getElementById('adBookNm').value,document.getElementById('adAutherNm').value, 'add')"> <br><br>
+
+	<!--delet the book with his ISBN-->
+	<a name="delet"><h4>Delete a book:</h4></a><br>
+		Book ISBN:<input type="text" name="bookID" id="dbookID"> <br>
+		<input type="button" name="submit" value="OK" onclick="javascript:adminiRequest(document.getElementById('dbookID').value,'no','no','delet')""><br>
+
+		
+</div>
+
+</body>
+</html>
