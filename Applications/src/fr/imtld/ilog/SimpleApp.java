@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
+// Une application simple
 public class SimpleApp implements Iapplication, Runnable {
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
 	protected ServerSocket _sockSvr;
@@ -19,7 +19,7 @@ public class SimpleApp implements Iapplication, Runnable {
 	protected volatile int port = 2015;
 	protected ServerListener _lsn;
 
-	// Une application simple
+	
 	public void addServerlistener(ServerListener lsn) {
 		if(_lsn==null)
 			_lsn=lsn;	
