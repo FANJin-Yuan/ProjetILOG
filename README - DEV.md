@@ -11,7 +11,7 @@ Ce fichier sert à adier la developper à bien comprendre et utiliser de cette p
 L'environnement de local serveur est nécessaire, il faut installer la suite web serveur( nous avons chioisi WampServer, un suite légé et user-friendly, cliquez [ici](http://www.wampserver.com/en/download-wampserver-64bits/ "Download wampserver 64-bits") à installer).
 Chaque fois avant d'utilier ce produit, être sur la serveur est en train de dérouler.
     
-Dézippez la fichier dans la chemin sous la serveur WamperServer: "C:\~\wamp64\www", vous allez avoir un dossier nommé: "OnlineLibrary" et il y a deux sous-dossiers: "base" et "program",todo
+Dézippez la fichier dans la chemin sous la serveur WamperServer: "C:\~\wamp64\www", vous allez avoir un dossier nommé: "WebLibrary" et il y a deux sous-dossiers: "base" et "program", coupe la dossier "base" dans la racine de driver c:/base.
 
     
 ### présentation de l'architecture, des concepts
