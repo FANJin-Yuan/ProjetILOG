@@ -12,6 +12,7 @@ ___Un conteneur d'application qui permet aux utilisateurs de lancer plusieurs ap
 	- Ajouter les propriétés *.jarsFolder pour le chemin de dossiers contenant des .jar ou des .class.
 	- Ajouter les propriétés *.class qui contient le nom de package+le nom de classe.
 - 3. __Personnaliser votre application__
+	- Ajouter le projet ___Conteneur___ dans le Java Build Path du projet ___Applications___.
 	- Importer le projet ___Applications___, il y a des squelette des applications.
 	- Definir les comportement de votre l'application dans les méthodes: init(), start(), stop() et destroy();
 	- Créer un dossier prope pour cette nouvelle application sous le dossier ***jars*** et exporter votre application 		      en *.jar.
