@@ -2,7 +2,7 @@
 ## Les outils à installer 
   - 1. Installer les plugins de SWT/JFace dans le site http://www.eclipse.org/windowbuilder/download.php pour votre Eclipse.
 ## Importer les codes sources
-  - 1. Créer un SWT/Jface Projet.
+  - 1. Créer un SWT/JFace Projet.
   - 2. Importer les codes sources de Conteneur, le dossier de jars et le fichier **.properties*
   - 3. Importer le projet Application, qui définit les squelettes.
   - 3. Améliorer le Conteneur.
