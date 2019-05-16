@@ -17,7 +17,6 @@ public class Watch {
     public static void main( String args[] ) {
             Watch watch = new Watch();
 
-          //  watch.displayLocalTime();
             watch.displayServerTime(args[0],"CET");
             
     }
