@@ -88,5 +88,9 @@ Pour regénérer un jar et l'utiliser sur la clé USB :
 * Finish
 
 ### Présentation de l'architecture, des concepts
+Concernant l'architecture de la clé USB, veuillez vous référer aux parties sur l'installation, la configuration et le mode d'emploi de la clé. Concernant l'architecture et les concepts du projet Java, veuillez vous référer :
+* Aux sujets de TP concernant SWT, JFace ainsi que le scripting applicatif
+* A la Javadoc de nos classes principales que nous allons générer dans le projet Java (cf. projet "FileExplorer" dans le workspace du user par défaut).
 
 ### Documentation du code
+Comme vu précédemment, une documentation Javadoc sera rendue disponible dans le projet Java (cf. projet "FileExplorer" dans le workspace du user par défaut).
