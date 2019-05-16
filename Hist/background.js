@@ -1,7 +1,9 @@
+//Fonction utilisee pour le formatage des dates.
 Number.prototype.padLeft = function (base, chr) {
     var len = (String(base || 10).length - String(this).length) + 1;
     return len > 0 ? new Array(len).join(chr || '0') + this : this;
 }
+
 chrome.webNavigation.onCommitted.addListener(evt => {
     // Filter out any sub-frame related navigation event
     if (evt.frameId !== 0) {
@@ -25,10 +27,12 @@ chrome.webNavigation.onCommitted.addListener(evt => {
         url: [{ schemes: ["http", "https"] }]
     });
 
+//Reponses au requêtes
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    //retourne la valeur de l'index (nombre d'url dans l'historique)
     if (request.method == "getIndex")
         sendResponse({ index: chrome.storage.local['index'] });
-
+    //retourne un string contenant les données au format CSV.
     else if (request.method == "getAll") {
         index = chrome.storage.local['index'];
         str_all = "dateTime;url;";
@@ -37,8 +41,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         }
         sendResponse({ all: str_all });
     }
+    //Retourne l'url et la date associe au parametre index donne en parametre.
     else if (request.type == "url")
         sendResponse({ data: chrome.storage.local[request.method] });
+    //Enregistre les lignes du fichie csv importe dans la memoire cache.
     else if (request.type == "input") {
         try {
             var lines = request.method.split(';');
