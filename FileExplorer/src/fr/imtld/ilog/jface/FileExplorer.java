@@ -34,6 +34,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
 
+import fr.imtld.ilog.jface.actions.ExitAction;
+import fr.imtld.ilog.jface.actions.OpenAction;
+import fr.imtld.ilog.jface.actions.ParentAction;
+import fr.imtld.ilog.jface.utils.FileUtils;
+import fr.imtld.ilog.jface.utils.Root;
+import fr.imtld.ilog.jface.utils.TableFilter;
+import fr.imtld.ilog.jface.utils.TableSorter;
+import fr.imtld.ilog.jface.utils.TreeFilter;
+
 public class FileExplorer extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
 
 	public static enum Status {

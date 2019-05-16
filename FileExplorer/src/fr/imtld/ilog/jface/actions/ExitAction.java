@@ -1,6 +1,8 @@
-package fr.imtld.ilog.jface;
+package fr.imtld.ilog.jface.actions;
 
 import org.eclipse.jface.action.Action;
+
+import fr.imtld.ilog.jface.FileExplorer;
 
 public class ExitAction extends Action {
 	protected FileExplorer explo;

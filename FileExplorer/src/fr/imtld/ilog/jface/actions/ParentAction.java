@@ -1,9 +1,12 @@
-package fr.imtld.ilog.jface;
+package fr.imtld.ilog.jface.actions;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TableViewer;
+
+import fr.imtld.ilog.jface.FileExplorer;
+import fr.imtld.ilog.jface.utils.FileUtils;
 
 public class ParentAction extends Action {
 	protected FileExplorer expl;

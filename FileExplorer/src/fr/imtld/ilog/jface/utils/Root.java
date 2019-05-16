@@ -1,4 +1,4 @@
-package fr.imtld.ilog.jface;
+package fr.imtld.ilog.jface.utils;
 
 import java.io.File;
 

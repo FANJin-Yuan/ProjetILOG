@@ -14,12 +14,15 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.graphics.Image;
 
+import fr.imtld.ilog.jface.utils.FileUtils;
+import fr.imtld.ilog.jface.utils.Root;
+
 public class FileContentProvider implements ITreeContentProvider, ILabelProvider, ITableLabelProvider {
 
-	protected Image imgArchive = new Image(null, "Archive.gif");
-	protected Image imgFolder = new Image(null, "Folder.gif");
-	protected Image imgDoc = new Image(null, "Document.gif");
-	protected Image imgJar = new Image(null, "Jar.gif");
+	protected Image imgArchive = new Image(null, "res/Archive.gif");
+	protected Image imgFolder = new Image(null, "res/Folder.gif");
+	protected Image imgDoc = new Image(null, "res/Document.gif");
+	protected Image imgJar = new Image(null, "res/Jar.gif");
 
 	private FileExplorer explo;
 

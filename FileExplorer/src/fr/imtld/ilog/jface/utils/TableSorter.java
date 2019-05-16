@@ -1,9 +1,11 @@
-package fr.imtld.ilog.jface;
+package fr.imtld.ilog.jface.utils;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+
+import fr.imtld.ilog.jface.FileExplorer;
 
 public class TableSorter extends ViewerComparator {
 

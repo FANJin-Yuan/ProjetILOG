@@ -1,11 +1,13 @@
-package fr.imtld.ilog.jface;
+package fr.imtld.ilog.jface.actions;
 
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.program.Program;
+
+import fr.imtld.ilog.jface.FileExplorer;
+import fr.imtld.ilog.jface.utils.FileUtils;
 
 public class OpenAction extends Action {
 	protected FileExplorer expl;
@@ -30,7 +32,7 @@ public class OpenAction extends Action {
 					Program.launch(path);
 				}
 				expl.setStatus(FileExplorer.Status.READY.getMsg());
-			} catch (FileSystemException e) {
+			} catch (Exception e) {
 				expl.err(e.getMessage());
 				expl.setStatus(FileExplorer.Status.ERROR.getMsg());
 			}

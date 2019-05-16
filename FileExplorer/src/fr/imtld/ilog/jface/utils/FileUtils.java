@@ -1,4 +1,4 @@
-package fr.imtld.ilog.jface;
+package fr.imtld.ilog.jface.utils;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -24,7 +24,7 @@ public class FileUtils {
 	
 	protected static FileSystemManager fm;
 
-	protected static FileSystemManager getFSManager() throws FileSystemException {
+	public static FileSystemManager getFSManager() throws FileSystemException {
 		if (fm == null)
 			fm = VFS.getManager();
 		return fm;
