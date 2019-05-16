@@ -6,7 +6,7 @@
 }
 
 body{
-  background-color:#404040;
+  background-color:#606060;
   padding-top:10px;
   text-align: center;
   margin:0;
@@ -63,6 +63,11 @@ h3{
 #importLine1{
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+#importLine1 form{
+  margin-right: 50px;
 }
 
 #importLine2{
@@ -74,4 +79,11 @@ h3{
 #importLine2 input{
   margin-left:50px;
 }
+
+#dateFilters, #customFilter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 

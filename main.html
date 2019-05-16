@@ -29,14 +29,14 @@
 
     <div id="component">
         <div id="leftSide">
-    
+
             <h1>I. Import your ICS file</h1>
             <h3> From your clipboard ...</h3>
             <div id="importLine1">
                 <!-- Input form -->
                 <form action="#">
                     <div class="mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" type="text" id="icsInput">
+                        <textarea class="mdl-textfield__input" type="text" id="icsInput"></textarea>
                         <label class="mdl-textfield__label" for="icsInput">Paste .ics file here ...</label>
                     </div>
                 </form>
@@ -45,40 +45,73 @@
                     Import
                 </button>
             </div>
-    
+
             <h3> ... Or use the example data, even the file explorer !</h3>
-    
+
             <!-- Example use button -->
             <div id="importLine2">
-    
+
                 <button onclick="importICS('EXAMPLE')"
                     class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                     Use ILOG example data
                 </button>
-    
+
                 <!-- File Explorer -->
                 <input type="file" id="files" name="files[]" />
             </div>
-    
+
             <!-- File Explorer Use Detector -->
             <script>
                 document.getElementById('files').addEventListener('change', handleFileSelect, false);
             </script>
         </div>
-    
+
         <div id="rightSide">
             <h1>II. Generate calendar</h1>
-            
+
+            <div id="dateFilters">
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="startDate">
+                        <label class="mdl-textfield__label" for="startDate">Start Date</label>
+                    </div>
+                </form>
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="endDate">
+                        <label class="mdl-textfield__label" for="endDate">End Date</label>
+                    </div>
+                </form>
+                <button onclick=""
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    Apply
+                </button>
+            </div>
+
+            <div id="customFilter">
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <textarea class="mdl-textfield__input" type="text" rows="1" id="sample5"></textarea>
+                        <label class="mdl-textfield__label" for="sample5">User custom filter function</label>
+                    </div>
+                </form>
+                <button onclick=""
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    Apply custom
+                </button>
+            </div>
+
             <div id="calendar"></div>
-    
+
+
         </div>
     </div>
 
     <!-- Snackbar -->
     <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-          </div>
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
 </body>
 
 </html>

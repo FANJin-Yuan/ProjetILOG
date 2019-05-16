@@ -52,7 +52,7 @@ function convDateString(rawDate) {
   var stringDate = rawDate;
   if (rawDate.includes(":"))
     stringDate = rawDate.split(":")[1];
-  return new Date(stringDate.substring(0, 4), stringDate.substring(4, 6), stringDate.substring(6, 8), stringDate.substring(9, 11), stringDate.substring(11, 13), stringDate.substring(13, 15));
+  return new Date(stringDate.substring(0, 4), stringDate.substring(4, 6)-1, stringDate.substring(6, 8), stringDate.substring(9, 11), stringDate.substring(11, 13), stringDate.substring(13, 15));
 }
 
 /** 
