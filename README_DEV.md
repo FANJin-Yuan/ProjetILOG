@@ -13,7 +13,8 @@ Il y a des méthodes principales:*
  - 2.  createContents: Créer une interface utilisateur avec les button liée aux différents fonctions de l'application, et     affiche l'état de l'application.
  - 3. init(app), run(app), stopApp(app), destroy(app): quand on appuie les boutons concernant, l'un de ceux-ci sont appellé pour appeler les méthodes de l'application concernant. Dans la méthode de init(app), on utlise la __réflexion__ pour inicialiser une application ,et puis appeler la méthode init() de celle.
  - 4. serverStarted(app), serverStarted(app),serverStopped(iCause, iPort,app), serverDestroy(app): Pour mettre à jour l'état de l'applcations dans l'interface utilisateur.
-*Dans le projet Application, les applications implementent l'interfacer **Iapplication.java** qui définit les méthodes principes de une application: init(),start(),stop(),destroy(). Chaque application a un **ServerListener** qui est inicialisé quand on inicialise une application pour le feed-back de son état dans l'interface utilisateur.
+
+*Dans le projet Application, les applications implementent l'interfacer **Iapplication.java** qui définit les méthodes principes de une application: init(),start(),stop(),destroy(). Chaque application a un **ServerListener** qui est inicialisé quand on inicialise une application pour le feed-back de son état dans l'interface utilisateur.*
  
 
 
