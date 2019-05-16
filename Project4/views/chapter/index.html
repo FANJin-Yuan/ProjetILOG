@@ -1,48 +1,36 @@
 <!DOCTYPE html>
-
 <html>
-
-<head>
-    <title>Learn Chinese</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<script type="text/javascript">
-    function sendForm(value){
-        document.getElementById('idChapter').value = value;
-        document.getElementById('form1').submit();
-    }
-
-</script>
-
-</head>
-
-<body class="bg-info">
-    
-           <div class="col-md-6" style="background-color: #fff;margin-top: 25px;padding:20px;">
-                <h3 class = "text-center" >Chapter List</h3>
-                <form action="chapter/dictionnary" method="post" id="form1" >
-                    <input id="idChapter" type="hidden" name="_id" value="valeur1" />
-                    </form>
-                
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                for(var i=0; i<chapters.length; i++) {
-                            %>
-                            <tr>
-                                <td><a href="#" onclick="sendForm('<%= chapters[i]._id %>')"><%= chapters[i].name %></a></td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                    </form>
-
+    <head>
+        <title>Chapter List</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            a:hover, /* OPTIONAL*/
+            a:visited,
+            a:focus
+            {text-decoration: none !important;}
+        </style>
+        <script type="text/javascript"><% include ../scripts/chaptersScripts.js %></script>
+    </head>
+    <body style="background-color: #4C2117;">
+        <div class="container">
+            <div class="h1 text-center offset-md-4 col-md-4 bg-secondary" style="background-color: #fff;margin-top: 25px;padding:20px;">Chapter List
             </div>
-</body>
+            <div class="offset-md-3 col-md-6 text-center h4">
+                <form action="chapters/dictionnary" method="post" id="choiceChapter">
+                    <input id="idChapter" type="hidden" name="_id" />
+                    <ul class="list-group">
+                        <% for(var i=0; i<chapters.length; i++) { %>
+                        <a href="#" onclick="selectChapter('<%= chapters[i]._id %>')">
+                            <li class="h2 my-1 list-group-item text-dark">
+                                <%= chapters[i].name %>
+                            </li>
+                        </a>
+                        <% } %>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

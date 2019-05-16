@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Learn Chinese</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
 
@@ -101,7 +101,7 @@
             <div id="actionToBeMade" class="col-md-5">
                 <% if ((action == "added") || (action == "deleted") || (action == "updated")) { %>
                     <div id="actionMade" class="alert alert-primary h1 text-center" role="alert">
-                      Your chapter has been <%= action %>
+                      Your object has been <%= action %>
                     </div>
                         <script>
                             window.onload = function(){
