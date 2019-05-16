@@ -32,16 +32,37 @@ import com.fazecast.jSerialComm.SerialPort;
  */
 public class SerialSuite extends Suite {
 
+	/**
+	 * Annotation used to define serial port to be used
+	 */
 	@Retention(RetentionPolicy.RUNTIME)  
 	@Target(ElementType.TYPE)  
 	@interface SetCommPort{  
 		String value();  
 		}
-	
+	/**
+	 * Number of test classes within global test
+	 */
 	static int iTestNb;
+	
+	/**
+	 * String containing the serial port
+	 */
 	static String commPort;
+	
+	/**
+	 * Array used to store test names
+	 */
 	static ArrayList<String> listTests = new ArrayList<String>();
+	
+	/**
+	 * Array used to store test results
+	 */
 	static ArrayList<Result> listResults = new ArrayList<Result>();
+	
+	/**
+	 * Message to be sent to the serial port
+	 */
 	static String message = "";
 
 	public SerialSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
@@ -121,14 +142,13 @@ public class SerialSuite extends Suite {
 	 * @return Said serial port
 	 */
 	private SerialPort setSerialPort() {
-		// attempt to connect to the serial port
 		SerialPort serialPort = SerialPort.getCommPort(commPort);
 		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
 		return serialPort;
 	}
 	
 	/**
-	 * Sets the message to send based on the following format.
+	 * Sets the message to send based on preset format.
 	 * Example for testName1 that was a success and testName2 that failed 2 tests out of 7 :
 	 * testName1|ok;nomTest2|5/7|ko
 	 */
@@ -148,7 +168,7 @@ public class SerialSuite extends Suite {
 	/**
 	 * Concatenates each test name and result to message according to preset format.
 	 * @param i index of results and test names lists
-	 * @param status 
+	 * @param status string corresponding to the test result
 	 */
 	private void messageCat(int i, String status) {
 		message = message + listTests.get(i) + "|" + status + ";";
