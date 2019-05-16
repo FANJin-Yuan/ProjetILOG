@@ -11,9 +11,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-	/*
-	* Une application avec thread envoie le temps au client connecté
-	*/
 public class DayTimeServer implements Iapplication,Runnable{
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
 	protected ServerSocket _sockSvr;
@@ -21,10 +18,8 @@ public class DayTimeServer implements Iapplication,Runnable{
 	protected volatile int port = 2013;
 	protected ServerListener _lsn;
 
-
-	/*
-	* Abonnement un Serverlistener pour cette application.
-	*/
+//Une application DayTimeServer avec thread 
+	
 	public void addServerlistener(ServerListener lsn) {
 		if(_lsn==null)
 			_lsn=lsn;	
@@ -51,8 +46,10 @@ public class DayTimeServer implements Iapplication,Runnable{
 
 	@Override
 	public void init() {
+		// TODO Auto-generated method stub
 
-		System.out.println("Initiation DayTimeServer V2!");
+
+		System.out.println("Initiation DayTimeServer 1.0!");
 		fireInit("DayTimeServer");
 
 	}
@@ -63,6 +60,7 @@ public class DayTimeServer implements Iapplication,Runnable{
 			_thr = new Thread(this);
 			_thr.setDaemon(true);
 			_thr.start();
+
 		}
 	}
 
@@ -73,11 +71,12 @@ public class DayTimeServer implements Iapplication,Runnable{
 			_sockSvr.close();
 		} catch (Exception e) {
 		}
+
 	}
 
 	@Override
 	public void destroy() {
-
+		// TODO Auto-generated method stub
 		_sockSvr=null;
 		_thr=null;
 		System.out.println("DayTimeServer destroy!");
@@ -99,6 +98,7 @@ public class DayTimeServer implements Iapplication,Runnable{
 
 	@Override
 	public void run() {
+	//	init();
 		try {
 			
 			System.out.println("DayTimeServer start!");

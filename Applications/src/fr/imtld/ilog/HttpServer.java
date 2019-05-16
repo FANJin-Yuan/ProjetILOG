@@ -11,9 +11,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/*
-	* Une application avec thread simule le httpserver
-	*/
+//Une application httpserver avec thread
 public class HttpServer implements Iapplication, Runnable {
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
 	protected ServerSocket _sockSvr;
@@ -28,12 +26,10 @@ public class HttpServer implements Iapplication, Runnable {
 	}
 	
 	protected void fireStarted(String app) {
-	//	System.out.println(_lsn);
 		_lsn.serverStarted(app);
 	}
 	
 	protected void fireInit(String app) {
-	//	System.out.println(_lsn);
 		_lsn.serverInit(app);
 	}
 	
@@ -48,9 +44,6 @@ public class HttpServer implements Iapplication, Runnable {
 	
 	@Override
 	public void init() {
-//		baoStream = new ByteArrayOutputStream(1024);
-//		cacheStream = new PrintStream(baoStream);
-//		System.setOut(cacheStream);
 		System.out.println("Initiation HttpServer Version 1.0");
 		fireInit("HttpServer");
 	}
@@ -110,7 +103,6 @@ public class HttpServer implements Iapplication, Runnable {
 		try {
 			
 			System.out.println("HttpServer start!");
-			//fireStarted("HttpServer");
 			_sockSvr = new ServerSocket(port);
 			try {
 				while (true) {

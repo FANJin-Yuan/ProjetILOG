@@ -10,9 +10,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-/*
-*	Une application trés simple sans thread
-*/
+
 
 public class SimpleApp implements Iapplication, Runnable {
 	public static final int NORMAL = 0, PORT_CONTENTION = 1;
@@ -21,7 +19,7 @@ public class SimpleApp implements Iapplication, Runnable {
 	protected volatile int port = 2015;
 	protected ServerListener _lsn;
 
-	
+	// Une application simple
 	public void addServerlistener(ServerListener lsn) {
 		if(_lsn==null)
 			_lsn=lsn;	
@@ -46,7 +44,7 @@ public class SimpleApp implements Iapplication, Runnable {
 	
 	@Override
 	public void init() {
-		System.out.println("Initiation SimpleApp Version 1.0");
+		System.out.println("Initiation SimpleApp Version 2.0");
 		fireInit("SimpleApp");
 	}
 
@@ -54,7 +52,7 @@ public class SimpleApp implements Iapplication, Runnable {
 	public void start() {
 		// TODO Auto-generated method stub
 		fireStarted("SimpleApp");
-		System.out.println("Initiation SimpleApp Version 1.0");
+		System.out.println("start SimpleApp Version 2.0");
 	}
 
 	@Override
@@ -63,10 +61,6 @@ public class SimpleApp implements Iapplication, Runnable {
 		System.out.println("stop SimpleApp Version 1.0");
 		fireStateChange(NORMAL,port,"SimpleApp");	
 		
-//		try {
-//			_sockSvr.close();
-//		} catch (Exception e) {
-//		}
 	}
 
 	@Override

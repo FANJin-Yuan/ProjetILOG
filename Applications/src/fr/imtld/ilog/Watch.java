@@ -9,10 +9,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Date;
-
-/*
-*	La côte Client de DayTimeServer
-*/
 public class Watch {
 	Date date = new Date();
     protected void displayLocalTime() {

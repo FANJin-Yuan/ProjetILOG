@@ -8,10 +8,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-
 /*
-*	La côte Client de HttpServer
+* Un client de httpServer
 */
+
 public class Client {
 	public static void main(String[] args) {
 		// forsure http request uri
