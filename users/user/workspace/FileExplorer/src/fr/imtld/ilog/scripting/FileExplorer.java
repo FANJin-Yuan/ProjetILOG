@@ -209,6 +209,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 // }} scripting related
 
+	/**
+	 * Permet de creer le popupMenu
+	 */
 	protected void createPopupMenu() {
 		MenuManager mmCtx = new MenuManager();
 // script related {{
@@ -229,6 +232,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		return sashForm;
 	}
 
+	/**
+	 * Permet de creer la TableViewer
+	 */
 	protected void createTableViewer(SashForm sashForm) {
 		tbvw = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tbvw.getTable();
@@ -248,6 +254,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		tbvw.addDoubleClickListener(this);
 	}
 
+	/**
+	 * Permet de creer la vue de l'arborescence
+	 */
 	protected void createTreeViewer(SashForm sashForm) {
 		TreeViewer trvw = new TreeViewer(sashForm, SWT.BORDER);
 		trvw.addSelectionChangedListener(this);
@@ -285,9 +294,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	/**
-	 * Create the menu manager.
+	 * Créer le menu manager
 	 * 
-	 * @return the menu manager
+	 * @return le menu manager
 	 */
 	@Override
 	protected MenuManager createMenuManager() {
@@ -300,9 +309,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	/**
-	 * Create the coolbar manager.
+	 * Créer la coolbar manager.
 	 * 
-	 * @return the coolbar manager
+	 * @return la coolbar manager
 	 */
 	@Override
 	protected CoolBarManager createCoolBarManager(int style) {
@@ -327,9 +336,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}*/
 
 	/**
-	 * Create the status line manager.
+	 * Créer le status line manager.
 	 * 
-	 * @return the status line manager
+	 * @return le status line manager
 	 */
 	@Override
 	protected StatusLineManager createStatusLineManager() {
@@ -338,7 +347,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	/**
-	 * Launch the application.
+	 * Lance l'application.
 	 * 
 	 * @param args
 	 */
@@ -358,7 +367,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	/**
-	 * Configure the shell.
+	 * Configure le shell.
 	 * 
 	 * @param newShell
 	 */
@@ -369,7 +378,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	/**
-	 * Return the initial size of the window.
+	 * Return la taille initiale du la fenêtre
 	 */
 	@Override
 	protected Point getInitialSize() {
