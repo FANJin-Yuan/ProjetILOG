@@ -52,7 +52,7 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
 	private Text txtEnterUser;
 
 	/**
-	 * Create the application window.
+	 * Creation de l'ihm
 	 */
 	public Ihm() {
 		super(null);
@@ -63,6 +63,11 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
 		addStatusLine();
 	}
 
+	/**
+	 * Creation des radioButtons et du champ pour saisir le nom de l'utilisateur.
+	 * Permet la creation des workspaces pour les différents utilisateurs si ces derniers n'existent pas.
+	 * Permet de lancer le fileExplorer
+	 */
 	private void Composite() {
 		Display display = new Display();
 		Shell shlWelcome = new Shell(display);
@@ -150,6 +155,9 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
 		display.dispose();
 	}
 
+	/**
+	 * Permet de vérifier si l'utilisateur possède déjà un workspace
+	 */
 	public Boolean checkIfInListOfUsersDirectory(String str) {
 		Boolean contains = false;
 		File file = new File(repertoireUsers);
@@ -181,7 +189,7 @@ public class Ihm extends ApplicationWindow implements ISelectionChangedListener,
 	}
 
 	/**
-	 * Launch the application.
+	 * Lance l'application
 	 * 
 	 * @param args
 	 */
