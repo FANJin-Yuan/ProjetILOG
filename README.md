@@ -1,4 +1,5 @@
 # ILOG2019
+<<<<<<< HEAD
 Ne pas travailler la branche master. Chaque binôme doit travailler dans sa branche.
 
 Chaque binôme fait un checkout local de la seule branche distante qui le concerne.
@@ -18,3 +19,6 @@ Faire une doc. développeur :
 - procédure de build
 - présentation de l'architecture, des concepts
 - documentation du code
+=======
+Démo de technos Web modernes
+>>>>>>> b4cef42c210e83ec9445a1ee72d2666e95ab09ad

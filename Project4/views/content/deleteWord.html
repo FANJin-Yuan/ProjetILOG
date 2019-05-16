@@ -1,0 +1,32 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<div class="container">
+	<div class="card text-dark bg-primary mb-3">
+	  <div class="card-header text-white h3">Delete a word</div>
+	  <div class="card-body">
+		      <table id="filteredTable" class="table table-striped bg-white">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%">Chinese Name</th>
+                            <th style="width: 25%">Chinese Phonetic</th>
+                            <th style="width: 25%">French Name</th>
+                            <th><input type="text" id="filteredInput" onkeyup="filterTable()" placeholder="Search for names.." title="Type in a name"></th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        <%
+                            for(var i=0; i<words.length; i++) {
+                        %>
+                        <tr>
+                            <td style="width: 75%"><%= words[i].chineseName %></td>
+                            <td style="width: 75%"><%= words[i].chinesePhonetic %></td>
+                            <td style="width: 75%"><%= words[i].frenchName %></td>
+                            <td><a href="/chapter/deleteWord/<%= words[i]._id %>" onclick="return confirm('Are you sure to delete this record ?');"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+            				</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+	  </div>
+	</div>
+</div>

@@ -1,0 +1,27 @@
+<div class="container">
+	<div class="card text-white bg-primary mb-3">
+	  <div class="card-header h3">Add a word</div>
+	  <div class="card-body">
+	      	<form class="form-horizontal" action="/chapter/insertWord" method="post" autocomplete="off">
+			  	<input type="hidden" name="_id" value="">
+			    <div class="form-group">
+			    	<label>Chapter</label>
+			    	<SELECT id="chapterId" name="chapterId" size="1" class= "form-control bg-secondary text-white">
+			    		<%
+                            for(var i=0; i<chapters.length; i++) {
+                        %>
+                            <OPTION value="<%= chapters[i]._id %>"><%= chapters[i].name %></OPTION>            
+                        <% } %>
+					</SELECT>
+			    	<label>Chinese name</label>
+			    	<input id="chineseName" type="text" class="form-control" placeholder="Enter name" name="chineseName" placeholder="Name" value="">
+			    	<label>Chinese phonetic</label>
+			    	<input id="chinesePhonetic" type="text" class="form-control" placeholder="Enter name" name="chinesePhonetic" placeholder="Name" value="">
+			    	<label>French name</label>
+			    	<input id="frenchName" type="text" class="form-control" placeholder="Enter name" name="frenchName" placeholder="Name" value="">
+			    	<button type="submit" class="btn mt-2" value="post">Add</button>
+			  	</div>
+	  		</form>
+	  </div>
+	</div>
+</div>

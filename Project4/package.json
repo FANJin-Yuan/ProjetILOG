@@ -1,0 +1,20 @@
+{
+  "name": "project4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "ejs": "^2.6.1",
+    "events": "^3.0.0",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "mongoose": "^5.5.8",
+    "nunjucks": "^3.2.0"
+  }
+}

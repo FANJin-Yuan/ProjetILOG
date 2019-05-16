@@ -1,0 +1,15 @@
+<div class="container">
+	<div class="card text-white bg-info mb-3">
+	  <div class="card-header h3">Add a chapter</div>
+	  <div class="card-body">
+	      	<form class="form-horizontal" action="/chapter/insertChapter" method="post" autocomplete="off">
+			  	<input type="hidden" name="_id" value="">
+			    <div class="form-group">
+			    	<label>Chapter name</label>
+			    	<input id="name" type="text" class="form-control" placeholder="Enter name" name="name" placeholder="Name" value="">
+			    	<button type="submit" class="btn mt-2" value="post">Add</button>
+			  	</div>
+	  		</form>
+	  </div>
+	</div>
+</div>

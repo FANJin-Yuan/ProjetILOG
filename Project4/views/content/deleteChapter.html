@@ -1,0 +1,28 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<div class="container">
+	<div class="card text-dark bg-primary mb-3">
+	  <div class="card-header text-white h3">Delete a chapter</div>
+	  <div class="card-body">
+		      <table class="table table-striped bg-white">
+                    <thead>
+                        <tr>
+                            <th style="width: 75%">Name</th>
+                            <th><input type="text" id="filteredInput" onkeyup="filterTable()" placeholder="Search for names.." title="Type in a name"></th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody id="filteredTable">
+                        <%
+                            for(var i=0; i<chapters.length; i++) {
+                        %>
+                        <tr>
+                            <td style="width: 75%"><%= chapters[i].name %></td>
+                            <td><a href="/chapter/deleteChapter/<%= chapters[i]._id %>" onclick="return confirm('Are you sure to delete this record ?');"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+            				</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+	  </div>
+	</div>
+</div>
