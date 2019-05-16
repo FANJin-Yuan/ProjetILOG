@@ -1,6 +1,6 @@
 # ILOG2019 - Créer un device JUnit
 
-This project lets the user run JUnit tests within a suite and send the results on a serial port, to which we can connect an Arduino board, for instance.
+This project lets the user run JUnit tests within a suite and send the results on a serial port, to which we can connect a device like an Arduino board, for instance, to process the results.
 
 ## Getting Started
 
