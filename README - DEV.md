@@ -1,4 +1,4 @@
-#README-DEVELOPPER
+# README-DEVELOPPER
 
 Ce fichier sert à adier la developper à bien comprendre et utiliser de cette programme. Il s'est organisé comme la suite:
 
