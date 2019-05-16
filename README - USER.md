@@ -21,7 +21,7 @@ Téléchargez et dézippez la fichier "WebLibrary.zip" dans la chemin sous la se
 
 ### Comment il-est utilisé ?
 - Téléchargez d'abord le fichier .zip et l'extract dans un dossier, grâce à votre navigateur d'internet, vous double-cliquez sur le fichier : Vue.html, ou cliquez droit sur cette bouton->ouvrir dans le navigateur, pour l'utiliser dans un page de browser.
-- Utilisez le premier module pour chercher un livre : vous remplissez un seul champ parmi : ISBN, book name, author name et cliquer Search pour faire la recherche, le resultat sera affiche de
+- Utilisez le premier module pour chercher un livre : vous remplissez un seul champ parmi : ISBN, book name, author name et cliquer Search pour faire la recherche, le resultat sera affiche dans une ligne suivant.
 - Utilisez les outils administratifs pour :
     - Modifier les informations de la livre : vous entrez l'ISBN de la livre à modifier, et entrez les nouvelles informations ;
     - Ajouter un nouveau livre avec ses : ISBN, nom, nom d'auteur;
