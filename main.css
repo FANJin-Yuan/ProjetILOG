@@ -18,13 +18,15 @@ h3{
 
 #component{
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly
 }
 
 #calendar{
   max-height: 500px;
   overflow-y: scroll;
-  
+  width:530px;
+
 }
 
 .eventHeader{
