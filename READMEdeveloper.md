@@ -7,8 +7,12 @@ Cloner en local le projet github, disposer de JUnit 4 ou ultérieur, se référe
 ## Architecture et concepts utilisés en vue de la modification de l’application
 
 La classe SerialSuite hérite de Suite, qui permet l’exécution d’une suite de tests paramétrés grâce à l’annotation SuiteClasses.
-La méthode run est exécutée sur le runner principal de la classe. Nous avons gardé l’implémentation originale de celle-ci, en lui ajoutant du code permettant d’obtenir le nombre de classes de test appartenant à la suite de tests, ainsi que le port série défini dans l’annotation SetCommPort de la JUnit Test Suite.
-La méthode runChild quant à elle est exécutée pour chaque test de la suite et elle prend en charge l’ajout des noms des tests ainsi que leurs résultats dans des listes prévues à cet effet, à travers l’utilisation des ClassLoaders. Elle gère également l’envoi de ces résultats sur le port série.
+
+* La méthode run est exécutée sur le runner principal de la classe.
+Nous avons gardé l’implémentation originale de celle-ci, en lui ajoutant du code permettant d’obtenir le nombre de classes de test appartenant à la suite de tests, ainsi que le port série défini dans l’annotation SetCommPort de la JUnit Test Suite.
+
+* La méthode runChild quant à elle est exécutée pour chaque test de la suite et elle prend en charge l’ajout des noms des tests ainsi que leurs résultats dans des listes prévues à cet effet, à travers l’utilisation des ClassLoaders.
+Elle gère également l’envoi de ces résultats sur le port série.
 
 ## Axes d’amélioration
 
