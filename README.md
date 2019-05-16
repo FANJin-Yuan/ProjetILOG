@@ -1,4 +1,5 @@
-# ILOG2019
+# ILOG2019 - FlyUSB
+![Logo FlyUSB](https://image.noelshack.com/fichiers/2019/20/4/1558041209-logo3.png)  
 IHM de clé USB "Ilog".
 
 L'arborescence en racine de ce repository GitHub représente la racine de la clé USB que vous pourrez utiliser pour travailler :
