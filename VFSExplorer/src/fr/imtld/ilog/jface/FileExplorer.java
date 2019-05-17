@@ -33,9 +33,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
 
+import fr.imtld.ilog.jface.actions.CopyAction;
 import fr.imtld.ilog.jface.actions.ExitAction;
 import fr.imtld.ilog.jface.actions.OpenAction;
 import fr.imtld.ilog.jface.actions.ParentAction;
+import fr.imtld.ilog.jface.actions.PasteAction;
 import fr.imtld.ilog.jface.utils.FileUtils;
 import fr.imtld.ilog.jface.utils.Root;
 import fr.imtld.ilog.jface.utils.TableFilter;
@@ -55,7 +57,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	 */
 	public static enum Status {
 		READY("Ready"), SEARCHING("Searching..."), OPENING("Opening..."), ERROR("Error"),
-		NO_PARENT("No parent directory");
+		NO_PARENT("No parent directory"), COPIED("File copied"), PASTED("File pasted"), EMPTY_CLIPBOARD("Clipboard empty");
 
 		private String msg;
 
@@ -69,8 +71,11 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	private Action exitAct;
-	private OpenAction openAct;
-	private ParentAction parentAct;
+	private Action openAct;
+	private Action parentAct;
+	private Action copyAct;
+	private Action pasteAct;
+	
 	private TableViewer tbvw;
 	private TreeViewer trvw;
 	private FileContentProvider cp;
@@ -80,6 +85,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	private StyledText console;
 	private Color colBlue;
 	private Color colRed;
+	
+	private FileObject clipboard = null;
+	private String clipboardName;
 
 	/**
 	 * Getter for the FileContentProvider instance used by the FileExplorer.
@@ -123,6 +131,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		exitAct = new ExitAction(this);
 		openAct = new OpenAction(this);
 		parentAct = new ParentAction(this);
+		copyAct = new CopyAction(this);
+		pasteAct = new PasteAction(this);
 	}
 
 	/**
@@ -168,6 +178,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	protected void createPopupMenu() {
 		MenuManager mmCtx = new MenuManager();
 		mmCtx.add(openAct);
+		mmCtx.add(copyAct);
+		mmCtx.add(pasteAct);
 		Table table = tbvw.getTable();
 		Menu mnCtx = mmCtx.createContextMenu(table);
 		table.setMenu(mnCtx);
@@ -393,5 +405,18 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	 */
 	public TreeViewer getTreeViewer() {
 		return trvw;
+	}
+
+	public FileObject getClipboard() {
+		return clipboard;
+	}
+	
+	public String getClipboardName() {
+		return clipboardName;
+	}
+
+	public void setClipboard(FileObject clipboard, String name) {
+		this.clipboard = clipboard;
+		this.clipboardName = name;
 	}
 }
