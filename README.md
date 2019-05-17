@@ -3,6 +3,17 @@ Apache VFS Virtual File System : VFS Explorer
 
 # Documentation utilisateur :
 
+##Prérequis
+Aucun prérequis
+
+##Installation
+Un fichier executable JAR est présent dans le dossier build du projet.
+
+##Configuration du produit
+Aucun prérequis de configuration nécessaire
+
+##Mode d'emploi du produit
+
 **Utilisation :**
 - L’application est un explorateur de fichier permettant de naviguer entre des dossiers et des fichiers. Un dossier est en réalité un type de fichier servant de conteneur à d’autre fichiers, de la même manière que les fichiers JAR et ZIP sont aussi des conteneurs.
 - Un fichier lui est un conteneur de données pouvant être ouvert pour accéder à ses données (.txt, .exe, …)
@@ -16,7 +27,7 @@ L'interface se compose de trois parties.
 **Actions possible :**
 
 ***Fichier***
-L’option fichier se compose d’un sous-menu contenant la possibilité de fermer l’application
+L’option fichier se comp ose d’un sous-menu contenant la possibilité de fermer l’application
 
 ***Parent*** 
 Cette option permet de remonter au niveau N-1 d’un fichier. Elle est utilisable jusqu’à la racine de l’arborescence (ou Driver).
