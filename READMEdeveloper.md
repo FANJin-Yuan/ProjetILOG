@@ -44,13 +44,13 @@ Installation IDE Arduino, téléchargement des bibliothèques RGB_lcd.h et Keypa
 
 * Initialisation d’un tableau pour les tests et d’un « char » pour la récupération des touches appuyées
 * Quand signal repéré sur le port série : 
-		* Récupération d’une « String », mise au format « char* »
-	* Isolement de chaque test de la « String » repérés grâce à un séparateur (« ; ») et mise de chaque test dans une des cases du tableau
+		* Récupération d’une *String*, mise au format *char**
+	* Isolement de chaque test de la *String* repérés grâce à un séparateur (« ; ») et mise de chaque test dans une des cases du tableau
 		* Récupération du nombre de tests trouvé
 		* Signification à l’utilisateur que les tests sont récupérés et présents dans le tableau
 	* A l’appui d’une touche du Keypad (4 ou 6) :
 		* On se déplace dans le tableau et on affiche le test.
-			* La fonction « afficher() » affiche le nom, le statut et les touches de navigation.
+			* La fonction *afficher()* affiche le nom, le statut et les touches de navigation.
 			* Si le nom est trop long, il va défiler vers la gauche jusqu’à la fin.
 		* On récupère le dernier caractère qui indique le statut du test.
 		* En fonction de ce statut, on change la couleur grâce à la fonction « choixCouleur ».
