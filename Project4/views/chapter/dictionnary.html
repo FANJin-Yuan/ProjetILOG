@@ -11,6 +11,7 @@
             a:focus
             {text-decoration: none !important;}
         </style>
+        <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
         <script type="text/javascript"><% include ../scripts/chaptersScripts.js %></script>
     </head>
     <body style="background-color: #4C2117;">
@@ -42,10 +43,11 @@
                 <span class = "display-3" ><%= chapter.name %></span>
                 <br>
                 <br>
-                <h3 class = "text-center" >Character List</h3>
+                <h3 class = "text-center" >Characters List</h3>
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Chinese word</th>
                             <th>Phonetic</th>
                             <th>French word</th>
@@ -54,13 +56,27 @@
                     <tbody>
                         <% for(var i=0; i<chapter.characters.length; i++) {  %>
                         <tr>
-                            <td><%= chapter.characters[i].chineseName %></td>
-                            <td><%= chapter.characters[i].chinesePhonetic %></td>
-                            <td><%= chapter.characters[i].frenchName %></td>
+                            <td><button id="listen" class="btn btn-info btn-circle btn-xs btn-block" onclick="responsiveVoice.speak('<%= chapter.characters[i].chineseName %>;', 'Chinese Female')"><span class="fa fa-bullhorn"></span></button></td>
+                            <td class="highlightable"><%= chapter.characters[i].chineseName %></td>
+                            <td class="highlightable"><%= chapter.characters[i].chinesePhonetic %></td>
+                            <td class="highlightable"><%= chapter.characters[i].frenchName %></td>
                         </tr>
                         <% } %>
                     </tbody>
                 </table>
+                <script>
+                    var x = document.querySelectorAll(".highlightable");
+                    for(var i=0 ; i<x.length ; i++){
+                    x[i].addEventListener("click", function(){
+                      if(this.style.backgroundColor == "red")
+                          this.style.backgroundColor = "green";
+                      else if(this.style.backgroundColor == "green")
+                          this.style.backgroundColor = "initial";
+                      else
+                          this.style.backgroundColor = "red"
+                    }, false);
+                    }
+                </script>
             </div>
         </div>
     </body>
