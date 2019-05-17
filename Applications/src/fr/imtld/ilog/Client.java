@@ -9,12 +9,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 /*
-* Un client de httpServer
+* Un client de HttpServer
 */
 
 public class Client {
 	public static void main(String[] args) {
-		// forsure http request uri
 		String uri="index.htm";
 		if (args.length!=0) {
 			uri=args[0];
