@@ -15,13 +15,13 @@ L'interface se compose de trois parties.
 
 **Actions possible :**
 
-- Fichier
+***Fichier***
 L’option fichier se compose d’un sous-menu contenant la possibilité de fermer l’application
 
-- Parent 
+***Parent*** 
 Cette option permet de remonter au niveau N-1 d’un fichier. Elle est utilisable jusqu’à la racine de l’arborescence (ou Driver).
  
-- Clic droit
+***Clic droit***
 Copier, coller, supprimer
  
 # Documentation développeur :
