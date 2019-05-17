@@ -1,9 +1,8 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <div class="container">
-	<div class="card text-dark bg-primary mb-3">
+	<div class="card text-dark bg-info mb-3">
 	  <div class="card-header text-white h3">Delete a chapter</div>
 	  <div class="card-body">
-		      <table class="table table-striped bg-white">
+		      <table id="filteredTable" class="table table-striped bg-white">
                     <thead>
                         <tr>
                             <th style="width: 75%">Name</th>
@@ -11,13 +10,13 @@
                         </tr>
                         
                     </thead>
-                    <tbody id="filteredTable">
+                    <tbody>
                         <%
                             for(var i=0; i<chapters.length; i++) {
                         %>
                         <tr>
                             <td style="width: 75%"><%= chapters[i].name %></td>
-                            <td><a href="/chapter/deleteChapter/<%= chapters[i]._id %>" onclick="return confirm('Are you sure to delete this record ?');"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+                            <td><a href="/admin/deleteChapter/<%= chapters[i]._id %>" onclick="return confirm('Are you sure to delete this record ?');"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
             				</td>
                         </tr>
                         <% } %>
