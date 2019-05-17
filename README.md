@@ -1,24 +1,26 @@
-# ILOG2019
-<<<<<<< HEAD
-Ne pas travailler la branche master. Chaque binÙme doit travailler dans sa branche.
+# Le Dictionnaire Franco-Chinois, gr√¢ce √† Node.js, une technologie Web Moderne
+>>Veuillez vous r√©f√©rer au dossier Documentation
 
-Chaque binÙme fait un checkout local de la seule branche distante qui le concerne.
+Outils pr√©-requis avant utilisation : 
+  - Node.js
+  - MongoDB
 
-CrÈer un seul dossier par binÙme ‡ la racine du dÈpÙt.
-CrÈer autant de sous-dossiers que nÈcessaire (e.g. dossiers projets, dossier doc) 
+### D√©ploiement
+  - Cr√©er un workspace et y placer le dossier Project4
+  - Mettre en place la base de donn√©es MongoDB en y cr√©ant une base Project4
 
-Faire une doc. utilisateur :
-- prÈrequis (‡ installer avant l'install du produit)
-- installation ou dÈploiement du produit dans son environnement d'exploitation (hors de son environnement de dÈveloppement)
-- configuration du produit
-- mode d'emploi du produit une fois configurÈ
+### Configurer l'application
+  - Modifier le port si besoin dans app.js
+  - Modifier l'url de la BDD dans models/db.js si besoin
 
-Faire une doc. dÈveloppeur :
-- outils ‡ installer (si non prÈsents dans ilog.zip)
-- config. environnement de dÈveloppement
-- procÈdure de build
-- prÈsentation de l'architecture, des concepts
-- documentation du code
-=======
-DÈmo de technos Web modernes
->>>>>>> b4cef42c210e83ec9445a1ee72d2666e95ab09ad
+### Mode d'emploi
+  - Se placer dans le dossier projet en invite de commandes
+  - Taper node app.js
+
+### Pages disponibles
+
+Vous pourrez acc√©der aux pages suivantes :
+  - url/chapters
+  - url/chapters/search
+  - url/chapters/dictionnary
+  - url/admin
