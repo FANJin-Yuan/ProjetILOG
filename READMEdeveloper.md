@@ -53,7 +53,7 @@ Installation IDE Arduino, téléchargement des bibliothèques RGB_lcd.h et Keypa
 			* La fonction *afficher()* affiche le nom, le statut et les touches de navigation.
 			* Si le nom est trop long, il va défiler vers la gauche jusqu’à la fin.
 		* On récupère le dernier caractère qui indique le statut du test.
-		* En fonction de ce statut, on change la couleur grâce à la fonction « choixCouleur ».
+		* En fonction de ce statut, on change la couleur grâce à la fonction *choixCouleur*.
 
 
 
