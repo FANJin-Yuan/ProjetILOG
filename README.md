@@ -8,6 +8,8 @@ Aucun prérequis
 
 ## Installation
 Un fichier executable JAR est présent dans le dossier build du projet.
+Il faut ouvrir votre terminal, se rendre dans le dossier build et exécuter la commande suivante:
+java - jar VFSExplorer.jar
 
 ## Configuration du produit
 Aucun prérequis de configuration nécessaire
