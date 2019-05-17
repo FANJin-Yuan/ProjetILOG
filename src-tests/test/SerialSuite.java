@@ -70,7 +70,9 @@ public class SerialSuite extends Suite {
 	}
 
 	/**
-	 * Runs the test for this runner and sets the number of tests classes in the suite.
+	 * Runs the test for this runner and sets the number of tests classes in the suite
+	 * as well as serial port as defined in {@literal @}SetCommPort annotation in test suite class.
+	 * This is run once at the launch of the test suite.
 	 */
 	@Override
 	public void run(final RunNotifier notifier) {
@@ -108,6 +110,7 @@ public class SerialSuite extends Suite {
 	/**
 	 * Runs the test corresponding to child runner.
 	 * Performs connection to serial port and sends defined message.
+	 * This is run for each test class within the test suite.
 	 */
 	@Override
 	protected void runChild(Runner runner, final RunNotifier notifier) {
