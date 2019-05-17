@@ -53,6 +53,7 @@ routerAdmin.get('/deleteChapter/:id', async(req, res) => {
             if(!err){
                 var characters = chapter.characters;
                 characters.forEach(function(char){
+                    event.emit('action', 'deleted Character on Cascade: '+ char.chineseName);
                     Character.deleteOne({ "_id": char._id }).exec();
                 });
             }
@@ -162,8 +163,6 @@ function updateWord(req, res) {
         }
     });
 }
-
-
 
 
 module.exports = routerAdmin;

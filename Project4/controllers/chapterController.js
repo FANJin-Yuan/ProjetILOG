@@ -64,16 +64,15 @@ routerChapter.get('/dictionnary', async(req, res) => {
             console.log('Error in retrieving chapter list :' + err);
         }
     });
-
-        chapter = chapters[0];
-        Chapter.findById(chapter._id).populate('characters').exec( (err, doc) =>{
-            if(!err){
-                res.render("chapter/dictionnary.html", {
-                chapters: chapters,
-                chapter: doc
+    chapter = chapters[0];
+    Chapter.findById(chapter._id).populate('characters').exec( (err, doc) =>{
+        if(!err){
+            res.render("chapter/dictionnary.html", {
+            chapters: chapters,
+            chapter: doc
             });
-            }
-        });
+        }
+    });
 });
 
 routerChapter.post('/search', async(req, res) =>{
