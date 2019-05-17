@@ -1,24 +1,36 @@
-# ILOG2019
-<<<<<<< HEAD
-Ne pas travailler la branche master. Chaque binôme doit travailler dans sa branche.
+# Le Dictionnaire Franco-Chinois, grÃ¢ce Ã  Node.js, une technologie Web Moderne
+>Veuillez vous rÃ©fÃ©rer au dossier Documentation
 
-Chaque binôme fait un checkout local de la seule branche distante qui le concerne.
+Outils prÃ©-requis avant utilisation : 
+  - Node.js
+  - MongoDB
 
-Créer un seul dossier par binôme à la racine du dépôt.
-Créer autant de sous-dossiers que nécessaire (e.g. dossiers projets, dossier doc) 
+### DÃ©ploiement
+  - CrÃ©er un workspace et y placer le dossier Project4
+  - Mettre en place la base de donnÃ©es MongoDB en y crÃ©ant une base Project4
 
-Faire une doc. utilisateur :
-- prérequis (à installer avant l'install du produit)
-- installation ou déploiement du produit dans son environnement d'exploitation (hors de son environnement de développement)
-- configuration du produit
-- mode d'emploi du produit une fois configuré
+### Configurer l'application
+  - Modifier le port si besoin dans app.js
+  - Modifier l'url de la BDD dans models/db.js si besoin
 
-Faire une doc. développeur :
-- outils à installer (si non présents dans ilog.zip)
-- config. environnement de développement
-- procédure de build
-- présentation de l'architecture, des concepts
-- documentation du code
-=======
-Démo de technos Web modernes
->>>>>>> b4cef42c210e83ec9445a1ee72d2666e95ab09ad
+### Mode d'emploi
+  - Se placer dans le dossier projet en invite de commandes
+  - Taper node app.js
+
+### Pages disponibles
+
+Vous pourrez accÃ©der aux pages suivantes :
+  - url/chapters
+  - url/chapters/search
+  - url/chapters/dictionnary
+  - url/admin
+
+### Axes d'amÃ©lioration
+
+- Ajout dâ€™une authentification (couple login/mdp) qui sera stockÃ©e dans une nouvelle collection
+de la MongoDB. Cette authentification pourra permettre de restreindre lâ€™accÃ¨s Ã  la vue admin.
+- PossibilitÃ© de mise en place de session dâ€™utilisation pour garder en cookie des rÃ©sultats
+dâ€™actions que lâ€™utilisateur aura effectuÃ©.
+- Cette session pourra Ã©galement permettre Ã  lâ€™utilisateur dâ€™enregistrer des mots dans un
+tableau. Ce tableau sera diffÃ©rent pour chaque utilisateur du fait de la mise en place des
+sessions.
