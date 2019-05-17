@@ -7,7 +7,8 @@
   - 3. Importer le projet Application, qui définit les squelettes.
   - 3. Améliorer le Conteneur.
 ##  l'architecture, des concepts
-*La classe principale de Conteneur est **ApplicationConteneur.java**, il implémente l'interface **ServerLisener.java** pour avoir la capacité d'écouter l'état de chaque application, et gérer le cycle de vie de l'application. Pour recharger l'application sans arrêter le conteneur, on crée un nouveau **ClassLoder** pour charger une nouvelle version de l'application.
+*Il y a deux partie: le projet Conteneur et le projet Applcations.*
+*Dans le projet Conteneur, la classe principale de Conteneur est **ApplicationConteneur.java**, il implémente l'interface **ServerLisener.java** pour avoir la capacité d'écouter l'état de chaque application, et gérer le cycle de vie de l'application. Pour recharger l'application sans arrêter le conteneur, on crée un nouveau **ClassLoder** pour charger une nouvelle version de l'application.
 Il y a des méthodes principales:*
  - 1.  init(): Initiation le conteneur en appelant la méthode getApps() qui retourne un tableau des noms des applications.
  - 2.  createContents(Composite parent): Créer une interface utilisateur avec les boutons liés aux différentes fonctions de l'application, et afficher l'état de l'application.
