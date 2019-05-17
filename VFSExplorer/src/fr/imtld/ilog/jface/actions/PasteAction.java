@@ -44,6 +44,7 @@ public class PasteAction extends Action {
 						}
 					});
 					expl.getTableViewer().refresh();
+					expl.getTreeViewer().refresh();
 					expl.setStatus(FileExplorer.Status.PASTED.getMsg());
 					expl.out("File " + expl.getClipboardName() + " copied to path " + dest.getName().getFriendlyURI());
 				} else

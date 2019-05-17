@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
 
 import fr.imtld.ilog.jface.actions.CopyAction;
+import fr.imtld.ilog.jface.actions.DeleteAction;
 import fr.imtld.ilog.jface.actions.ExitAction;
 import fr.imtld.ilog.jface.actions.OpenAction;
 import fr.imtld.ilog.jface.actions.ParentAction;
@@ -45,10 +46,11 @@ import fr.imtld.ilog.jface.utils.TableSorter;
 import fr.imtld.ilog.jface.utils.TreeFilter;
 
 /**
- * Main class of the program.
- * A file explorer using a ContentProvider based on Apache VFS library, allowing to browse folders as well as archive files.
- * The browser consists of a tree representation of the file system on the left of the screen, and a table containing the selection's 
- * children : folders and files. It is possible to open the files directly from this explorer.
+ * Main class of the program. A file explorer using a ContentProvider based on
+ * Apache VFS library, allowing to browse folders as well as archive files. The
+ * browser consists of a tree representation of the file system on the left of
+ * the screen, and a table containing the selection's children : folders and
+ * files. It is possible to open the files directly from this explorer.
  */
 public class FileExplorer extends ApplicationWindow implements ISelectionChangedListener, IDoubleClickListener {
 
@@ -57,7 +59,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	 */
 	public static enum Status {
 		READY("Ready"), SEARCHING("Searching..."), OPENING("Opening..."), ERROR("Error"),
-		NO_PARENT("No parent directory"), COPIED("File copied"), PASTED("File pasted"), EMPTY_CLIPBOARD("Clipboard empty");
+		NO_PARENT("No parent directory"), COPIED("File copied"), PASTED("File pasted"),
+		EMPTY_CLIPBOARD("Clipboard empty"), DELETED("File deleted");
 
 		private String msg;
 
@@ -75,7 +78,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	private Action parentAct;
 	private Action copyAct;
 	private Action pasteAct;
-	
+	private Action deleteAct;
+
 	private TableViewer tbvw;
 	private TreeViewer trvw;
 	private FileContentProvider cp;
@@ -85,12 +89,13 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	private StyledText console;
 	private Color colBlue;
 	private Color colRed;
-	
+
 	private FileObject clipboard = null;
 	private String clipboardName;
 
 	/**
 	 * Getter for the FileContentProvider instance used by the FileExplorer.
+	 * 
 	 * @return the FileContentProvider used by the explorer
 	 */
 	protected FileContentProvider getContentProvider() {
@@ -112,6 +117,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the controls of the explorer's interface.
+	 * 
 	 * @return the main container Control
 	 */
 	@Override
@@ -133,10 +139,12 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		parentAct = new ParentAction(this);
 		copyAct = new CopyAction(this);
 		pasteAct = new PasteAction(this);
+		deleteAct = new DeleteAction(this);
 	}
 
 	/**
 	 * Create the menu bar and different sub-menus/buttons.
+	 * 
 	 * @return the main menu bar
 	 */
 	@Override
@@ -150,6 +158,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create a secondary menu bar and its buttons.
+	 * 
 	 * @param style the style used for this CoolBarManager
 	 * @return the secondary menu bar
 	 */
@@ -164,6 +173,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the status line.
+	 * 
 	 * @return the status line
 	 */
 	@Override
@@ -180,6 +190,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		mmCtx.add(openAct);
 		mmCtx.add(copyAct);
 		mmCtx.add(pasteAct);
+		mmCtx.add(deleteAct);
 		Table table = tbvw.getTable();
 		Menu mnCtx = mmCtx.createContextMenu(table);
 		table.setMenu(mnCtx);
@@ -187,6 +198,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the container for the explorer.
+	 * 
 	 * @param parent the parent container of this SashForm
 	 * @return the SashForm used to contain the explorer (treeview and tableview)
 	 */
@@ -200,6 +212,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the container for the console.
+	 * 
 	 * @param parent the parent container of this SashForm
 	 */
 	protected void createSashFormConsole(Composite parent) {
@@ -211,6 +224,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the console.
+	 * 
 	 * @param parent the parent container of the console
 	 */
 	protected void createConsole(Composite parent) {
@@ -219,9 +233,10 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		colBlue = display.getSystemColor(SWT.COLOR_BLUE);
 		colRed = display.getSystemColor(SWT.COLOR_RED);
 	}
-	
+
 	/**
 	 * Appends some colored text in the console.
+	 * 
 	 * @param msg the message to print in the console
 	 * @param col the color of the message
 	 */
@@ -244,6 +259,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Append a message in the console with the color blue
+	 * 
 	 * @param msg the message to print in the console
 	 */
 	public void out(String msg) {
@@ -252,6 +268,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Append a message in the console with the color red
+	 * 
 	 * @param msg the message to print in the console
 	 */
 	public void err(String msg) {
@@ -260,6 +277,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the TreeView on the left of the explorer
+	 * 
 	 * @param sashForm the parent container of the TreeView
 	 */
 	@SuppressWarnings("unused")
@@ -280,6 +298,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Create the TableView on the right of the explorer
+	 * 
 	 * @param sashForm the parent container of the TableView
 	 */
 	protected void createTableViewer(SashForm sashForm) {
@@ -310,8 +329,8 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	}
 
 	/**
-	 * Entry point of the program.
-	 * Creates a new FileExplorer and runs it.
+	 * Entry point of the program. Creates a new FileExplorer and runs it.
+	 * 
 	 * @param args arguments for the main method
 	 */
 	public static void main(String args[]) {
@@ -334,6 +353,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Sets the initial size of the FileExplorer window.
+	 * 
 	 * @return a Point representing the size of the window
 	 */
 	@Override
@@ -343,6 +363,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Event triggering when a new element is selected in the TreeView.
+	 * 
 	 * @param arg the triggering event
 	 */
 	@Override
@@ -357,6 +378,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Event triggering when an element is double-clicked in the TableView.
+	 * 
 	 * @param e the triggering event
 	 */
 	@Override
@@ -383,6 +405,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Configure the window Shell (text and icon)
+	 * 
 	 * @param newShell the Shell to configure
 	 */
 	@Override
@@ -394,14 +417,16 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Getter for the TableViewer
+	 * 
 	 * @return the explorer's TableViewer
 	 */
 	public TableViewer getTableViewer() {
 		return tbvw;
 	}
-	
+
 	/**
 	 * Getter for the TreeViewer
+	 * 
 	 * @return the explorer's TreeViewer
 	 */
 	public TreeViewer getTreeViewer() {
@@ -410,14 +435,16 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Getter for the clipboard
+	 * 
 	 * @return the explorer's clipboard
 	 */
 	public FileObject getClipboard() {
 		return clipboard;
 	}
-	
+
 	/**
 	 * Getter for the clipboard file name
+	 * 
 	 * @return the clipboard's file name
 	 */
 	public String getClipboardName() {
@@ -426,8 +453,9 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 
 	/**
 	 * Setter for the clipboard
+	 * 
 	 * @param clipboard the FileObject kept in the clipboard
-	 * @param name the file's name
+	 * @param name      the file's name
 	 */
 	public void setClipboard(FileObject clipboard, String name) {
 		this.clipboard = clipboard;
