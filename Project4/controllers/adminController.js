@@ -12,11 +12,12 @@ var words = [];
 
 var event = new EventEmitter();
 
+//Event qui va être appelé lors de chaque action
 event.on('action', function(message){
     console.log(message);
 });
 
-
+//Renvoie la page affichant les chapitres (url : ip/admin)
 routerAdmin.get('/', async (req, res) => {
     var action = req.query.action;
     await Chapter.find((err, chaptersList) => {
@@ -42,12 +43,12 @@ routerAdmin.get('/', async (req, res) => {
     });
 });
 
-
+//N'est pas directement visible par l'utiliseur, va enregistrer le chapitre dans la BDD
 routerAdmin.post('/insertChapter', (req, res) => {
     insertChapter(req, res);
 });
 
-
+//N'est pas directement visible par l'utiliseur, va supprimer le chapitre dans la BDD
 routerAdmin.get('/deleteChapter/:id', async(req, res) => {
     await Chapter.findById(req.params.id).exec((err, chapter) =>{
             if(!err){
@@ -67,18 +68,18 @@ routerAdmin.get('/deleteChapter/:id', async(req, res) => {
     });
 });
 
-
+//N'est pas directement visible par l'utiliseur, va modifier le chapitre dans la BDD
 routerAdmin.post('/updateChapter', (req, res) => {
     updateChapter(req, res);
 });
 
 
-
+//N'est pas directement visible par l'utiliseur, va enregistrer le mot dans la BDD
 routerAdmin.post('/insertWord', (req, res) => {
     insertWord(req, res);
 });
 
-
+//N'est pas directement visible par l'utiliseur, va supprimer le mot dans la BDD
 routerAdmin.get('/deleteWord/:id', async(req, res) => {
     await Character.findByIdAndRemove(req.params.id, (err, char) => {
         if (!err) {
@@ -95,7 +96,7 @@ routerAdmin.post('/updateWord', (req, res) => {
 
 
 
-
+//Fonction d'insertion du chapitre dans la BDD, renvoie un évenement et redirige vers la page admin
 function insertChapter(req, res) {
     var chapter = new Chapter();
     chapter.name = req.body.name;
@@ -112,7 +113,7 @@ function insertChapter(req, res) {
 }
 
 
-
+//Fonction de modifiction du chapitre dans la BDD, renvoie un évenement et redirige vers la page admin
 function updateChapter(req, res) {
     Chapter.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, chap) => {
         if (!err) { 
@@ -125,6 +126,7 @@ function updateChapter(req, res) {
     });
 }
 
+//Fonction d'insertion du caractère dans la BDD, renvoie un évenement et redirige vers la page admin
 function insertWord(req, res) {
     var character = new Character();
     character.chineseName = req.body.chineseName;
@@ -151,7 +153,7 @@ function insertWord(req, res) {
     });
 }
 
-
+//Fonction de modification du caractère dans la BDD, renvoie un évenement et redirige vers la page admin
 function updateWord(req, res) {
     Character.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, chap) => {
         if (!err) { 

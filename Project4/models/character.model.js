@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//Schéma du caractère
 var characterSchema = new mongoose.Schema({
     chineseName: {
         type: String
@@ -9,9 +10,6 @@ var characterSchema = new mongoose.Schema({
     },
     frenchName: {
         type: String
-    },
-    chapterId : {
-        type: mongoose.Schema.Types.ObjectId
     },
 });
 

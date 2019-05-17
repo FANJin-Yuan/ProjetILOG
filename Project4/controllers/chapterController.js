@@ -1,3 +1,4 @@
+//Import des constantes et modèles utiles au Controller
 const express = require('express');
 const routerChapter = express.Router();
 const mongoose = require('mongoose');
@@ -5,20 +6,25 @@ mongoose.set('useFindAndModify', false);
 const Chapter = mongoose.model('Chapter');
 const Character = mongoose.model('Character');
 
+//Arrays définis globaux utilisés pour stocker les Objets et renvoyer les vues avec ceux-ci passés en paramètres
 var chapters = [];
 var words = [];
 
 
-
+//Renvoie la page affichant les chapitres (url : ip/chapters)
 routerChapter.get('/', (req, res) => {
-    Chapter.find({}).populate('characters').then(chapters =>{
-        res.render("chapter/index.html", {
-            viewTitle: "Home",
-            chapters: chapters
-        }); 
+    Chapter.find((err, chaptersList) => {
+        if (!err) {
+            res.render("chapter/index.html", {
+            chapters: chaptersList
+            });
+        }
+        else 
+            console.log('Error in retrieving chapter list :' + err);
     });
 });
 
+//Renvoie la page affichant les chapitres (url : ip/chapters/dictionnary)
 routerChapter.post('/dictionnary', async(req, res) => {
     var chapter = new Chapter();
     await Chapter.find((err, chaptersList) => {
@@ -27,6 +33,7 @@ routerChapter.post('/dictionnary', async(req, res) => {
         else 
             console.log('Error in retrieving chapter list :' + err);
     });
+    //Si la requête n'a pas d'id, c'est à dire que si le page n'a pas était chargée via l'index, alors on affichera le premier chapitre
     if(req.body._id == ""){
         chapter = chapters[0];
         Chapter.findById(chapter._id).populate('characters').exec((err, chapter) =>{
@@ -53,6 +60,7 @@ routerChapter.post('/dictionnary', async(req, res) => {
     }    
 });
 
+//Si la requête n'a pas d'id, c'est à dire que si le page n'a pas était chargée via l'index, alors on affichera le premier chapitre
 routerChapter.get('/dictionnary', async(req, res) => {
     var chapter = new Chapter();
 
@@ -75,6 +83,7 @@ routerChapter.get('/dictionnary', async(req, res) => {
     });
 });
 
+//Renvoie la page search filtrée par les paramètres envoyés par la requête POST
 routerChapter.post('/search', async(req, res) =>{
     var chapter = req.body.chapter;
     var character = req.body.character;
@@ -91,14 +100,12 @@ routerChapter.post('/search', async(req, res) =>{
                         characters.push(char);
                     }
                 });
-                
             });
            res.render("chapter/search.html", {
                 characters: characters,
                 chapterSearched : chapter,
                 characterSearched : character
-            });
-            
+            });         
         }
         else 
             console.log('Error in retrieving chapter list :' + err);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//Schéma du chapitre
 var chapterSchema = new mongoose.Schema({
 	name: {
         type: String
