@@ -3,17 +3,17 @@ Apache VFS Virtual File System : VFS Explorer
 
 # Documentation utilisateur :
 
-**Utilisation : **
+**Utilisation :**
 - L’application est un explorateur de fichier permettant de naviguer entre des dossiers et des fichiers. Un dossier est en réalité un type de fichier servant de conteneur à d’autre fichiers, de la même manière que les fichiers JAR et ZIP sont aussi des conteneurs.
 - Un fichier lui est un conteneur de données pouvant être ouvert pour accéder à ses données (.txt, .exe, …)
 
-** Interface : **
+**Interface :**
 L'interface se compose de trois parties.
 - L’arborescence (tree): Vision résumée des dossiers (fils et parents)
 - Le tableau: qui permet d’afficher le détail des éléments du dossier.
 - Le terminal: qui détaille l’action en cours (ouverture de fichier principalement)
 
-** Actions possible : **
+**Actions possible :**
 
 - Fichier
 L’option fichier se compose d’un sous-menu contenant la possibilité de fermer l’application
