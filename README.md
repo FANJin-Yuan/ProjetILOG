@@ -10,12 +10,12 @@ Aucun prérequis
 Un fichier executable JAR est présent dans le dossier build du projet.
 Il faut ouvrir votre terminal, se rendre dans le dossier build et exécuter la commande suivante:
 
-- java - jar VFSExplorer.jar
+-   java - jar VFSExplorer.jar
 
 ## Configuration du produit
 Aucun prérequis de configuration nécessaire
 
-##Mode d'emploi du produit
+## Mode d'emploi du produit
 
 **Utilisation :**
 - L’application est un explorateur de fichier permettant de naviguer entre des dossiers et des fichiers. Un dossier est en réalité un type de fichier servant de conteneur à d’autre fichiers, de la même manière que les fichiers JAR et ZIP sont aussi des conteneurs.
@@ -36,7 +36,7 @@ L’option fichier se comp ose d’un sous-menu contenant la possibilité de fermer l
 Cette option permet de remonter au niveau N-1 d’un fichier. Elle est utilisable jusqu’à la racine de l’arborescence (ou Driver).
  
 ***Clic droit***
-Copier, coller, supprimer
+Ouvrir, Copier, Coller, Supprimer
  
 # Documentation développeur :
 
