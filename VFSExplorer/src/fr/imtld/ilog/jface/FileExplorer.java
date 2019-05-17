@@ -312,6 +312,7 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 	/**
 	 * Entry point of the program.
 	 * Creates a new FileExplorer and runs it.
+	 * @param args arguments for the main method
 	 */
 	public static void main(String args[]) {
 		try {
@@ -407,14 +408,27 @@ public class FileExplorer extends ApplicationWindow implements ISelectionChanged
 		return trvw;
 	}
 
+	/**
+	 * Getter for the clipboard
+	 * @return the explorer's clipboard
+	 */
 	public FileObject getClipboard() {
 		return clipboard;
 	}
 	
+	/**
+	 * Getter for the clipboard file name
+	 * @return the clipboard's file name
+	 */
 	public String getClipboardName() {
 		return clipboardName;
 	}
 
+	/**
+	 * Setter for the clipboard
+	 * @param clipboard the FileObject kept in the clipboard
+	 * @param name the file's name
+	 */
 	public void setClipboard(FileObject clipboard, String name) {
 		this.clipboard = clipboard;
 		this.clipboardName = name;
