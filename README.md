@@ -3,13 +3,13 @@ Apache VFS Virtual File System : VFS Explorer
 
 # Documentation utilisateur :
 
-##Prérequis
+## Prérequis
 Aucun prérequis
 
-##Installation
+## Installation
 Un fichier executable JAR est présent dans le dossier build du projet.
 
-##Configuration du produit
+## Configuration du produit
 Aucun prérequis de configuration nécessaire
 
 ##Mode d'emploi du produit
