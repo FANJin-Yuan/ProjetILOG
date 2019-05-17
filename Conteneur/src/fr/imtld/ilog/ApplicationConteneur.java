@@ -75,7 +75,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 	}
 	/**
 	 * Initiation le tableau apps, groups, labels etc selon le fichier .properties pour avoir 
-	 * les premiere versions d'application.
+	 * les premières versions d'application.
 	 */
 	
 	public void init() throws FileNotFoundException, MalformedURLException, IOException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -107,7 +107,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 	
 	/**
 	 * Obtenir les fichiers .jar d'une application
-	 * @return le tableau de File
+	 * @return le tableau de fichier
 	 */
 	
 	public static File[] getJars(String dir) {
@@ -129,7 +129,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 	
 	
 	/**
-	 * Obtenir les application a lancer dans le conteneur
+	 * Obtenir les applications à lancer dans le conteneur
 	 * @return le tableau des noms d'application.
 	 */
 	public String[] getApps() throws FileNotFoundException, IOException {
@@ -225,7 +225,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 		//Ajouter la premiere application
 		
 /*
- * Une boucle pour ajouter les autres applications dans interface.
+ * Une boucle pour ajouter les autres applications dans l'interface utilisateur.
  */
 		
 		for(int i=1;i<appls.length;i++) {
@@ -295,7 +295,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 	}
 	
 	/*
-	 * Mettre a jour les labels d'etat dans l'interface.
+	 * Mettre à jour les labels d'état dans l'interface utilisateur.
 	 * 
 	 */
 	
@@ -356,7 +356,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 		
 	}
 	/*
-	 * Appeler les methode concernantrs d'une application
+	 * Appeler les methodes concernées d'une application
 	 * 
 	 */
 
@@ -380,7 +380,7 @@ public class ApplicationConteneur extends ApplicationWindow implements ServerLis
 	}
 	
 /*
- * Initiation d'une application en utilisant le ClassLoader et reflexion
+ * Initiation d'une application en utilisant le ClassLoader et Réflexion
  * Deploiement à chaud en creant un nouveau ClassLoader.
  * 
  */
