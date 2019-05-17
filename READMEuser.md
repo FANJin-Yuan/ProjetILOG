@@ -15,7 +15,7 @@ Avoir un projet Eclipse avec des tests JUnit fonctionnels et JUnit 4 ou ultérie
 
 * A partir de votre projet Eclipse comprenant vos tests JUnit, importer les librairies « «RXTXcomm.jar» et « jSerialComm.jar » ainsi que rxtxSerial.dll (Windows).
 * Ajouter la classe SerialSuite.java à votre package où sont présentes vos classes de test.
-* Ajouter la classe de Suite de tests à ce package.
+* Ajouter la classe de Suite de tests à ce package et importer SerialSuite.
 * Configurer  dans cette dernière classe les champs :
 	- @SetCommPort avec le nom du port sur lequel vous allez envoyer les résultats des tests
 	- @SuiteClasses avec le nom de toutes les classes de test dont vous souhaitez afficher le 	résultat sur l’Arduino
