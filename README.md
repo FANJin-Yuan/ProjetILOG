@@ -1,5 +1,5 @@
 # Le Dictionnaire Franco-Chinois, grâce à Node.js, une technologie Web Moderne
->>Veuillez vous référer au dossier Documentation
+>Veuillez vous référer au dossier Documentation
 
 Outils pré-requis avant utilisation : 
   - Node.js
@@ -24,3 +24,13 @@ Vous pourrez accéder aux pages suivantes :
   - url/chapters/search
   - url/chapters/dictionnary
   - url/admin
+
+### Axes d'amélioration
+
+- Ajout d’une authentification (couple login/mdp) qui sera stockée dans une nouvelle collection
+de la MongoDB. Cette authentification pourra permettre de restreindre l’accès à la vue admin.
+- Possibilité de mise en place de session d’utilisation pour garder en cookie des résultats
+d’actions que l’utilisateur aura effectué.
+- Cette session pourra également permettre à l’utilisateur d’enregistrer des mots dans un
+tableau. Ce tableau sera différent pour chaque utilisateur du fait de la mise en place des
+sessions.
