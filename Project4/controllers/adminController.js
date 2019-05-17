@@ -19,24 +19,23 @@ event.on('action', function(message){
 
 routerAdmin.get('/', async (req, res) => {
     var action = req.query.action;
-    await Chapter.find((err, chapters) => {
+    await Chapter.find((err, chaptersList) => {
         if (!err) {
-            chapters = chapters;
+            chapters = chaptersList;
         }
         else {
             console.log('Error in retrieving chapter list :' + err);
         }
     });
-    await Character.find((err, words) => {
+    await Character.find((err, wordsList) => {
         if (!err) {
-            words = words;
+            words = wordsList;
         }
         else {
             console.log('Error in retrieving character list :' + err);
         }
     });
     res.render("chapter/admin.html", {
-                viewTitle: "Panel Admin",
                 chapters: chapters,
                 words: words,
                 action: action
@@ -44,7 +43,33 @@ routerAdmin.get('/', async (req, res) => {
 });
 
 
+routerAdmin.post('/insertChapter', (req, res) => {
+    insertChapter(req, res);
+});
 
+
+routerAdmin.get('/deleteChapter/:id', async(req, res) => {
+    await Chapter.findById(req.params.id).exec((err, chapter) =>{
+            if(!err){
+                var characters = chapter.characters;
+                characters.forEach(function(char){
+                    Character.deleteOne({ "_id": char._id }).exec();
+                });
+            }
+    });
+    await Chapter.findByIdAndRemove(req.params.id, (err, chapter) => {
+        if (!err) {
+            event.emit('action', 'deleted Chapter: '+ chapter.name);
+            res.redirect('/admin/?action=deleted');
+        }
+        else { console.log('Error in chapter delete :' + err); }
+    });
+});
+
+
+routerAdmin.post('/updateChapter', (req, res) => {
+    updateChapter(req, res);
+});
 
 
 
@@ -54,8 +79,9 @@ routerAdmin.post('/insertWord', (req, res) => {
 
 
 routerAdmin.get('/deleteWord/:id', async(req, res) => {
-    await Character.findByIdAndRemove(req.params.id, (err, doc) => {
+    await Character.findByIdAndRemove(req.params.id, (err, char) => {
         if (!err) {
+            event.emit('action', 'deleted Word: '+ char.chineseName);
             res.redirect('/admin/?action=deleted');
         }
         else { console.log('Error in chapter delete :' + err); }
@@ -69,28 +95,34 @@ routerAdmin.post('/updateWord', (req, res) => {
 
 
 
-
-routerAdmin.post('/insertChapter', (req, res) => {
-    insertChapter(req, res);
-});
-
-
-routerAdmin.get('/deleteChapter/:id', async(req, res) => {
-    await Character.deleteMany({"chapterId":req.params.id}).exec();
-    await Chapter.findByIdAndRemove(req.params.id, (err, doc) => {
-        if (!err) {
-            res.redirect('/chapter/admin/?action=deleted');
+function insertChapter(req, res) {
+    var chapter = new Chapter();
+    chapter.name = req.body.name;
+    chapter.save((err, chap) => {
+        if (!err)
+            {
+                event.emit('action', 'added Chapter: '+chapter.name);
+                res.redirect('/admin/?action=added');
+            }
+        else {
+            console.log('Error during record insertion : ' + err);
         }
-        else { console.log('Error in chapter delete :' + err); }
     });
-});
+}
 
 
-routerAdmin.post('/updateChapter', (req, res) => {
-    updateChapter(req, res);
-});
 
-
+function updateChapter(req, res) {
+    Chapter.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, chap) => {
+        if (!err) { 
+            event.emit('action', 'updated Chapter '+ req.body._id + ' to ' + req.body.name);
+            res.redirect('/admin/?action=updated'); 
+        }
+        else {
+            console.log('Error during record update : ' + err);
+        }
+    });
+}
 
 function insertWord(req, res) {
     var character = new Character();
@@ -107,103 +139,31 @@ function insertWord(req, res) {
                     if (!err2) {
                         doc.characters.push(character)
                         doc.save();
-
+                        event.emit('action', 'added Word: '+character.chineseName);
+                        res.redirect('/admin/?action=added');
                     }
                 });
-                res.redirect('/?action=added');
             }
         else {
-            if (err.name == 'ValidationError') {
-                handleValidationError(err, req.body);
-                res.render("admin", {
-                    viewTitle: "Admin Panel",
-                    chapter: req.body
-                });
-            }
-            else
-                console.log('Error during record insertion : ' + err);
+            console.log('Error during record insertion : ' + err);
         }
     });
 }
 
 
 function updateWord(req, res) {
-    Character.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, doc) => {
-        if (!err) { res.redirect('admin/?action=updated'); }
+    Character.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, chap) => {
+        if (!err) { 
+            event.emit('action', 'updated Word '+ req.body._id + ' to ' + req.body.chineseName + '/' + req.body.chinesePhonetic + '/' + req.body.frenchName);
+            res.redirect('/admin/?action=updated'); 
+        }
         else {
-            if (err.name == 'ValidationError') {
-                handleValidationError(err, req.body);
-                res.render("chapter/addOrEdit", {
-                    viewTitle: 'Update Chapter',
-                    chapter: req.body
-                });
-            }
-            else
-                console.log('Error during record update : ' + err);
+            console.log('Error during record update : ' + err);
         }
     });
 }
 
 
 
-
-
-
-
-function insertChapter(req, res) {
-    var chapter = new Chapter();
-    chapter.name = req.body.name;
-    chapter.save((err, doc) => {
-        if (!err)
-            {
-                event.emit('addedWord', 'added Chapitre: '+chapter.name);
-                res.redirect('/admin/?action=added');
-            }
-        else {
-            if (err.name == 'ValidationError') {
-                handleValidationError(err, req.body);
-                res.render("admin", {
-                    viewTitle: "Admin Panel",
-                    chapter: req.body
-                });
-            }
-            else
-                console.log('Error during record insertion : ' + err);
-        }
-    });
-}
-
-
-
-function updateChapter(req, res) {
-    Chapter.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, doc) => {
-        if (!err) { res.redirect('admin/?action=updated'); }
-        else {
-            if (err.name == 'ValidationError') {
-                handleValidationError(err, req.body);
-                res.render("chapter/addOrEdit", {
-                    viewTitle: 'Update Chapter',
-                    chapter: req.body
-                });
-            }
-            else
-                console.log('Error during record update : ' + err);
-        }
-    });
-}
-
-
-
-function handleValidationError(err, body) {
-    for (field in err.errors) {
-        switch (err.errors[field].path) {
-            case 'name':
-                body['fullNameError'] = err.errors[field].message;
-                break;
-            default:
-                break;
-        }
-    }
-}
 
 module.exports = routerAdmin;

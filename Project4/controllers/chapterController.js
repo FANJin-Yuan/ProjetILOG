@@ -21,9 +21,9 @@ routerChapter.get('/', (req, res) => {
 
 routerChapter.post('/dictionnary', async(req, res) => {
     var chapter = new Chapter();
-    await Chapter.find((err, chapters) => {
+    await Chapter.find((err, chaptersList) => {
         if (!err) 
-            chapters = chapters;
+            chapters = chaptersList;
         else 
             console.log('Error in retrieving chapter list :' + err);
     });
@@ -36,6 +36,8 @@ routerChapter.post('/dictionnary', async(req, res) => {
                     chapter: chapter
                 });
             }
+            else 
+                console.log('Error in retrieving chapter list :' + err);
         });
     }
     else{
@@ -43,8 +45,8 @@ routerChapter.post('/dictionnary', async(req, res) => {
         Chapter.findById(chapter._id).populate('characters').exec( (err, chapter) =>{
             if(!err){
                 res.render("chapter/dictionnary.html", {
-                chapters: chapters,
-                chapter: chapter
+                    chapters: chapters,
+                    chapter: chapter
                 });
             }
         });
@@ -54,9 +56,9 @@ routerChapter.post('/dictionnary', async(req, res) => {
 routerChapter.get('/dictionnary', async(req, res) => {
     var chapter = new Chapter();
 
-    await Chapter.find((err, docs) => {
+    await Chapter.find((err, chapters) => {
         if (!err) {
-            chapters = docs;
+            chapters = chapters;
         }
         else {
             console.log('Error in retrieving chapter list :' + err);
@@ -78,9 +80,9 @@ routerChapter.post('/search', async(req, res) =>{
     var chapter = req.body.chapter;
     var character = req.body.character;
     var characters =[];
-    await Chapter.find({"name" : {"$regex" : chapter} }).populate('characters').select('characters').exec( (err,doc) =>{
+    await Chapter.find({"name" : {"$regex" : chapter} }).populate('characters').select('characters').exec( (err,chaptersMatching) =>{
         if(!err){
-            doc.forEach(function(chap){
+            chaptersMatching.forEach(function(chap){
                 var tabChar = chap.characters;
                 tabChar.forEach(function(char){
                     var chineseName = char.chineseName;
