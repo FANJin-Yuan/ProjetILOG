@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Practise</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            a:hover,
+            a:visited,
+            a:focus
+            {text-decoration: none !important;}
+        </style>
+        <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+        <script type="text/javascript"><% include ../scripts/chaptersScripts.js %></script>
+    </head>
+    <body style="background-color: #4C2117;">
+        <div class="row" style="margin-left: 0px;margin-right: 0px;">
+            <div class="col-md-2"> 
+                <div style="background-color: #fff;margin-top: 25px;padding:20px;">
+                    <h3 class = "text-center" >Chapter List</h3>
+                    <form action="practise" method="post">
+                        <ul class="list-group" style="list-style-type: none;">
+                            <% for(var i=0; i<chapters.length; i++) { %>
+                                    <li type="checkbox" class="h4 my-1 text-dark">
+                                         <input type="checkbox" name="chapter" value="<%= chapters[i]._id %>">    <%= chapters[i].name %></input>
+                                    </li>
+                            <% } %>
+                            <br>
+                            <button id="Practise" type="submit" >Practise</button>
+                        </ul>
+                    </form>
+                </div>
+            </div>        
+            <div class="col-md-6 offset-md-1 text-center card" style="background-color: #fff;margin-top: 25px;">
+                  <div class="card-body col-md-12">
+                    <p id="toGuess" class="card-text display-2"></p>
+                  </div>
+                  <br>
+                  <br>
+                  <br>
+                  <div class="row">
+                    <div id="vocabToPractise" style="display: none;"><%= vocabTabPractise %></div>
+                    <div id="vocabTabAll" style="display: none;"><%= vocabTabAll %></div>
+
+                    <div id="firstChoice" class="card-body col-md-4 h3 bg-info border border-dark rounded" onclick="newWord(1,TabvocabToPractise)" style="user-select:none;cursor: pointer;"></div>
+                    <div id="secondChoice" class="card-body col-md-4 h3 bg-success border border-dark rounded" onclick="newWord(2,TabvocabToPractise)" style="user-select:none;cursor: pointer;"></div>
+                    <div id="thirdChoice" class="card-body col-md-4 h3 bg-danger border border-dark rounded" onclick="newWord(3,TabvocabToPractise)" style="user-select:none;cursor: pointer;"></div>    
+
+                  </div>
+            </div>
+        </div>
+           <script type="text/javascript">
+                        var StrvocabToPractise = document.getElementById("vocabToPractise").innerHTML;
+                        var StrvocabTabAll = document.getElementById("vocabTabAll").innerHTML;
+                        var TabvocabToPractise = StrvocabToPractise.split('},');
+
+                        var goodAnswer = 0;
+                        var badAnswer = 0;
+
+                        var curChoice = "";
+                        var curWord = "";
+
+                        for(var i = 0; i < TabvocabToPractise.length; i++) {
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/{/g, "{\"");
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/:/g, '":');
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/:/, ':"');
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/,/g, ",\"");
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/,/, "\",");
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/'/g, "\"");   
+                            TabvocabToPractise[i] = TabvocabToPractise[i].replace(/\s/g, '');                  
+                            TabvocabToPractise[i]+='}'; 
+                            TabvocabToPractise[i]=TabvocabToPractise[i].replace(/}}/g, '}');
+                        }
+                        shuffle(TabvocabToPractise);
+    
+                        var TabvocabTabAll = StrvocabTabAll.split('},');
+                        for(var i = 0; i < TabvocabTabAll.length; i++) {
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/{/g, "{\"");
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/:/g, '":');
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/:/, ':"');
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/,/g, ",\"");
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/,/, "\",");
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/'/g, "\"");   
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/\s/g, '');
+                            TabvocabTabAll[i]+='}';
+                            TabvocabTabAll[i]=TabvocabTabAll[i].replace(/}}/g, '}');
+                        }
+                        shuffle(TabvocabTabAll);
+                        
+
+                        newWord(null, TabvocabToPractise);
+
+                        function newWord(choice,TabvocabToPractise) { 
+                            switch(choice){
+                                case 1:
+                                    curChoice = document.getElementById("firstChoice").innerHTML;
+                                    checkAnswer(curChoice,curWord);
+                                    break;
+                                case 2:
+                                    curChoice = document.getElementById("secondChoice").innerHTML;
+                                    checkAnswer(curChoice,curWord);
+                                    break;
+                                case 3:
+                                    curChoice = document.getElementById("thirdChoice").innerHTML;
+                                    checkAnswer(curChoice,curWord);
+                                    break;
+                                default:
+                            }
+
+                            if(TabvocabToPractise.length!=0){ 
+                                shuffle(TabvocabTabAll);
+                                var newWord = TabvocabToPractise.pop();
+                                curWord = JSON.parse(newWord).chinesePhonetic;
+
+                                document.getElementById("toGuess").innerHTML = JSON.parse(newWord).chineseName;
+
+                                var choicesTab = [];
+
+                                choicesTab.push(JSON.parse(TabvocabTabAll[0]).chinesePhonetic);
+                                choicesTab.push(JSON.parse(TabvocabTabAll[1]).chinesePhonetic);
+                                choicesTab.push(JSON.parse(TabvocabTabAll[2]).chinesePhonetic);
+
+                                if(choicesTab.indexOf(JSON.parse(newWord).chinesePhonetic)==-1){
+                                    choicesTab[Math.floor(Math.random() * choicesTab.length)] = JSON.parse(newWord).chinesePhonetic;
+                                }
+                                document.getElementById("firstChoice").innerHTML = choicesTab[0];
+                                document.getElementById("secondChoice").innerHTML = choicesTab[1];
+                                document.getElementById("thirdChoice").innerHTML = choicesTab[2];
+                            }
+                            else {
+                                document.getElementById("toGuess").innerHTML = "Good Answers: "+goodAnswer+" Bad Answers: "+badAnswer;
+                                document.getElementById("firstChoice").innerHTML = "NA";
+                                document.getElementById("secondChoice").innerHTML = "NA";
+                                document.getElementById("thirdChoice").innerHTML = "NA";
+                            }
+                        }
+
+                        function shuffle(array) {
+                            array.sort(() => Math.random() - 0.5);
+                        }
+
+                        function checkAnswer(answer, word){
+                            if(answer == word)
+                                goodAnswer++;
+                            else
+                                badAnswer++;
+                        }
+                    </script>
+    </body>
+</html>

@@ -16,7 +16,7 @@ routerChapter.get('/', (req, res) => {
     Chapter.find((err, chaptersList) => {
         if (!err) {
             res.render("chapter/index.html", {
-            chapters: chaptersList
+                chapters: chaptersList
             });
         }
         else 
@@ -64,31 +64,107 @@ routerChapter.post('/dictionnary', async(req, res) => {
 routerChapter.get('/dictionnary', async(req, res) => {
     var chapter = new Chapter();
 
-    await Chapter.find((err, chapters) => {
+    await Chapter.find((err, chaptersList) => {
         if (!err) {
-            chapters = chapters;
+            chapters = chaptersList;
+            chapter = chapters[0];
         }
         else {
             console.log('Error in retrieving chapter list :' + err);
         }
     });
-    chapter = chapters[0];
-    Chapter.findById(chapter._id).populate('characters').exec( (err, doc) =>{
+    
+    await Chapter.findById(chapter._id).populate('characters').exec( (err, curChapter) =>{
         if(!err){
             res.render("chapter/dictionnary.html", {
-            chapters: chapters,
-            chapter: doc
+                chapters: chapters,
+                chapter: curChapter
             });
         }
     });
+});
+
+routerChapter.get('/practise', async(req, res) => {
+    await Chapter.find((err, chapters) => {
+        if (!err) {
+            chaptersList = chapters;
+        }
+        else {
+            console.log('Error in retrieving chapter list :' + err);
+        }
+    });
+
+    await Character.find((err, charactersList) => {
+        if (!err) {
+            res.render("chapter/practise.html", {
+                vocabTabPractise: charactersList,
+                vocabTabAll: charactersList,
+                chapters: chaptersList
+            });
+        }
+        else 
+            console.log('Error in retrieving character list :' + err);
+    }); 
+});
+
+routerChapter.post('/practise', async(req, res) => {
+    var chaptersToPractise = req.body.chapter;
+
+    if(!Array.isArray(chaptersToPractise))
+        chaptersToPractise = [chaptersToPractise]
+
+    var vocabIdTab = [];
+    var vocabTabPractise = [];
+    var vocabTabAll = [];
+    var chaptersList = [];
+
+    await Chapter.find((err, chapters) => {
+        if (!err) {
+            chaptersList = chapters;
+        }
+        else {
+            console.log('Error in retrieving chapter list :' + err);
+        }
+    });
+
+    for(var i = 0; i < chaptersToPractise.length; i++) {
+        await Chapter.findById(chaptersToPractise[i], (err, chapter) => {
+            if (!err) {
+                var charactersTab = chapter.characters;
+                for(var j = 0; j < charactersTab.length; j++) {
+                    vocabIdTab.push(charactersTab[j]);
+                }
+            }
+        });
+    }
+
+    for(var i = 0; i < vocabIdTab.length; i++) {
+        await Character.findById(vocabIdTab[i], (err, character) => {
+            if (!err) 
+                vocabTabPractise.push(character);
+        });
+    }
+
+    await Character.find((err, charactersList) => {
+        if (!err) {
+
+            res.render("chapter/practise.html", {
+                vocabTabPractise: vocabTabPractise,
+                vocabTabAll: charactersList,
+                chapters: chaptersList
+            });
+        }
+        else 
+            console.log('Error in retrieving character list :' + err);
+    });    
 });
 
 //Renvoie la page search filtrée par les paramètres envoyés par la requête POST
 routerChapter.post('/search', async(req, res) =>{
     var chapter = req.body.chapter;
     var character = req.body.character;
-    var characters =[];
-    await Chapter.find({"name" : {"$regex" : chapter} }).populate('characters').select('characters').exec( (err,chaptersMatching) =>{
+    var characters = [];
+    await Chapter.find({"name" : {"$regex" : chapter} }).populate('characters').select('characters').exec((err,chaptersMatching) =>{
         if(!err){
             chaptersMatching.forEach(function(chap){
                 var tabChar = chap.characters;
@@ -110,7 +186,6 @@ routerChapter.post('/search', async(req, res) =>{
         else 
             console.log('Error in retrieving chapter list :' + err);
     });
-    
 });
 
 module.exports = routerChapter;
